@@ -1,0 +1,8 @@
+C:\Users\Tábi Zoltán\Desktop\Egyetem\Szakdolgozat\P4Analyst\GraphForP4\bin\Debug\netstandard2.1\GraphForP4.deps.json
+C:\Users\Tábi Zoltán\Desktop\Egyetem\Szakdolgozat\P4Analyst\GraphForP4\bin\Debug\netstandard2.1\GraphForP4.dll
+C:\Users\Tábi Zoltán\Desktop\Egyetem\Szakdolgozat\P4Analyst\GraphForP4\bin\Debug\netstandard2.1\GraphForP4.pdb
+C:\Users\Tábi Zoltán\Desktop\Egyetem\Szakdolgozat\P4Analyst\GraphForP4\obj\Debug\netstandard2.1\GraphForP4.csprojAssemblyReference.cache
+C:\Users\Tábi Zoltán\Desktop\Egyetem\Szakdolgozat\P4Analyst\GraphForP4\obj\Debug\netstandard2.1\GraphForP4.AssemblyInfoInputs.cache
+C:\Users\Tábi Zoltán\Desktop\Egyetem\Szakdolgozat\P4Analyst\GraphForP4\obj\Debug\netstandard2.1\GraphForP4.AssemblyInfo.cs
+C:\Users\Tábi Zoltán\Desktop\Egyetem\Szakdolgozat\P4Analyst\GraphForP4\obj\Debug\netstandard2.1\GraphForP4.dll
+C:\Users\Tábi Zoltán\Desktop\Egyetem\Szakdolgozat\P4Analyst\GraphForP4\obj\Debug\netstandard2.1\GraphForP4.pdb
