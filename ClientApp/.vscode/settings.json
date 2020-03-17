@@ -1,0 +1,6 @@
+{
+    "git.autoRepositoryDetection": false,
+    "git.enabled": false,
+    "git.path": null,
+    "git.autofetch": false
+}
