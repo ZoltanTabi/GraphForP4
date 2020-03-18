@@ -11,7 +11,6 @@ export class GraphComponent implements OnInit {
 
   @Input() number: number;
   @Input() list: Array<string>;
-  @Input() numbers: Array<Number>;
 
   constructor() { }
 
@@ -35,17 +34,11 @@ export class GraphComponent implements OnInit {
 
       var nodes = d3.selectAll(".node");
       nodes.on("click", this.fieldClickHandler);
-      //graph.on('click', this.fieldClickHandler);
     }
   };
 
   private fieldClickHandler() {
-    //console.log(d3.event)
-    //console.log(d3.select(this))
-
-    //Ez lesz a jó
     console.log(d3.event.toElement.__data__.parent.key);
-    //graphviz('#graph').renderDot('digraph { ' + d3.event.toElement.__data__.parent.key + ' } ')
   }
 
 }

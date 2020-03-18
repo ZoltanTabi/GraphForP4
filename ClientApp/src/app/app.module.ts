@@ -12,14 +12,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { GraphComponent } from './graph/graph.component';
+import { HomeComponent } from './home/home.component';
+import { HelpComponent } from './help/help.component';
+import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavBarComponent,
-    GraphComponent
+    GraphComponent,
+    HomeComponent,
+    HelpComponent
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -28,9 +35,15 @@ import { GraphComponent } from './graph/graph.component';
     MatButtonModule,
     MatSidenavModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    RouterModule.forRoot([
+      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: 'help', component: HelpComponent },
+      { path: 'graph', component: GraphComponent},
+    ])
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

@@ -4,5 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GraphForP4\GraphForP4.csproj" />
+  </ItemGroup>
+
 
 </Project>
