@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GraphForP4.ViewModel
+namespace GraphForP4.ViewModels
 {
     public class AngularNode
     {

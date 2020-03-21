@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GraphForP4.Models;
-using GraphForP4.ViewModel;
+using GraphForP4.ViewModels;
 
 namespace GraphForP4.Services
 {

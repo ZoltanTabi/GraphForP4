@@ -1,0 +1,22 @@
+<mat-sidenav-container color="primary" class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-toolbar>Menu</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item href="home">
+        <mat-icon>
+          home
+        </mat-icon>
+        Főoldal
+      </a>
+      <a mat-list-item href="help">
+        <mat-icon>
+          help
+        </mat-icon>
+        Súgó
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+</mat-sidenav-container>

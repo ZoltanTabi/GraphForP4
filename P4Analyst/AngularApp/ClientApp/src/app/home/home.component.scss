@@ -1,0 +1,33 @@
+.m-btn{
+    background-color: lightgray;
+    margin: 1em;
+}
+
+.custom-file-upload {
+    :hover{
+     background-color: #bfbfbf;
+    }
+    display: inline-block;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 12px;
+    margin: 1em;
+    background-color: lightgray;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-style: normal;
+    font-variant-ligatures: normal;
+    font-variant-caps: normal;
+    font-variant-numeric: normal;
+    font-variant-east-asian: normal;
+    font-weight: 500;
+    font-stretch: normal;
+    text-rendering: auto;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    font-size: 14px;
+}

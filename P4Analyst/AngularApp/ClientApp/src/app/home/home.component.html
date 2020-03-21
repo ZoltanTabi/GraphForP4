@@ -1,0 +1,31 @@
+<div>
+    <h1>Fájl feltöltő ablak</h1>
+</div>
+<br>
+
+<label mat-button class="custom-file-upload">
+    <input type="file" (change)="onChange($event.target.files)" style="display:none;"/>
+    Fájl kiválasztás
+    <mat-icon style="font-size:large;">
+        vertical_align_top
+    </mat-icon>
+</label>
+
+<div>
+  <h3>File Content</h3>
+  <pre> {{fileData.content}} </pre>
+</div>
+
+<div *ngIf="fileName">
+	<p>{{fileData.name}}</p>
+  <button mat-raised-button color="warn" (click)="removeFile()">Remove File</button>
+</div>
+
+<div>
+    <button mat-raised-button color="primary" (click)="onNext()" [disabled]="file==null">
+        Folytatás
+        <mat-icon>
+            navigate_next
+        </mat-icon>
+    </button>
+</div>
