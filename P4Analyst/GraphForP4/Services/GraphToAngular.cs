@@ -10,14 +10,15 @@ namespace GraphForP4.Services
 {
     public static class GraphToAngular
     {
-        public static List<AngularNode> Serialize(Graph graph)
+        public static IEnumerable<AngularNode> Serialize(Graph graph)
         {
             var angularGraph = new List<AngularNode>();
 
             var level = 0;
             var currentNodes = new List<Node>();
 
-            Parallel.ForEach(graph.Nodes, (node) => {
+            Parallel.ForEach(graph.Nodes, (node) =>
+            {
                 if (MainNode(graph, node)) currentNodes.Add(node);
             });
 
@@ -37,12 +38,14 @@ namespace GraphForP4.Services
                 var item = new AngularNode
                 {
                     Number = level,
-                    Node = new Tuple<string,string>(node.Text, node.ToString()),
-                    Edges = new Dictionary<Tuple<string, string>, string>()
+                    Node = new Tuple<string, string>(node.Text, node.ToString()),
+                    Edges = new List<Tuple<Tuple<string, string>, string>>()
                 };
                 foreach(var edge in node.Edges)
                 {
-                    item.Edges.Add(new Tuple<string, string>(edge.Parent.Text, edge.Child.Text), edge.ToString());
+                    item.Edges.Add(new Tuple<Tuple<string, string>, string>
+                                    (new Tuple<string, string>(edge.Parent.Text, edge.Child.Text), edge.ToString())
+                                  );
                     childNodes.Add(edge.Child);
                 }
                 angularGraph.Add(item);

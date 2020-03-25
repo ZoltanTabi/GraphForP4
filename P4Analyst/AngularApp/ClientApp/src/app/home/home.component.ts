@@ -18,8 +18,6 @@ import { FileData } from '../models/file';
 export class HomeComponent implements OnInit {
   fileData: FileData;
   file: File;
-  fileName: string;
-  fileContent: string;
 
   constructor(private homeService: HomeService, private router: Router) {
     this.fileData = {
@@ -48,14 +46,12 @@ export class HomeComponent implements OnInit {
       self.fileData.content = fileReader.result.toString();
     };
     fileReader.readAsText(this.file);
-    this.changeFile(this.fileData);
   }
 
   removeFile() {
     this.file = null;
     this.fileData.name = '';
     this.fileData.content = '';
-    this.changeFile(this.fileData);
   }
 
   onNext() {
@@ -64,6 +60,7 @@ export class HomeComponent implements OnInit {
       .subscribe(result => {
         this.fileData.name = result.name;
         this.print();
+        this.navigate();
       });
     // promise.then((data) => {
    //   this.fileData.name = data.name;
@@ -74,12 +71,11 @@ export class HomeComponent implements OnInit {
     // console.log(this.fileData.name);
   }
 
-  private changeFile(fileData: FileData) {
-    this.fileName = fileData.name;
-    this.fileContent = fileData.content;
-  }
-
   private print() {
     console.log(this.fileData.name);
+  }
+
+  navigate() {
+    this.router.navigateByUrl('/graphview');
   }
 }

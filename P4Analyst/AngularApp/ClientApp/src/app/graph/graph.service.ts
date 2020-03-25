@@ -1,22 +1,15 @@
 import { Inject } from '@angular/core';
+
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
-
 
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { HttpErrorHandler, HandleError } from 'src/app/services/http-error-handler.service';
-import { FileData } from '../models/file';
+import { Node } from '../models/node';
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/json',
-    'Authorization': 'my-auth-token'
-  })
-};
-
-export class HomeService {
+export class GraphService {
   private handleError: HandleError;
   private baseUrl: string;
 
@@ -28,10 +21,13 @@ export class HomeService {
     this.baseUrl = baseUrl;
   }
 
-  sendFileContent(fileData: FileData): Observable<FileData> {
-    return this.http.post<FileData>(this.baseUrl + 'graph', fileData, httpOptions)
+  getGraph(type: string): Observable<Array<Node>> {
+    const options = type ?
+     { params: new HttpParams().set('type', type) } : {};
+
+    return this.http.get<Array<Node>>(this.baseUrl + 'graph/' + type)
       .pipe(
-        catchError(this.handleError('sendFileContent', fileData))
+        catchError(this.handleError<Array<Node>>('sendFileContent', []))
       );
   }
 }

@@ -18,6 +18,7 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { MessageService } from 'src/app/services/message.service';
 import { HttpErrorHandler } from 'src/app/services/http-error-handler.service';
+import { GraphViewComponent } from './graph-view/graph-view.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { HttpErrorHandler } from 'src/app/services/http-error-handler.service';
     NavBarComponent,
     GraphComponent,
     HomeComponent,
-    HelpComponent
+    HelpComponent,
+    GraphViewComponent
   ],
   imports: [
     HttpClientModule,
@@ -41,7 +43,7 @@ import { HttpErrorHandler } from 'src/app/services/http-error-handler.service';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'help', component: HelpComponent },
-      { path: 'graph', component: GraphComponent},
+      { path: 'graphview', component: GraphViewComponent},
     ])
   ],
   providers: [
