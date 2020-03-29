@@ -1,6 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
+@include mat-core();
+@import './scss/mixins';
+@import './scss/theme.scss';
+@import './scss/custom-component-themes.scss';
 
-/* Provide sufficient contrast against white background */
+.my-theme {
+    @include angular-material-theme($my-theme);
+    @include custom-components-theme($my-theme, $my-theme-info, 
+    $my-theme-success, $my-theme-warning, $my-theme-error);
+}
+
 a {
   color: #0366d6;
 }
@@ -14,6 +23,10 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+/*.mat-icon:not([disabled]):hover {
+  background-color: rgba(158, 158, 158, 0.2);
+}*/
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -55,20 +55,16 @@ export class HomeComponent implements OnInit {
   }
 
   onNext() {
-    const promise = this.homeService
-      .sendFileContent(this.fileData)// .toPromise();
+    this.homeService
+      .sendFileContent(this.fileData)
       .subscribe(result => {
         this.fileData.name = result.name;
         this.print();
+      }, () => {
+        console.log(error);
+      }, () => {
         this.navigate();
       });
-    // promise.then((data) => {
-   //   this.fileData.name = data.name;
-    //  console.log("Promise resolved with: " + this.fileData.name);
-   // }).catch((error) => {
-    //  console.log("Promise rejected with " + JSON.stringify(error));
-    // });
-    // console.log(this.fileData.name);
   }
 
   private print() {

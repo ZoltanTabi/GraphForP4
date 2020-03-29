@@ -13,7 +13,7 @@ namespace GraphForP4.Models
 
         public override string ToString()
         {
-            return "color = #" + Color.R.ToString("X2") + Color.G.ToString("X2") + Color.B.ToString("X2");
+            return "[color=\"#" + Color.R.ToString("X2") + Color.G.ToString("X2") + Color.B.ToString("X2") + "\"]";
         }
     }
 }

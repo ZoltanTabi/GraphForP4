@@ -1,29 +1,43 @@
-.sidenav-container {
-  height: 100%;
-  width: 200px;
-}
-
-.sidenav {
-  width: 200px;
-  left: 0;
-  background-color: #1976d2;
-}
-
-.sidenav .mat-toolbar {
-  background: inherit;
-  color: white;
-}
-
-.mat-toolbar.mat-primary {
-  position: sticky;
+.example-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
   top: 0;
-  z-index: 1;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
-.mat-list-base .mat-list-item {
-  color: white !important;
+.example-is-mobile .example-toolbar {
+  position: fixed;
+  z-index: 2;
+}
+
+h1.example-app-name {
+  margin-left: 8px;
+}
+
+.example-sidenav-container {
+  flex: 1;
+}
+
+.example-is-mobile .example-sidenav-container {
+  flex: 1 0 auto;
+}
+
+.body-content {
+  height: 100%;
 }
 
 .mat-icon {
   padding-right: 0.5em;
+}
+
+h5 {
+  margin-bottom: 0;
+  margin-left: 0.5em;
+}
+
+mat-nav-list a {
+  color: white !important;
 }

@@ -1,0 +1,35 @@
+@mixin mat-design-icon-mixin() {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
+
+    &.md-18 { font-size: 18px; }
+    &.md-24 { font-size: 24px; }
+    &.md-36 { font-size: 36px; }
+    &.md-48 { font-size: 48px; }
+
+    &.md-dark { 
+        color: rgba(0, 0, 0, 0.54);
+
+        &.md-inactive { color: rgba(0, 0, 0, 0.26); }
+    }
+
+    &.md-light { 
+        color: rgba(255, 255, 255, 1);
+
+        &.md-inactive { color: rgba(255, 255, 255, 0.3); }
+    }
+}

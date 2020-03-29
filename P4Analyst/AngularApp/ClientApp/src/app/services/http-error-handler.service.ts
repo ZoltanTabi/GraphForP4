@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 
 import { MessageService } from './message.service';
+import { Router } from '@angular/router';
 
 /** Type of the handleError function returned by HttpErrorHandler.createHandleError */
 export type HandleError =
@@ -12,7 +13,7 @@ export type HandleError =
 /** Handles HttpClient errors */
 @Injectable()
 export class HttpErrorHandler {
-  constructor(private messageService: MessageService) { }
+  constructor(private messageService: MessageService, private router: Router) { }
 
   /** Create curried handleError function that already knows the service name */
   createHandleError = (serviceName = '') => <T>
@@ -37,8 +38,9 @@ export class HttpErrorHandler {
 
       // TODO: better job of transforming error for user consumption
       this.messageService.add(`${serviceName}: ${operation} failed: ${message}`);
-
+      this.router.navigateByUrl('/help');
       // Let the app keep running by returning a safe result.
+      // return throwError(error.message);
       return of( result );
     };
 

@@ -1,1 +1,3 @@
-<div id="graph"></div>
+<mat-progress-spinner *ngIf="loading"></mat-progress-spinner>
+
+<div id="graph" class="graph" [ngClass]="{'dont-touch': dontTouch, 'touch': !dontTouch }"></div>

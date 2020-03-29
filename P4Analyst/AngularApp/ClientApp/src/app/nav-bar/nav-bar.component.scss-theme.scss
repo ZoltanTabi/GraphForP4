@@ -1,0 +1,25 @@
+@import '~@angular/material/theming';
+@import '../../scss/default.scss-theme.scss';
+@mixin nav-bar-component-theme($theme) {
+
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .mat-sidenav{
+    background-color: mat-color($background, app-bar);
+    color: mat-color($foreground, text);
+
+    &[color=primary]{
+      @include toolbar-color($primary);
+    }
+    &[color=accent]{
+      @include toolbar-color($accent);
+    }
+    &[color=warn]{
+      @include toolbar-color($warn);
+    }
+  }
+}

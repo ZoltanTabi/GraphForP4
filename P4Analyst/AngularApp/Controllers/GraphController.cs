@@ -30,7 +30,6 @@ namespace AngularApp.Controllers
             if(success)
             {
                 var file = SessionExtension.Get<FileData>(session, key);
-                //return Ok(GraphToAngular.Serialize(SessionExtension.Get<Graph>(session, key)));
                 return Ok(GraphToAngular.Serialize(P4ToGraph.Create(file.Content)));
             }
             else
@@ -50,15 +49,6 @@ namespace AngularApp.Controllers
             {
                 var graph = P4ToGraph.Create(file.Content);
 
-
-                var currentNodes = new List<Node>();
-                Parallel.ForEach(graph.Nodes, (node) =>
-                {
-                    if (MainNode(graph, node)) currentNodes.Add(node);
-                });
-
-
-
                 //SessionExtension.Set(session, Key.ControlFlowGraph, currentNodes);
                 SessionExtension.Set(session, Key.ControlFlowGraph, file);
                 file.Name = "Success";
@@ -66,23 +56,6 @@ namespace AngularApp.Controllers
             }
 
             return file;
-        }
-
-
-
-        private static bool MainNode(Graph graph, Node node)
-        {
-            var find = false;
-
-            for (var i = 0; i < graph.Nodes.Count && !find; ++i)
-            {
-                for (var j = 0; j < graph.Nodes[i].Edges.Count && !find; ++j)
-                {
-                    find = graph.Nodes[i].Edges[j].Child == node;
-                }
-            }
-
-            return !find;
         }
     }
 }

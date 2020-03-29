@@ -7,7 +7,7 @@
     <input type="file" accept=".txt" (change)="onChange($event.target.files)" style="display:none;"/>
     Fájl kiválasztás
     <mat-icon style="font-size:large;">
-        vertical_align_top
+        get_app
     </mat-icon>
 </label>
 
@@ -16,16 +16,21 @@
   <pre> {{fileData.content}} </pre>
 </div>
 
-<div *ngIf="fileName">
+<div *ngIf="fileData.name">
 	<p>{{fileData.name}}</p>
-  <button mat-raised-button color="warn" (click)="removeFile()">Remove File</button>
+  <button mat-raised-button color="warn" class="m-btn" (click)="removeFile()">
+      Remove File
+      <mat-icon>
+          delete
+      </mat-icon>
+  </button>
 </div>
 
 <div>
-    <button mat-raised-button color="primary" (click)="onNext()" [disabled]="file==null">
+    <button mat-raised-button color="primary" class="m-btn" (click)="onNext()" [disabled]="file==null">
         Folytatás
         <mat-icon>
-            navigate_next
+            send
         </mat-icon>
     </button>
 </div>

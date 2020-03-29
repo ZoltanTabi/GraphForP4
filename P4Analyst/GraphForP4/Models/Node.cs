@@ -15,9 +15,9 @@ namespace GraphForP4.Models
 
         public override string ToString()
         {
-            return "fillcolor = #" + FillColor.R.ToString("X2") + FillColor.G.ToString("X2") + FillColor.B.ToString("X2")
-                 + " fontcolor = #" + FontColor.R.ToString("X2") + FontColor.G.ToString("X2") + FontColor.B.ToString("X2")
-                 + " shape = " + Shape.ToString("g").ToLower();
+            return "[fillcolor=\"#" + FillColor.R.ToString("X2") + FillColor.G.ToString("X2") + FillColor.B.ToString("X2")
+                 + "\", fontcolor=\"#" + FontColor.R.ToString("X2") + FontColor.G.ToString("X2") + FontColor.B.ToString("X2")
+                 + "\", shape=\"" + Shape.ToString("g").ToLower() + "\"]";
         }
     }
 }

@@ -15,6 +15,7 @@ namespace GraphForP4.Services
         const string IF = "if";
         const string ELSE = "else";
         const string ACTIONS = "actions";
+        private static readonly String[] CHARACTERS = { " ", "(", "{", "=" };
 
         public static Graph Create(string input)
         {
@@ -52,19 +53,33 @@ namespace GraphForP4.Services
                 graph.AddEdge(node, graph["End"]);
             }
 
-            Parallel.ForEach(graph.Nodes, (node) => //foreach(var node in graph.Nodes)
+            //Parallel.ForEach(graph.Nodes, (node) =>
+            //{
+            //    foreach (var edge in node.Edges)
+            //    {
+            //        if (edge.Child.Type == NodeType.Skip)
+            //        {
+            //            foreach (var childEdge in edge.Child.Edges)
+            //            {
+            //                graph.AddEdge(edge.Parent, childEdge.Child);
+            //            }
+            //        }
+            //    }
+            //});
+
+            for(var i = graph.Nodes.Count - 1; i >= 0; --i)
             {
-                foreach (var edge in node.Edges)
+                for(var j = graph.Nodes[i].Edges.Count -1; j >= 0; --j)
                 {
-                    if (edge.Child.Type == NodeType.Skip)
+                    if(graph.Nodes[i].Edges[j].Child.Type == NodeType.Skip)
                     {
-                        foreach (var childEdge in edge.Child.Edges)
+                        for(var k = graph.Nodes[i].Edges[j].Child.Edges.Count - 1; k >= 0; --k)
                         {
-                            graph.AddEdge(edge.Parent, childEdge.Child);
+                            graph.AddEdge(graph.Nodes[i].Edges[j].Parent, graph.Nodes[i].Edges[j].Child.Edges[k].Child);
                         }
                     }
                 }
-            });
+            }
 
             graph.Nodes.RemoveAll(new Predicate<Node>(x => x.Type == NodeType.Skip));
             foreach(var node in graph.Nodes)
@@ -114,7 +129,8 @@ namespace GraphForP4.Services
                         }
                     }
 
-                    currentNodes = currentNodes.Concat(IfMethod(graph, currentNodes, ifMethod + elseMethod, ingressMethod)).ToList();
+                    //currentNodes = currentNodes.Concat(IfMethod(graph, currentNodes, ifMethod + elseMethod, ingressMethod)).ToList();
+                    currentNodes = IfMethod(graph, currentNodes, ifMethod + elseMethod, ingressMethod);
                 }
                 (method, current) = Pop(method);
             }
@@ -156,6 +172,7 @@ namespace GraphForP4.Services
                 };
                 graph.Add(skipNode);
                 graph.AddEdge(ifNode, skipNode);
+                currentNodes.Add(skipNode);
             }
 
             return currentNodes;
@@ -223,7 +240,6 @@ namespace GraphForP4.Services
 
             return new List<Node> { actionMethodNode };
         }
-
         private static string InputClean(string input)
         {
             input = Regex.Replace(input, "<[^0-9]*>", " ");
@@ -239,8 +255,14 @@ namespace GraphForP4.Services
             var result = String.Empty;
             var count = 0;
             var findStartChar = false;
+            var index = -1;
+            
+            for(var i = 0; i < CHARACTERS.Length && index == -1; ++i)
+            {
+                index = input.IndexOf(firstEqual + CHARACTERS[i]);
+            }
 
-            for(var i = input.IndexOf(firstEqual); i > -1 && (count != 0 || !findStartChar); ++i)
+            for(var i = index; i > -1 && (count != 0 || !findStartChar); ++i)
             {
                 if(input[i] == startChar)
                 {

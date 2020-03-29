@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GraphForP4.Models;
 using GraphForP4.ViewModels;
@@ -20,6 +21,7 @@ namespace GraphForP4.Services
             Parallel.ForEach(graph.Nodes, (node) =>
             {
                 if (MainNode(graph, node)) currentNodes.Add(node);
+                node.Text = node.Text.Insert(0, "\"") + "\"";
             });
 
             while (currentNodes.Any())
