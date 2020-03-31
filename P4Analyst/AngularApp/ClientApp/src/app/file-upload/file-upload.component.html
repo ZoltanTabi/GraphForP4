@@ -1,0 +1,20 @@
+<div>
+  <div (click)="uploadFile.click()" (disabled)="!uploaded" class="col-12 rmpm dropzone"
+    appDrag (file)="fileDropped($event)">
+    <div class="text-wrapper">
+      <div class="centered">Drop your file here!</div>
+      <input #uploadFile type="file" accept=".txt,.p4" (change)="onChange($event.target.files)"
+      style="display:none;"/>
+    </div>
+  </div>
+  <div>
+    <mat-form-field *ngIf="fileData.name">
+      <input matInput [value]="getName()" readonly>
+      <button mat-icon-button matSuffix color="warn" class="m-btn" (click)="removeFile()">
+        <mat-icon>
+            delete
+        </mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+</div>

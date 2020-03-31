@@ -17,7 +17,6 @@ import { FileData } from '../models/file';
 
 export class HomeComponent implements OnInit {
   fileData: FileData;
-  file: File;
 
   constructor(private homeService: HomeService, private router: Router) {
     this.fileData = {
@@ -26,32 +25,12 @@ export class HomeComponent implements OnInit {
     };
   }
 
-  ngOnInit(): void {
-    this.file = null;
-  }
+  ngOnInit(): void { }
 
-
-  trigger() {
-    const element = document.getElementById('upload_file') as HTMLInputElement;
-    element.click();
-  }
-
-  onChange(fileList: FileList): void {
-    this.file = fileList[0];
-    this.fileData.name = fileList[0].name;
-
-    const fileReader: FileReader = new FileReader();
-    const self = this;
-    fileReader.onloadend = () => {
-      self.fileData.content = fileReader.result.toString();
-    };
-    fileReader.readAsText(this.file);
-  }
-
-  removeFile() {
-    this.file = null;
-    this.fileData.name = '';
-    this.fileData.content = '';
+  onUpload(fileData: FileData) {
+    console.log('Megérkezett');
+    this.fileData = fileData;
+    this.fileData.name = this.fileData.name ? this.fileData.name : '';
   }
 
   onNext() {
@@ -59,16 +38,11 @@ export class HomeComponent implements OnInit {
       .sendFileContent(this.fileData)
       .subscribe(result => {
         this.fileData.name = result.name;
-        this.print();
       }, () => {
         console.log(error);
       }, () => {
         this.navigate();
       });
-  }
-
-  private print() {
-    console.log(this.fileData.name);
   }
 
   navigate() {
