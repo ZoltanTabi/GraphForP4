@@ -10,11 +10,13 @@ import { GraphComponent } from './graph/graph.component';
 import { HomeComponent } from './home/home.component';
 import { HelpComponent } from './help/help.component';
 import { MatAnimatedIconComponent } from './mat-animated-icon/mat-animated-icon.component';
+import { HoverClassDirective } from './hover-class.directive';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { MessageService } from 'src/app/services/message.service';
 import { HttpErrorHandler } from 'src/app/services/http-error-handler.service';
 import { GraphViewComponent } from './graph-view/graph-view.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {
   MatAutocompleteModule,
@@ -46,6 +48,7 @@ import {
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
+  MatFormFieldModule,
 } from '@angular/material';
 
 @NgModule({
@@ -56,7 +59,8 @@ import {
     HomeComponent,
     HelpComponent,
     GraphViewComponent,
-    MatAnimatedIconComponent
+    MatAnimatedIconComponent,
+    HoverClassDirective
   ],
   imports: [
     HttpClientModule,
@@ -64,6 +68,8 @@ import {
     AppRoutingModule,
     BrowserAnimationsModule,
     LayoutModule,
+    FormsModule,
+    ReactiveFormsModule,
 
     // Material
     MatToolbarModule,
@@ -74,6 +80,10 @@ import {
     MatListModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
+    MatMenuModule,
+    MatTabsModule,
+    MatFormFieldModule,
+    MatInputModule,
 
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },

@@ -1,5 +1,5 @@
 import {MediaMatcher} from '@angular/cdk/layout';
-import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, EventEmitter, Output} from '@angular/core';
 
 @Component({
   selector: 'app-nav-bar',
@@ -7,6 +7,7 @@ import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
   styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent implements OnDestroy {
+  @Output() change = new EventEmitter<boolean>();
   mobileQuery: MediaQueryList;
   themeColor = 'primary';
   opened = false;
@@ -23,5 +24,9 @@ export class NavBarComponent implements OnDestroy {
   ngOnDestroy(): void {
     // tslint:disable-next-line: deprecation
     this.mobileQuery.removeListener(this._mobileQueryListener);
+  }
+
+  changeTheme(defaultTheme: boolean) {
+    this.change.emit(defaultTheme);
   }
 }

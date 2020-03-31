@@ -1,32 +1,41 @@
 <div>
-    <h1>Fájl feltöltő ablak</h1>
-</div>
-<br>
-
-<label mat-button class="custom-file-upload">
-    <input type="file" accept=".txt" (change)="onChange($event.target.files)" style="display:none;"/>
-    Fájl kiválasztás
-    <mat-icon style="font-size:large;">
-        get_app
-    </mat-icon>
-</label>
-
-<div>
-  <h3>File Content</h3>
-  <pre> {{fileData.content}} </pre>
+    <h1 class="title">Kód feltöltés</h1>
 </div>
 
-<div *ngIf="fileData.name">
-	<p>{{fileData.name}}</p>
-  <button mat-raised-button color="warn" class="m-btn" (click)="removeFile()">
-      Remove File
-      <mat-icon>
-          delete
-      </mat-icon>
-  </button>
-</div>
+<mat-tab-group mat-stretch-tabs class="min-height" animationDuration="750ms">
+    <mat-tab label="Fájl feltöltés">
+        <label mat-button class="custom-file-upload">
+            <input type="file" accept=".txt" (change)="onChange($event.target.files)" style="display:none;"/>
+            Fájl kiválasztás
+            <mat-icon style="font-size:large;">
+                get_app
+            </mat-icon>
+        </label>
+        
+        <div>
+          <h3>File Content</h3>
+          <pre> {{fileData.content}} </pre>
+        </div>
+        
+        <div *ngIf="fileData.name">
+            <p>{{fileData.name}}</p>
+          <button mat-raised-button color="warn" class="m-btn" (click)="removeFile()">
+              Remove File
+              <mat-icon>
+                  delete
+              </mat-icon>
+          </button>
+        </div>
+    </mat-tab>
+    <mat-tab label="Szövegbevitel">
+        <mat-form-field class="input-textarea">
+            <mat-label>Írd vagy másold be a kódot</mat-label>
+            <textarea matInput placeholder="control Ingress(inout headers hdr..."></textarea>
+        </mat-form-field>
+    </mat-tab>
+</mat-tab-group>
 
-<div>
+<div class="next-btn">
     <button mat-raised-button color="primary" class="m-btn" (click)="onNext()" [disabled]="file==null">
         Folytatás
         <mat-icon>

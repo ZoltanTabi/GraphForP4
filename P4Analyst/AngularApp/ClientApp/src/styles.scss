@@ -10,6 +10,16 @@
     $my-theme-success, $my-theme-warning, $my-theme-error);
 }
 
+.my-dark-theme {
+    @include angular-material-theme($my-dark-theme);
+    @include custom-components-theme($my-dark-theme, $my-theme-info, 
+    $my-theme-success, $my-theme-warning, $my-theme-error);
+    /*mat-sidenav-content {
+      color: white;
+      background-color: black;
+    }*/
+}
+
 a {
   color: #0366d6;
 }

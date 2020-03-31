@@ -41,3 +41,19 @@ h5 {
 mat-nav-list a {
   color: white !important;
 }
+
+.my-theme-change {
+  background-color: #303f9f !important;
+  color: white;
+  font-size: x-large;
+}
+
+.my-dark-theme-change {
+  background-color: #7b1fa2 !important;
+  color: white;
+  font-size: x-large;
+}
+
+button.change-color {
+  text-align: right;
+}

@@ -1,15 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  // templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  template: `
+  <div role="main" [ngClass]="{'my-theme': defaultTheme, 'my-dark-theme': !defaultTheme}">
+    <div class='row'>
+      <div>
+        <app-nav-bar (change)="this.defaultTheme=$event"></app-nav-bar>
+      </div>
+    </div>
+  </div>
+  `
 })
 export class AppComponent {
-  // list: Array<string> = ['start [fontcolor="#008000" shape="diamond"]' ,
-  //  'node [style="filled"] start [fillcolor="#008000" shape="diamond"] start -> b',
-  //  'node [style="filled"] start [fillcolor="#008000" shape="diamond"] start -> b; start -> c',
-  //  'node [style="filled"] start [fillcolor="#008000" shape="diamond"] start -> b; start -> c; b -> d; c -> d'];
+  defaultTheme = true;
 
   // tslint:disable-next-line: use-lifecycle-interface
   ngOnInit() { }

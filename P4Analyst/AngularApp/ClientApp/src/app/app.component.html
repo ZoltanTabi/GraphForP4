@@ -1,12 +1,7 @@
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-<div role="main">
+<div role="main" [ngClass]="{'my-theme': defaultTheme, 'my-dark-theme': !defaultTheme}">
   <div class='row'>
     <div>
-      <app-nav-bar></app-nav-bar>
+      <app-nav-bar (change)="this.defaultTheme=$event"></app-nav-bar>
     </div>
-    <!--<div class="body-content">
-      <router-outlet></router-outlet>
-    </div>-->
   </div>
 </div>
