@@ -29,8 +29,8 @@ namespace AngularApp.Controllers
 
             if(success)
             {
-                var file = SessionExtension.Get<FileData>(session, key);
-                return Ok(GraphToAngular.Serialize(P4ToGraph.Create(file.Content)));
+                var graph = SessionExtension.GetGraph(session, key);
+                return Ok(GraphToAngular.Serialize(graph));
             }
             else
             {
@@ -49,8 +49,7 @@ namespace AngularApp.Controllers
             {
                 var graph = P4ToGraph.Create(file.Content);
 
-                //SessionExtension.Set(session, Key.ControlFlowGraph, currentNodes);
-                SessionExtension.Set(session, Key.ControlFlowGraph, file);
+                SessionExtension.SetGraph(session, Key.ControlFlowGraph, graph);
                 file.Name = "Success";
                 logger.LogInformation("Gráf megalkotása", graph);
             }

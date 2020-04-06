@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { FileData } from '../models/file';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-file-upload',
@@ -7,13 +8,12 @@ import { FileData } from '../models/file';
   styleUrls: ['./file-upload.component.scss']
 })
 export class FileUploadComponent {
-  @Output() upload: EventEmitter<FileData> = new EventEmitter();
+  @Output() change: EventEmitter<FileData> = new EventEmitter();
 
-  uploaded = true;
   file: File;
   fileData: FileData;
 
-  constructor() {
+  constructor(private notificationService: NotificationService) {
     this.fileData = {
       name: '',
       content: ''
@@ -21,16 +21,28 @@ export class FileUploadComponent {
     this.file = null;
   }
 
-  fileDropped(file: File): void {
-    console.log('DROP');
-    this.file = file;
-    this.newUpload();
+  filesDropped(files: File[]): void {
+    const name = files[0].name.split('.');
+    const extension = name[name.length - 1];
+
+    if (files.length > 1) {
+      this.notificationService.warning('Csak egy fájlt lehet feltölteni!');
+    } else if (extension !== 'p4' && extension !== 'txt') {
+      this.notificationService.warning('Megengedett fájlformátumok: ".p4", ".txt"!');
+    } else {
+      this.file = files[0];
+      this.fileRead();
+    }
   }
 
-  onChange(fileList: FileList): void {
+  onUpload(fileList: FileList): void {
     console.log('ABLAK');
     this.file = fileList[0];
-    this.newUpload();
+    this.fileRead();
+  }
+
+  editFile() {
+
   }
 
   removeFile() {
@@ -38,22 +50,24 @@ export class FileUploadComponent {
     this.fileData.name = '';
     this.fileData.content = '';
     this.file = null;
-    this.newUpload();
+    this.onChange();
   }
 
-
-  newUpload(): void {
-    this.uploaded = false;
+  fileRead(): void {
     this.fileData.name = this.file.name;
 
     const fileReader: FileReader = new FileReader();
     const self = this;
     fileReader.onloadend = () => {
       self.fileData.content = fileReader.result.toString();
+      self.onChange();
     };
     fileReader.readAsText(this.file);
+  }
+
+  onChange() {
     console.log('KULDES');
-    this.upload.emit(this.fileData);
+    this.change.emit(this.fileData);
   }
 
   getName(): string {

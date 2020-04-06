@@ -9,16 +9,19 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { GraphComponent } from './graph/graph.component';
 import { HomeComponent } from './home/home.component';
 import { HelpComponent } from './help/help.component';
-import { MatAnimatedIconComponent } from './mat-animated-icon/mat-animated-icon.component';
-import { HoverClassDirective } from './hover-class.directive';
+import { MatAnimatedIconComponent } from './components/mat-animated-icon/mat-animated-icon.component';
+import { SnackBarTemplateComponent } from './components/snack-bar-template/snack-bar-template.component';
+import { HoverClassDirective } from './directives/hover-class.directive';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { MessageService } from 'src/app/services/message.service';
 import { HttpErrorHandler } from 'src/app/services/http-error-handler.service';
+import { NotificationService } from './services/notification.service';
 import { GraphViewComponent } from './graph-view/graph-view.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DragDropDirective } from './drag-drop.directive';
+import { DragDropDirective } from './directives/drag-drop.directive';
 import { FileUploadComponent } from './file-upload/file-upload.component';
+import { MAT_SNACK_BAR_DATA } from '@angular/material';
 
 import {
   MatAutocompleteModule,
@@ -63,6 +66,7 @@ import {
     GraphViewComponent,
     FileUploadComponent,
     MatAnimatedIconComponent,
+    SnackBarTemplateComponent,
     HoverClassDirective,
     DragDropDirective
   ],
@@ -76,18 +80,36 @@ import {
     ReactiveFormsModule,
 
     // Material
-    MatToolbarModule,
+    MatAutocompleteModule,
     MatButtonModule,
-    MatSidenavModule,
-    MatSnackBarModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatGridListModule,
     MatIconModule,
-    MatListModule,
-    MatProgressSpinnerModule,
-    MatTooltipModule,
-    MatMenuModule,
-    MatTabsModule,
-    MatFormFieldModule,
     MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatNativeDateModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatRadioModule,
+    MatRippleModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatSliderModule,
+    MatSlideToggleModule,
+    MatSnackBarModule,
+    MatStepperModule,
+    MatTableModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    MatFormFieldModule,
 
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -96,9 +118,12 @@ import {
     ])
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+  entryComponents: [SnackBarTemplateComponent],
   providers: [
     HttpErrorHandler,
-    MessageService
+    MessageService,
+    NotificationService,
+    { provide: MAT_SNACK_BAR_DATA, useValue: {} }
   ],
   bootstrap: [AppComponent]
 })

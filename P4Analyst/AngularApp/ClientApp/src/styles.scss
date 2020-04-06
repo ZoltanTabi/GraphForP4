@@ -3,21 +3,26 @@
 @import './scss/mixins';
 @import './scss/theme.scss';
 @import './scss/custom-component-themes.scss';
+@import './scss/notification.scss';
 
 .my-theme {
-    @include angular-material-theme($my-theme);
-    @include custom-components-theme($my-theme, $my-theme-info, 
-    $my-theme-success, $my-theme-warning, $my-theme-error);
+  @include angular-material-theme($my-theme);
+  @include custom-components-theme($my-theme, $my-theme-info, 
+  $my-theme-success, $my-theme-warning, $my-theme-error);
 }
 
 .my-dark-theme {
-    @include angular-material-theme($my-dark-theme);
-    @include custom-components-theme($my-dark-theme, $my-theme-info, 
-    $my-theme-success, $my-theme-warning, $my-theme-error);
-    /*mat-sidenav-content {
-      color: white;
-      background-color: black;
-    }*/
+  @include angular-material-theme($my-dark-theme);
+  @include custom-components-theme($my-dark-theme, $my-theme-info, 
+  $my-theme-success, $my-theme-warning, $my-theme-error);
+  mat-sidenav-content {
+    background-color: #303030 !important;
+    color: white !important;
+  }
+}
+
+.text-primary-color {
+  color: $primary !important;
 }
 
 a {
@@ -32,6 +37,14 @@ code {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+}
+
+.mat-icon-button:focus {
+  outline: none;
+}
+
+button.change-color {
+  margin-right: 20px !important;
 }
 
 /*.mat-icon:not([disabled]):hover {

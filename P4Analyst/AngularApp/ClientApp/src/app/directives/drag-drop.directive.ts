@@ -5,7 +5,7 @@ import { Directive, HostBinding, HostListener, Output, EventEmitter } from '@ang
 })
 
 export class DragDropDirective {
-  @Output() file: EventEmitter<File> = new EventEmitter();
+  @Output() files: EventEmitter<File[]> = new EventEmitter();
 
   @HostBinding('style.background') private background = '#eee';
 
@@ -26,7 +26,13 @@ export class DragDropDirective {
     event.stopPropagation();
     this.background = '#eee';
 
-    const name = event.dataTransfer.files[0].name.split('.');
+    const files = new Array<File>();
+    for (let i = 0; i < event.dataTransfer.files.length; ++i) {
+      files.push(event.dataTransfer.files.item(i));
+    }
+
+    this.files.emit(files);
+    /*const name = event.dataTransfer.files[0].name.split('.');
     const extension = name[name.length - 1];
 
     if (event.dataTransfer.files.length > 1) {
@@ -37,6 +43,6 @@ export class DragDropDirective {
       // TODO notificitaon
     } else {
       this.file.emit(event.dataTransfer.files[0]);
-    }
+    }*/
   }
 }

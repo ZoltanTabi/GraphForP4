@@ -221,7 +221,8 @@ namespace GraphForP4.Services
             graph.Add(actionNode);
             graph.AddEdge(tableNode, actionNode);
 
-            var actionMethod = Regex.Replace(GetMethod(ingressMethod, "action " + actionName),@" *; *", @";" + Environment.NewLine).Trim();
+            //A replace ideiglenes megoldás
+            var actionMethod = Regex.Replace(GetMethod(ingressMethod, "action " + actionName),@" *; *", @";" + "|||").Trim();
             actionMethod = Regex.Replace(actionMethod, @" +", " ");
             
             if(String.IsNullOrWhiteSpace(actionMethod))

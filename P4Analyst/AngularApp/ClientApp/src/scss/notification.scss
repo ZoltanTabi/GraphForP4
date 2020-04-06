@@ -1,0 +1,38 @@
+.info-notification {
+  background: blue;
+  color: black;
+  font-weight: bold;
+}
+
+.success-notification {
+  background: green;
+  color: black;
+  font-weight: bold;
+}
+
+.warning-notification {
+  background: yellow;
+  color: black;
+  font-weight: bold;
+}
+
+.error-notification{
+  background-color: red;
+  color: black;
+  font-weight: bold;
+}
+
+mat-icon.notification-icon {
+  margin-right: 0.2em;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mat-snack-bar-container {
+  max-width: 100% !important;
+}
+  

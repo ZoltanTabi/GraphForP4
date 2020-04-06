@@ -84,6 +84,7 @@ export class GraphComponent implements OnInit {
     if (draw || this.currentEdges.length !== 0) {
       const currentThis = this;
       graph.renderDot('digraph { ' + this.tuple[0] + ' ' + this.tuple[1] + ' } ', function() {
+        // document.getElementById("node1").getElementsByTagName("polygon")[0].setAttribute("fill", "#008000")
         currentThis.graphDrawing(++i, this);
       });
     } else {

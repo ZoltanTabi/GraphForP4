@@ -1,9 +1,7 @@
-@import 'app/nav-bar/nav-bar.component.scss-theme.scss';
+@import '../app/nav-bar/nav-bar.component.scss-theme';
 //@import 'app/dialog/dialog-content-example-dialog.scss-theme';
-//@import 'app/notification/notifications.scss-theme';
 
 @mixin custom-components-theme($theme, $theme-info, $theme-success, $theme-warnig, $theme-error) {
   @include nav-bar-component-theme($theme);
  // @include dialog-component-theme($theme);
- // @include notification-theme($theme-info, $theme-success, $theme-warnig, $theme-error);
 }

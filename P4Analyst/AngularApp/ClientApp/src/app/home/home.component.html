@@ -3,43 +3,27 @@
 </div>
 
 <mat-tab-group mat-stretch-tabs class="min-height" animationDuration="750ms">
-    <mat-tab label="Fájl feltöltés">
-
-        <app-file-upload (upload)="onUpload($event)"></app-file-upload>
-
-        <!--<label mat-button class="custom-file-upload">
-            <input type="file" accept=".txt,.p4" (change)="onChange($event.target.files)" style="display:none;"/>
-            Fájl kiválasztás
-            <mat-icon style="font-size:large;">
-                get_app
-            </mat-icon>
-        </label>
-        
-        <div>
-          <h3>File Content</h3>
-          <pre> {{fileData.content}} </pre>
-        </div>
-        
-        <div *ngIf="fileData.name">
-            <p>{{fileData.name}}</p>
-          <button mat-raised-button color="warn" class="m-btn" (click)="removeFile()">
-              Remove File
-              <mat-icon>
-                  delete
-              </mat-icon>
-          </button>
-        </div>-->
+    <mat-tab label="Fájl feltöltés" [disabled]="isCode()"
+        [matTooltipDisabled]="!isCode()" matTooltip="Fájlból feltöltéshez törölje ki a beírt szöveget!">
+        <!--<ng-template mat-tab-label>
+            <label  class="labelHeading"
+            [matTooltipDisabled]="!isCode()" matTooltip="Fájlból feltöltéshez törölje ki a beírt szöveget!">
+                Fájl feltöltés
+            </label>
+		</ng-template>-->
+        <app-file-upload (change)="onChange($event)"></app-file-upload>
     </mat-tab>
-    <mat-tab label="Szövegbevitel">
-        <mat-form-field class="input-textarea">
+    <mat-tab label="Szövegbevitel" [disabled]="isFile()"
+        [matTooltipDisabled]="!isFile()" matTooltip="Szövegbevitelhez törölje ki a feltöltött fájlt!">
+        <mat-form-field appearance="fill" class="input-textarea">
             <mat-label>Írd vagy másold be a kódot</mat-label>
-            <textarea matInput placeholder="control Ingress(inout headers hdr..."></textarea>
+            <textarea matInput [(ngModel)]="code" placeholder="control Ingress(inout headers hdr..."></textarea>
         </mat-form-field>
     </mat-tab>
 </mat-tab-group>
 
 <div class="next-btn">
-    <button mat-raised-button color="primary" class="m-btn" (click)="onNext()" [disabled]="fileData===null">
+    <button mat-raised-button color="primary" class="m-btn" (click)="onNext()" [disabled]="getNextDisabled()">
         Folytatás
         <mat-icon>
             send

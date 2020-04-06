@@ -17,23 +17,39 @@ import { FileData } from '../models/file';
 
 export class HomeComponent implements OnInit {
   fileData: FileData;
+  code: string;
 
   constructor(private homeService: HomeService, private router: Router) {
     this.fileData = {
       name: '',
       content: ''
     };
+    this.code = '';
   }
 
   ngOnInit(): void { }
 
-  onUpload(fileData: FileData) {
+  onChange(fileData: FileData) {
     console.log('Megérkezett');
     this.fileData = fileData;
-    this.fileData.name = this.fileData.name ? this.fileData.name : '';
+  }
+
+  getNextDisabled(): boolean {
+    return !this.isCode() && !this.isFile();
+  }
+
+  isCode(): Boolean {
+    return this.code !== '';
+  }
+
+  isFile(): Boolean {
+    return this.fileData.name !== '';
   }
 
   onNext() {
+    if (this.isCode()) {
+      this.fileData.content = this.code;
+    }
     this.homeService
       .sendFileContent(this.fileData)
       .subscribe(result => {

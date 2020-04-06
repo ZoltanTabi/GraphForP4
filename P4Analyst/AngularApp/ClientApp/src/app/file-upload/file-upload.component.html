@@ -1,20 +1,46 @@
-<div>
-  <div (click)="uploadFile.click()" (disabled)="!uploaded" class="col-12 rmpm dropzone"
-    appDrag (file)="fileDropped($event)">
+<ng-container *ngIf="file==null; else elseTemplate">
+  <div (click)="uploadFile.click()" class="col-12 rmpm dropzone dropzone-active" appDrag (files)="filesDropped($event)">
     <div class="text-wrapper">
-      <div class="centered">Drop your file here!</div>
-      <input #uploadFile type="file" accept=".txt,.p4" (change)="onChange($event.target.files)"
+      <div class="centered">
+        <mat-icon color="primary" style="font-size: 10em; height:100%; width: 100%;">
+          cloud_upload
+        </mat-icon>
+        <br>
+        <div>
+          Húzd ide a fájlokat
+        </div>
+        <div style="font-size: 2em;">
+          VAGY
+        </div>
+        <div text-primary-color>
+          Kattints a feltöltésért!
+        </div>
+      </div>
+      <input #uploadFile type="file" accept=".txt,.p4" (change)="onUpload($event.target.files)"
       style="display:none;"/>
     </div>
   </div>
-  <div>
-    <mat-form-field *ngIf="fileData.name">
-      <input matInput [value]="getName()" readonly>
-      <button mat-icon-button matSuffix color="warn" class="m-btn" (click)="removeFile()">
-        <mat-icon>
-            delete
-        </mat-icon>
-      </button>
-    </mat-form-field>
+</ng-container>
+
+<ng-template #elseTemplate>
+  <div class="col-12 rmpm dropzone">
+    <div class="text-wrapper">
+      <div class="centered">
+        <mat-form-field appearance="outline">
+          <input matInput [value]="getName()" readonly>
+          <button mat-mini-fab matSuffix color="accent" (click)="editFile()" style="margin-right: 0.2em;">
+            <mat-icon>
+                edit
+            </mat-icon>
+          </button>
+          <button mat-mini-fab matSuffix color="warn" (click)="removeFile()">
+            <mat-icon>
+                delete
+            </mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+    </div>
   </div>
-</div>
+</ng-template>
+

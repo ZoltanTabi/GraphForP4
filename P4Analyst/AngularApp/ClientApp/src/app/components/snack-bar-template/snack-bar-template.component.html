@@ -1,0 +1,9 @@
+<div class="flex">
+    <mat-icon class="notification-icon">{{data.icon}}</mat-icon>
+    <div class="data">{{data.message}}</div>
+    <div class="dismiss notification-icon">
+        <button mat-icon-button (click)="snackBarRef.dismiss()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+</div>

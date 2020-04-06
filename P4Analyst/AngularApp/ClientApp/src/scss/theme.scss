@@ -1,3 +1,5 @@
+@import '~@angular/material/theming';
+
 $my-theme-primary: mat-palette($mat-indigo, 700, 300, 900);
 $my-theme-accent: mat-palette($mat-grey, 700, 300, 900);
 $my-theme-warn: mat-palette($mat-red, 700, 300, 900);
@@ -11,3 +13,7 @@ $my-theme-info: mat-palette($mat-blue);
 $my-theme-success: mat-palette($mat-green);
 $my-theme-warning: mat-palette($mat-yellow);
 $my-theme-error: mat-palette($mat-red);
+
+$primary: mat-color($my-theme-primary);
+$accent: mat-color($my-theme-accent);
+$warn: mat-color($my-theme-warn);
