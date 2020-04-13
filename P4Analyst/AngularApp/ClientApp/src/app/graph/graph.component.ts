@@ -4,8 +4,7 @@ import * as d3 from 'd3';
 import { Node } from '../models/node';
 import { GraphService } from './graph.service';
 import { Router } from '@angular/router';
-import { error } from '@angular/compiler/src/util';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-graph',
@@ -24,7 +23,7 @@ export class GraphComponent implements OnInit {
   private graph: Array<Node>;
   private currentEdges: Array<[[string, string], string]>;
 
-  constructor(private graphService: GraphService, private router: Router, private snackBar: MatSnackBar) {
+  constructor(private graphService: GraphService, private router: Router, private notificationService: NotificationService) {
     this.loading = true;
     this.tuple = ['', ''];
     this.dontTouch = true;
@@ -43,9 +42,6 @@ export class GraphComponent implements OnInit {
           this.searcNode(0);
           this.startGraph(0);
         } else {
-          // this.graph.forEach(node => {
-          //  this.addTuple(node);
-          // });
           let i = 0;
           while (this.searcNode(i)) {
             ++i;
@@ -56,15 +52,8 @@ export class GraphComponent implements OnInit {
         }
       } else {
         this.loading = false;
-        this.snackBar.open('Üres a gráf', 'Hiba!', {
-          duration: 50000,
-          panelClass: ['error-snackbar']
-        });
+        this.notificationService.warning('Üres a gráf!');
       }
-    }, () => {
-        console.log(error);
-    }, () => {
-
     });
   }
 
@@ -114,37 +103,6 @@ export class GraphComponent implements OnInit {
     return draw;
   }
 
-  // addTuple(node: Node) {
-  //  this.tuple[0] += node.node[0] + ' ' + node.node[1] + ' ';
-  //  this.graph.forEach(item => {
-  //    item.edges.forEach(edge => {
-  //      if (edge[0][1] === node.node[0] && item.number <= node.number) {
-  //        this.tuple[1] += edge[0][0] + ' -> ' + edge[0][1] + ' ' + edge[1] + ' ';
-  //      }
-  //    });
-  //  });
-  //  node.edges.forEach(edge => {
-  //    this.graph.forEach(item => {
-  //      if (item.node[0] === edge[0][1] && item.number < node.number) {
-  //        this.tuple[1] += edge[0][0] + ' -> ' + edge[0][1] + ' ' + edge[1] + ' ';
-  //      }
-  //    });
-  //  });
-  // }
-
-  // otherEdge(i: number): boolean {
-  //  let find = false;
-  //  this.graph.forEach(item => {
-  //    if (item.number === i && item.edges.length > 0) {
-  //      find = true;
-  //      item.edges.forEach(edge => {
-  //        this.tuple[1] += edge[0][0] + ' -> ' + edge[0][1] + ' ' + edge[1] + ' ';
-  //      });
-  //    }
-  //  });
-  //  return find;
-  // }
-
   addHandler() {
     const nodes = d3.selectAll('.node');
     nodes.on('click', this.fieldClickHandler);
@@ -179,8 +137,6 @@ export class GraphComponent implements OnInit {
     if (datum.tag === 'svg') {
         const width = document.getElementById('mat-sidenav-content').offsetWidth;
         const height = document.getElementById('mat-sidenav-content').offsetHeight;
-        // const width = window.innerWidth;
-        // const height = window.innerHeight;
         datum.attributes.width = width - margin;
         datum.attributes.height = height - margin;
     }

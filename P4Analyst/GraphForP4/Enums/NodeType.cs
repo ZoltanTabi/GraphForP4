@@ -1,5 +1,5 @@
 ﻿
-namespace GraphForP4.Models
+namespace GraphForP4.Enums
 {
     public enum NodeType
     {

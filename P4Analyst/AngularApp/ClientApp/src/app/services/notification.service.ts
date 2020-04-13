@@ -32,7 +32,7 @@ export class NotificationService {
     this.open({
       data: {
         message: message,
-        icon: 'ok'
+        icon: 'check_circle'
       },
       panelClass: 'success-notification',
       horizontalPosition: horizontalPosition,

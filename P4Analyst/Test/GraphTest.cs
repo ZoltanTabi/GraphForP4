@@ -9,7 +9,7 @@ namespace Test
         [Fact]
         public void TestCreateGraph()
         {
-            var graph = P4ToGraph.Create(System.IO.File.ReadAllText(@"C:\Users\Tábi Zoltán\Desktop\hello.txt"));
+            var graph = P4ToGraph.ControlFlowGraph(System.IO.File.ReadAllText(@"C:\Users\Tábi Zoltán\Desktop\Egyetem\Szakdolgozat\GraphForP4\P4Analyst\AngularApp\Files\demo5.txt"));
 
             var angularGraph = GraphToAngular.Serialize(graph);
 

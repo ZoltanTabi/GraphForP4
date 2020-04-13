@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GraphForP4.Models
+namespace GraphForP4.Enums
 {
-    public enum NodeShape
+    public enum Operation
     {
-        Ellipse,
-        Diamond
+        Read,
+        Write
     }
 }

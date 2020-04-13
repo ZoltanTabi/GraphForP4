@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using GraphForP4.Enums;
 using GraphForP4.Models;
 
 namespace GraphForP4.Services
@@ -17,14 +18,16 @@ namespace GraphForP4.Services
         const string ACTIONS = "actions";
         private static readonly String[] CHARACTERS = { " ", "(", "{", "=" };
 
-        public static Graph Create(string input)
+        #region ControlFlowGraph
+        public static Graph ControlFlowGraph(string input)
         {
             Graph graph = new Graph();
             graph.Add(new Node
             {
                 FillColor = Color.Green,
                 Text = "Start",
-                Shape = NodeShape.Diamond
+                Shape = NodeShape.Diamond,
+                Tooltip = "Start"
             });
             List<Node> currentNodes = new List<Node>
             {
@@ -45,27 +48,14 @@ namespace GraphForP4.Services
             {
                 FillColor = Color.Red,
                 Text = "End",
-                Shape = NodeShape.Diamond
+                Shape = NodeShape.Diamond,
+                Tooltip = "End"
             });
 
             foreach(var node in currentNodes)
             {
                 graph.AddEdge(node, graph["End"]);
             }
-
-            //Parallel.ForEach(graph.Nodes, (node) =>
-            //{
-            //    foreach (var edge in node.Edges)
-            //    {
-            //        if (edge.Child.Type == NodeType.Skip)
-            //        {
-            //            foreach (var childEdge in edge.Child.Edges)
-            //            {
-            //                graph.AddEdge(edge.Parent, childEdge.Child);
-            //            }
-            //        }
-            //    }
-            //});
 
             for(var i = graph.Nodes.Count - 1; i >= 0; --i)
             {
@@ -102,11 +92,43 @@ namespace GraphForP4.Services
             (method, current) = Pop(method);
             while (!String.IsNullOrWhiteSpace(current))
             {
-                if(!current.Contains(IF))
+                if(current != IF)
                 {
-                    currentNodes = TableMethod(graph, currentNodes, 
-                                               Regex.Replace(current, @"\. *" + APPLY + @" *\( *\);", String.Empty).Trim(),
-                                               ingressMethod);
+                    if (current.Contains(APPLY))
+                    {
+                        currentNodes = TableMethod(graph, currentNodes,
+                                       Regex.Replace(current, @"\. *" + APPLY + @" *\( *\);", String.Empty).Trim(),
+                                       ingressMethod);
+                    }
+                    else if (current.Contains('('))
+                    {
+                        currentNodes = ActionMethod(graph, currentNodes,
+                                       Regex.Replace(current, @"\. *" + APPLY + @" *\( *\);", String.Empty).Trim(),
+                                       ingressMethod);
+                    }
+                    else
+                    {
+                        string actionMethod = current;
+                        while (!String.IsNullOrWhiteSpace(current) && !current.Contains(';'))
+                        {
+                            (method, current) = Pop(method);
+                            actionMethod += current;
+                        }
+                        var actionMethodNode = new Node()
+                        {
+                            Text = actionMethod,
+                            Type = NodeType.ActionMethod,
+                            Tooltip = actionMethod
+                        };
+
+                        graph.Add(actionMethodNode);
+                        foreach (var node in currentNodes)
+                        {
+                            graph.AddEdge(node, actionMethodNode);
+                        }
+
+                        currentNodes = new List<Node> { actionMethodNode };
+                    }
                 }
                 else
                 {
@@ -129,7 +151,6 @@ namespace GraphForP4.Services
                         }
                     }
 
-                    //currentNodes = currentNodes.Concat(IfMethod(graph, currentNodes, ifMethod + elseMethod, ingressMethod)).ToList();
                     currentNodes = IfMethod(graph, currentNodes, ifMethod + elseMethod, ingressMethod);
                 }
                 (method, current) = Pop(method);
@@ -141,10 +162,12 @@ namespace GraphForP4.Services
         private static List<Node> IfMethod(Graph graph, List<Node> currentNodes, String ifMethod, String ingressMethod)
         {
             var ifCondition = GetMethod(ifMethod, IF, '(', ')');
+            ifCondition = ifCondition.Insert(0, $"{IF} ");
             var ifNode = new Node
             {
                 Text = ifCondition,
-                Type = NodeType.If
+                Type = NodeType.If,
+                Tooltip = ifCondition
             };
 
             graph.Add(ifNode);
@@ -183,7 +206,8 @@ namespace GraphForP4.Services
             var tableNode = new Node
             {
                 Text = tableName,
-                Type = NodeType.Table
+                Type = NodeType.Table,
+                Tooltip = tableName
             };
 
             graph.Add(tableNode);
@@ -202,7 +226,7 @@ namespace GraphForP4.Services
                 if(action.Contains(";"))
                 {
                     currentNodes = currentNodes
-                                   .Concat(ActionMethod(graph, tableNode,
+                                   .Concat(ActionMethod(graph, new List<Node> { tableNode },
                                    Regex.Replace(action, @"( |;)", String.Empty).Trim(), ingressMethod)).ToList();
                 }
             }
@@ -210,19 +234,22 @@ namespace GraphForP4.Services
             return currentNodes;
         }
 
-        private static List<Node> ActionMethod(Graph graph, Node tableNode, String actionName, String ingressMethod)
+        private static List<Node> ActionMethod(Graph graph, List<Node> currentNodes, String actionName, String ingressMethod)
         {
             var actionNode = new Node
             {
                 Text = actionName,
-                Type = NodeType.Action
+                Type = NodeType.Action,
+                Tooltip = actionName
             };
 
             graph.Add(actionNode);
-            graph.AddEdge(tableNode, actionNode);
+            foreach(var node in currentNodes)
+            {
+                graph.AddEdge(node, actionNode);
+            }
 
-            //A replace ideiglenes megoldás
-            var actionMethod = Regex.Replace(GetMethod(ingressMethod, "action " + actionName),@" *; *", @";" + "|||").Trim();
+            var actionMethod = GetMethod(ingressMethod, "action " + actionName).Trim();
             actionMethod = Regex.Replace(actionMethod, @" +", " ");
             
             if(String.IsNullOrWhiteSpace(actionMethod))
@@ -233,7 +260,8 @@ namespace GraphForP4.Services
             var actionMethodNode = new Node
             {
                 Text = actionMethod,
-                Type = NodeType.ActionMethod
+                Type = NodeType.ActionMethod,
+                Tooltip = actionMethod
             };
 
             graph.Add(actionMethodNode);
@@ -241,11 +269,74 @@ namespace GraphForP4.Services
 
             return new List<Node> { actionMethodNode };
         }
+        #endregion
+
+        #region DataFlowGraph
+        public static Graph DataFlowGraph(string input, Graph controlFlowGraph)
+        {
+            var graph = new Graph();
+            graph.Add(controlFlowGraph[0]);
+
+            var queue = new Queue<Node>();
+            foreach(var edge in controlFlowGraph[0].Edges)
+            {
+                edge.Child.FillColor = Color.Gray;
+                queue.Enqueue(edge.Child);
+            }
+
+            while (queue.Any())
+            {
+                var node = queue.Dequeue();
+                foreach (var edge in node.Edges)
+                {
+                    var childNode = edge.Child;
+
+                    switch(childNode.Type)
+                    {
+                        case NodeType.If:
+                            IfNode();
+                            break;
+
+                        case NodeType.Table:
+                            TableNode();
+                            break;
+
+                        case NodeType.ActionMethod:
+                            ActionMethodNode();
+                            break;
+                    }
+
+                    if(childNode.FillColor == Color.White)
+                    {
+                        queue.Enqueue(childNode);
+                    }
+                }
+                node.FillColor = Color.Black;
+            }
+
+            return graph;
+        }
+
+        private static void IfNode()
+        {
+
+        }
+
+        private static void TableNode()
+        {
+
+        }
+
+        private static void ActionMethodNode()
+        {
+
+        }
+        #endregion
+
+        #region Helper Methods
         private static string InputClean(string input)
         {
-            input = Regex.Replace(input, "<[^0-9]*>", " ");
-            input = Regex.Replace(input, @"/\*(.*)\*/", " ");
-            input = Regex.Replace(input, @"[\n\r]", " ");
+            input = Regex.Replace(input, @"(<[^0-9]*>)|(//(.*?)\r?\n)|(/\*(.*)\*/)|([\n\r])", " ");
             input = Regex.Unescape(input);
 
             return input;
@@ -303,6 +394,6 @@ namespace GraphForP4.Services
             list.RemoveAt(0);
             return (list, currentFirst);
         }
-
+        #endregion
     }
 }

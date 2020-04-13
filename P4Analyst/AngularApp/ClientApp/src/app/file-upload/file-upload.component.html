@@ -1,15 +1,15 @@
-<ng-container *ngIf="file==null; else elseTemplate">
+<ng-container *ngIf="file==null; else elseTemplate" class="max-height">
   <div (click)="uploadFile.click()" class="col-12 rmpm dropzone dropzone-active" appDrag (files)="filesDropped($event)">
     <div class="text-wrapper">
       <div class="centered">
-        <mat-icon color="primary" style="font-size: 10em; height:100%; width: 100%;">
+        <mat-icon color="primary" style="font-size: 15vw; height:100%; width: 100%;">
           cloud_upload
         </mat-icon>
         <br>
         <div>
           Húzd ide a fájlokat
         </div>
-        <div style="font-size: 2em;">
+        <div style="font-size: 2vw;">
           VAGY
         </div>
         <div text-primary-color>
@@ -22,18 +22,19 @@
   </div>
 </ng-container>
 
-<ng-template #elseTemplate>
+<ng-template #elseTemplate class="max-height">
   <div class="col-12 rmpm dropzone">
     <div class="text-wrapper">
       <div class="centered">
         <mat-form-field appearance="outline">
           <input matInput [value]="getName()" readonly>
-          <button mat-mini-fab matSuffix color="accent" (click)="editFile()" style="margin-right: 0.2em;">
+          <button mat-mini-fab matSuffix color="primary" (click)="editFile()" style="margin-right: 0.2em;"
+            matTooltip="Szerkesztés">
             <mat-icon>
                 edit
             </mat-icon>
           </button>
-          <button mat-mini-fab matSuffix color="warn" (click)="removeFile()">
+          <button mat-mini-fab matSuffix color="warn" (click)="removeFile()" matTooltip="Törlés">
             <mat-icon>
                 delete
             </mat-icon>

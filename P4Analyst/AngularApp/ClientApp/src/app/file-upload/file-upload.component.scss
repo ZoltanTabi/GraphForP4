@@ -1,16 +1,18 @@
 .dropzone {
-  min-height: 400px;
-  min-width: 400px;
+  //min-height: 400px;
+  //min-width: 400px;
   display: table;
   margin: 0px 20px 0px 20px;
   width: calc(100% - 40px);
+  height: 100%;
   background-color: #eee;
   border: dotted 1px #aaa;
+  padding: 0;
 }
 
 .dropzone-active {
   :hover {
-    background-color: #aaa;
+    background: #aaa;
   }
   cursor: pointer;
 }

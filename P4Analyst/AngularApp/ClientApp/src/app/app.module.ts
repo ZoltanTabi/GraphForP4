@@ -21,6 +21,7 @@ import { GraphViewComponent } from './graph-view/graph-view.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DragDropDirective } from './directives/drag-drop.directive';
 import { FileUploadComponent } from './file-upload/file-upload.component';
+import { EditDialogComponent } from './home/edit-dialog/edit-dialog.component';
 import { MAT_SNACK_BAR_DATA } from '@angular/material';
 
 import {
@@ -67,6 +68,7 @@ import {
     FileUploadComponent,
     MatAnimatedIconComponent,
     SnackBarTemplateComponent,
+    EditDialogComponent,
     HoverClassDirective,
     DragDropDirective
   ],
@@ -118,7 +120,7 @@ import {
     ])
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  entryComponents: [SnackBarTemplateComponent],
+  entryComponents: [SnackBarTemplateComponent, EditDialogComponent],
   providers: [
     HttpErrorHandler,
     MessageService,

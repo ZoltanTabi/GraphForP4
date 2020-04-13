@@ -1,0 +1,16 @@
+<h1 mat-dialog-title attr.color="primary">Szerkesztés
+    <div class="dismiss notification-icon" style="text-align: right;">
+        <button mat-icon-button (click)="onNoClick()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+</h1>
+<div mat-dialog-content>
+    <mat-form-field appearance="fill" class="input-textarea">
+        <textarea matInput [(ngModel)]="data.content"></textarea>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions class="next-btn">
+    <button mat-raised-button (click)="onNoClick()">Mégsem</button>
+    <button mat-raised-button color="primary" [mat-dialog-close]="data.content" cdkFocusInitial>Mentés</button>
+</div>

@@ -25,36 +25,53 @@ namespace AngularApp.Controllers
         {
             logger.LogInformation("Gráf lekérdezése", type);
 
-            var success = Enum.TryParse(type, true, out Key key);
-
-            if(success)
+            try
             {
+                var success = Enum.TryParse(type, true, out Key key);
+
+                if (!success) return BadRequest("Érvénytelen behívás!");
+
                 var graph = SessionExtension.GetGraph(session, key);
+
+                if (graph == null) return BadRequest("Kérem töltsön fel először fájlt!");
+
                 return Ok(GraphToAngular.Serialize(graph));
             }
-            else
+            catch (ApplicationException ex)
             {
-                return NotFound();
+                return BadRequest(ex.Message);
             }
-           
+            catch (Exception)
+            {
+                return BadRequest("Váratlan hiba!");
+            }
         }
 
         [HttpPost]
-        public FileData FileUpload([FromBody]FileData file)
+        public IActionResult FileUpload([FromBody]FileData file)
         {
             logger.LogInformation("Fájl beküldése", file);
 
-            file.Name = "Failed";
-            if(file.Content != null && !string.IsNullOrWhiteSpace(file.Content))
+            try
             {
-                var graph = P4ToGraph.Create(file.Content);
+                if (file.Content == null || string.IsNullOrWhiteSpace(file.Content)) return BadRequest("Üres fájl!");
 
-                SessionExtension.SetGraph(session, Key.ControlFlowGraph, graph);
-                file.Name = "Success";
-                logger.LogInformation("Gráf megalkotása", graph);
+                var controlFlowGraph = P4ToGraph.ControlFlowGraph(file.Content);
+                SessionExtension.SetGraph(session, Key.ControlFlowGraph, controlFlowGraph);
+
+                var dataFlowGraph = P4ToGraph.DataFlowGraph(file.Content, controlFlowGraph);
+                SessionExtension.SetGraph(session, Key.DataFlowGraph, dataFlowGraph);
+
+                return Ok(file);
             }
-
-            return file;
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Váratlan hiba!");
+            }
         }
     }
 }

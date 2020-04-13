@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -21,7 +22,6 @@ namespace GraphForP4.Services
             Parallel.ForEach(graph.Nodes, (node) =>
             {
                 if (MainNode(graph, node)) currentNodes.Add(node);
-                node.Text = node.Text.Insert(0, "\"") + "\"";
             });
 
             while (currentNodes.Any())
@@ -40,20 +40,25 @@ namespace GraphForP4.Services
                 var item = new AngularNode
                 {
                     Number = level,
-                    Node = new Tuple<string, string>(node.Text, node.ToString()),
+                    Node = new Tuple<string, string>($"\"{node.Id}\"", node.ToString()),
                     Edges = new List<Tuple<Tuple<string, string>, string>>()
                 };
                 foreach(var edge in node.Edges)
                 {
                     item.Edges.Add(new Tuple<Tuple<string, string>, string>
-                                    (new Tuple<string, string>(edge.Parent.Text, edge.Child.Text), edge.ToString())
+                                    (new Tuple<string, string>(edge.Parent.Id.ToString(), edge.Child.Id.ToString()), edge.ToString())
                                   );
-                    childNodes.Add(edge.Child);
+                    node.FillColor = Color.Black;
+                    if (edge.Child.FillColor == Color.White) childNodes.Add(edge.Child);
                 }
+
+                if(node.ParentId != null)
+                {
+                    item.ParentId = node.ParentId.ToString();
+                }
+
                 angularGraph.Add(item);
             });
-
-            CheckExisting(childNodes, angularGraph);
 
             return (childNodes.Distinct().ToList(), ++level);
         }
@@ -73,7 +78,7 @@ namespace GraphForP4.Services
             return !find;
         }
 
-        private static void CheckExisting(List<Node> childNodes, List<AngularNode> angularGraph)
+        /*private static void CheckExisting(List<Node> childNodes, List<AngularNode> angularGraph)
         {
             foreach(var angularNode in angularGraph)
             {
@@ -82,6 +87,6 @@ namespace GraphForP4.Services
                     if (childNodes[i].Text == angularNode.Node.Item1) childNodes.Remove(childNodes[i]);
                 }
             }
-        }
+        }*/
     }
 }

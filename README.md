@@ -8,4 +8,4 @@ Telepítsd a Visual Studio 2019-et és hozzá a .Net Core 3.1
 ## Futtatás
 
 Visual Studio 2019-ben nyisd meg a solution-t és indítsd el az AngularApp projektet.
-Markup : * Első indításkor pár percbe is beletelik, mire az npm telepíti a szükséges kiegészítőket.
+- Első indításkor pár percbe is beletelik, mire az npm telepíti a szükséges kiegészítőket.

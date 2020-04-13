@@ -4,6 +4,7 @@
 @import './scss/theme.scss';
 @import './scss/custom-component-themes.scss';
 @import './scss/notification.scss';
+@import './scss/dialog.scss-theme.scss';
 
 .my-theme {
   @include angular-material-theme($my-theme);
@@ -15,9 +16,9 @@
   @include angular-material-theme($my-dark-theme);
   @include custom-components-theme($my-dark-theme, $my-theme-info, 
   $my-theme-success, $my-theme-warning, $my-theme-error);
-  mat-sidenav-content {
-    background-color: #303030 !important;
-    color: white !important;
+  .dropzone {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
   }
 }
 
@@ -43,8 +44,24 @@ code {
   outline: none;
 }
 
+mat-icon.play {
+  color: green;
+}
+
+mat-icon.pause {
+  color: red;
+}
+
+.mat-mini-fab:focus {
+  outline: none;
+}
+
 button.change-color {
   margin-right: 20px !important;
+}
+
+.max-height {
+  height: 100%;
 }
 
 /*.mat-icon:not([disabled]):hover {

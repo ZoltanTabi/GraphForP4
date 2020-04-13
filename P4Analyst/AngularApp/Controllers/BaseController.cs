@@ -19,5 +19,21 @@ namespace AngularApp.Controllers
             this.session = http.HttpContext.Session;
             this.logger = logger;
         }
-}
+
+        protected IActionResult ReturnAction(ActionResult action)
+        {
+            try
+            {
+                return action;
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Váratlan hiba!");
+            }
+        }
+    }
 }

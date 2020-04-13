@@ -27,7 +27,7 @@ export class GraphService {
 
     return this.http.get<Array<Node>>(this.baseUrl + 'graph/' + type)
       .pipe(
-        catchError(this.handleError<Array<Node>>('sendFileContent', []))
+        catchError(this.handleError<Array<Node>>('getGraph', []))
       );
   }
 }

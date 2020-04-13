@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GraphForP4.Enums;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -147,7 +148,10 @@ namespace GraphForP4.Models
             foreach (var node in Nodes)
             {
                 node.Edges = GetEdges(edges.First(x => x.Key == node.Id).Value, node);
-                node.Text = Regex.Replace(node.Text, @"[|||]", Environment.NewLine);
+                if(node.Type == NodeType.ActionMethod)
+                {
+                    node.Text = Regex.Replace(node.Text, @" *; *", ";" + Environment.NewLine);
+                }
             }
         }
 

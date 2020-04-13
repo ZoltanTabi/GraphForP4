@@ -12,7 +12,7 @@ export class DragDropDirective {
   @HostListener('dragover', ['$event']) public onDragOver(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    this.background = '#999';
+    this.background = '#aaa';
   }
 
   @HostListener('dragleave', ['$event']) public onDragLeave(event: DragEvent) {
@@ -32,17 +32,5 @@ export class DragDropDirective {
     }
 
     this.files.emit(files);
-    /*const name = event.dataTransfer.files[0].name.split('.');
-    const extension = name[name.length - 1];
-
-    if (event.dataTransfer.files.length > 1) {
-      console.log('SOK');
-      // TODO notification
-    } else if (extension !== 'p4' && extension !== 'txt') {
-      console.log('ROSSZ FAJL');
-      // TODO notificitaon
-    } else {
-      this.file.emit(event.dataTransfer.files[0]);
-    }*/
   }
 }

@@ -30,9 +30,9 @@ textarea.mat-input-element {
     height: 100%;
 }
 
-mat-tab-group.min-height {
+/*mat-tab-group.min-height {
     min-height: 76%;
-}
+}*/
 
 ::ng-deep .mat-tab-body-wrapper {
     flex-grow: 1;
@@ -51,4 +51,9 @@ mat-tab-group.min-height {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+}
+
+.flex-divs {
+    display: flex;
+    flex-direction: column;
 }

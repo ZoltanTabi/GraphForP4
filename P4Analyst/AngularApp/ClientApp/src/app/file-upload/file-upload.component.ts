@@ -1,6 +1,8 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { FileData } from '../models/file';
 import { NotificationService } from '../services/notification.service';
+import { MatDialog } from '@angular/material';
+import { EditDialogComponent } from '../home/edit-dialog/edit-dialog.component';
 
 @Component({
   selector: 'app-file-upload',
@@ -13,7 +15,7 @@ export class FileUploadComponent {
   file: File;
   fileData: FileData;
 
-  constructor(private notificationService: NotificationService) {
+  constructor(private notificationService: NotificationService, public dialog: MatDialog) {
     this.fileData = {
       name: '',
       content: ''
@@ -42,7 +44,19 @@ export class FileUploadComponent {
   }
 
   editFile() {
+    const dialogRef = this.dialog.open(EditDialogComponent, {
+      height: '30vw',
+      width: '55vw',
+      panelClass: 'my-theme',
+      data: { content: this.fileData.content }
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.fileData.content = result;
+        this.notificationService.success('Sikeres szerkesztés!');
+      }
+    });
   }
 
   removeFile() {

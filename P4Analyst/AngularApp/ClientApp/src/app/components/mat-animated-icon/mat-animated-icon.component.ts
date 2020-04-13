@@ -14,6 +14,7 @@ export class MatAnimatedIconComponent implements OnInit {
   @Input() colorEnd: String;
   @Input() animate: boolean;
   @Input() animateFromParent = false;
+  @Input() playAndPause = false;
 
   constructor() { }
 

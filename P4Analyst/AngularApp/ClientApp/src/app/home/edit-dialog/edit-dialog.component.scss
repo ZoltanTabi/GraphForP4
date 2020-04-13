@@ -1,0 +1,23 @@
+mat-form-field.input-textarea {
+    margin: 0px 20px 0px 20px;
+    width: calc(100% - 40px);
+    height: 100%;
+}
+
+::ng-deep .mat-form-field-flex {
+    height: 100%;
+}
+
+::ng-deep .mat-form-field-infix {
+    height: 100%;
+}
+
+textarea.mat-input-element {
+    resize: none;
+    height: 100%;
+}
+
+.next-btn {
+    text-align: right;
+    padding: 0px 40px 20px 0px;
+}
