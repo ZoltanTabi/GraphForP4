@@ -9,9 +9,12 @@ namespace Test
         [Fact]
         public void TestCreateGraph()
         {
-            var graph = P4ToGraph.ControlFlowGraph(System.IO.File.ReadAllText(@"C:\Users\Tábi Zoltán\Desktop\Egyetem\Szakdolgozat\GraphForP4\P4Analyst\AngularApp\Files\demo5.txt"));
+            var content = System.IO.File.ReadAllText(@"C:\Users\Tábi Zoltán\Desktop\Egyetem\Szakdolgozat\GraphForP4\P4Analyst\AngularApp\Files\hello.txt");
+            var graph = P4ToGraph.ControlFlowGraph(ref content);
+            var graph1 = P4ToGraph.DataFlowGraph(content, graph);
 
             var angularGraph = GraphToAngular.Serialize(graph);
+            var angularGraph1 = GraphToAngular.Serialize(graph1);
 
             Assert.Equal("ipv4_lpm", graph[0].Text);
             Assert.Equal("ipv4_forward", graph[1].Text);

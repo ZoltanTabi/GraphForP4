@@ -9,6 +9,7 @@ namespace GraphForP4.Enums
         Action,
         If,
         Skip,
-        ActionMethod
+        ActionMethod,
+        Key
     }
 }

@@ -56,10 +56,11 @@ namespace AngularApp.Controllers
             {
                 if (file.Content == null || string.IsNullOrWhiteSpace(file.Content)) return BadRequest("Üres fájl!");
 
-                var controlFlowGraph = P4ToGraph.ControlFlowGraph(file.Content);
+                var content = file.Content;
+                var controlFlowGraph = P4ToGraph.ControlFlowGraph(ref content);
                 SessionExtension.SetGraph(session, Key.ControlFlowGraph, controlFlowGraph);
 
-                var dataFlowGraph = P4ToGraph.DataFlowGraph(file.Content, controlFlowGraph);
+                var dataFlowGraph = P4ToGraph.DataFlowGraph(content, controlFlowGraph);
                 SessionExtension.SetGraph(session, Key.DataFlowGraph, dataFlowGraph);
 
                 return Ok(file);

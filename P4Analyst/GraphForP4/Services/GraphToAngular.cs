@@ -40,13 +40,13 @@ namespace GraphForP4.Services
                 var item = new AngularNode
                 {
                     Number = level,
-                    Node = new Tuple<string, string>($"\"{node.Id}\"", node.ToString()),
+                    Node = new Tuple<string, string>($"{node.Id.ToString().Replace("-", String.Empty)}", node.ToString()),
                     Edges = new List<Tuple<Tuple<string, string>, string>>()
                 };
                 foreach(var edge in node.Edges)
                 {
                     item.Edges.Add(new Tuple<Tuple<string, string>, string>
-                                    (new Tuple<string, string>(edge.Parent.Id.ToString(), edge.Child.Id.ToString()), edge.ToString())
+                                    (new Tuple<string, string>(edge.Parent.Id.ToString().Replace("-", String.Empty), edge.Child.Id.ToString().Replace("-", String.Empty)), edge.ToString())
                                   );
                     node.FillColor = Color.Black;
                     if (edge.Child.FillColor == Color.White) childNodes.Add(edge.Child);
