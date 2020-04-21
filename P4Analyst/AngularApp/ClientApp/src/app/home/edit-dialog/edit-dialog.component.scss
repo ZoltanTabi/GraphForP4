@@ -12,12 +12,15 @@ mat-form-field.input-textarea {
     height: 100%;
 }
 
+::ng-deep.mat-form-field-underline {
+    position: initial;
+}
+
 textarea.mat-input-element {
     resize: none;
     height: 100%;
 }
 
 .next-btn {
-    text-align: right;
-    padding: 0px 40px 20px 0px;
+    float: right;
 }

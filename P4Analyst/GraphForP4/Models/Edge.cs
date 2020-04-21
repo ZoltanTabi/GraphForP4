@@ -13,12 +13,5 @@ namespace GraphForP4.Models
         public Color Color { get; set; } = Color.Black;
         public EdgeArrowType EdgeArrowType { get; set; } = EdgeArrowType.Normal;
         public EdgeStyle EdgeStyle { get; set; } = EdgeStyle.None;
-
-        public override string ToString()
-        {
-            return $"[color=\"#{Color.R:X2}{Color.G:X2}{Color.B:X2}\", "
-                 + $"arrowType=\"{EdgeArrowType.ToString("g").ToLower()}\", "
-                 + $"style=\"{EdgeStyle.ToString("g").ToLower()}\"]";
-        }
     }
 }

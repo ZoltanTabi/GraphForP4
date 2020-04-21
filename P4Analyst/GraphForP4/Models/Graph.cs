@@ -57,7 +57,6 @@ namespace GraphForP4.Models
             }
 
             builder.Append("]}");
-            var result = builder.ToString();
 
             return builder.ToString();
         }

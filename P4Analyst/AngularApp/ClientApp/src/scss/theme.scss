@@ -9,11 +9,6 @@ $my-dark-theme-primary: mat-palette($mat-purple, 700, 300, 900);
 $my-theme: mat-light-theme($my-theme-primary, $my-theme-accent, $my-theme-warn);
 $my-dark-theme: mat-dark-theme($my-dark-theme-primary, $my-theme-accent, $my-theme-warn);
 
-$my-theme-info: mat-palette($mat-blue);
-$my-theme-success: mat-palette($mat-green);
-$my-theme-warning: mat-palette($mat-yellow);
-$my-theme-error: mat-palette($mat-red);
-
 $primary: mat-color($my-theme-primary);
 $accent: mat-color($my-theme-accent);
 $warn: mat-color($my-theme-warn);

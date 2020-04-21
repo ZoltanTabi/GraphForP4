@@ -280,7 +280,8 @@ namespace GraphForP4.Services
             {
                 Text = "Start",
                 FillColor = Color.Green,
-                Tooltip = "Start"
+                Tooltip = "Start",
+                Shape = NodeShape.Diamond
             });
 
             foreach(var node in controlFlowGraph.Nodes)
@@ -467,6 +468,8 @@ namespace GraphForP4.Services
 
                 if (tokens.Length < 2) continue;
 
+                var subgraph = Guid.NewGuid();
+
                 var firstToken = new Node()
                 {
                     ModifiedAndUse = false,
@@ -476,7 +479,8 @@ namespace GraphForP4.Services
                     Text = Regex.Replace(tokens[0], @"{|}|;", String.Empty).Trim(),
                     Tooltip = Regex.Replace(tokens[0], @"{|}|;", String.Empty).Trim(),
                     Type = NodeType.ActionMethod,
-                    Shape = NodeShape.Circle
+                    Shape = NodeShape.Circle,
+                    SubGraph = subgraph
                 };
 
                 var secondToken = new Node()
@@ -488,7 +492,8 @@ namespace GraphForP4.Services
                     Text = Regex.Replace(tokens[1], @"{|}|;", String.Empty).Trim(),
                     Tooltip = Regex.Replace(tokens[1], @"{|}|;", String.Empty).Trim(),
                     Type = NodeType.ActionMethod,
-                    Shape = NodeShape.Box
+                    Shape = NodeShape.Box,
+                    SubGraph = subgraph
                 };
 
                 firstToken.Edges.Add(new Edge()

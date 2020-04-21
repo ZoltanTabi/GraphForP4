@@ -1,6 +1,14 @@
+import { Edge } from './edge';
+
 export interface Node {
-  parentId?: string;
-  node: [string, string];
-  edges: Array<[[string, string], string]>;
+  id: string;
   number: number;
+  text: string;
+  parentId: string;
+  subGraph: string;
+  tooltip: string;
+  edges: Edge[];
+  fillColor: string;
+  fontColor: string;
+  shape: number;
 }

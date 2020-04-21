@@ -1,11 +1,12 @@
-<h1 mat-dialog-title attr.color="primary">Szerkesztés
-    <div class="dismiss notification-icon" style="text-align: right;">
-        <button mat-icon-button (click)="onNoClick()">
-            <mat-icon>close</mat-icon>
-        </button>
-    </div>
-</h1>
-<div mat-dialog-content>
+<div class="dialog-header" attr.color="primary">
+    <h1 mat-dialog-title>Szerkesztés</h1>
+    <button mat-icon-button class="dialog-close-button" (click)="onNoClick()">
+      <mat-icon>
+        close
+      </mat-icon>
+    </button>
+</div>
+<div mat-dialog-content class="dialog-content-with-title-actions">
     <mat-form-field appearance="fill" class="input-textarea">
         <textarea matInput [(ngModel)]="data.content"></textarea>
     </mat-form-field>

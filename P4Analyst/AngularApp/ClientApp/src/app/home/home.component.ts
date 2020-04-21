@@ -30,7 +30,6 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void { }
 
   onChange(fileData: FileData) {
-    console.log('Megérkezett');
     this.fileData = fileData;
   }
 
@@ -52,11 +51,7 @@ export class HomeComponent implements OnInit {
     }
     this.homeService
       .sendFileContent(this.fileData)
-      .subscribe(result => {
-        this.fileData.name = result.name;
-      }, () => {
-        console.log(error);
-      }, () => {
+      .subscribe(() => {
         this.navigate();
       });
   }

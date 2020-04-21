@@ -35,31 +35,38 @@ namespace GraphForP4.Services
         private static (List<Node>, int) GenerateLevel(List<AngularNode> angularGraph, List<Node> currentNodes, int level)
         {
             var childNodes = new List<Node>();
-            Parallel.ForEach(currentNodes, (node) =>
+            currentNodes.ForEach(node =>
             {
                 var item = new AngularNode
                 {
+                    Text = node.Text,
+                    Id = node.Id.ToString().Replace("-", String.Empty),
                     Number = level,
-                    Node = new Tuple<string, string>($"{node.Id.ToString().Replace("-", String.Empty)}", node.ToString()),
-                    Edges = new List<Tuple<Tuple<string, string>, string>>()
+                    FillColor = $"#{node.FillColor.R:X2}{node.FillColor.G:X2}{node.FillColor.B:X2}",
+                    FontColor = $"#{node.FontColor.R:X2}{node.FontColor.G:X2}{node.FontColor.B:X2}",
+                    Shape = (int)node.Shape,
+                    Tooltip = node.Tooltip,
+                    ParentId = node.ParentId != null ? node.ParentId.ToString().Replace("-", String.Empty) : String.Empty,
+                    SubGraph = node.SubGraph != null ? node.SubGraph.ToString().Replace("-", String.Empty) : String.Empty,
+                    Edges = new List<AngularEdge>()
                 };
-                foreach(var edge in node.Edges)
-                {
-                    item.Edges.Add(new Tuple<Tuple<string, string>, string>
-                                    (new Tuple<string, string>(edge.Parent.Id.ToString().Replace("-", String.Empty), edge.Child.Id.ToString().Replace("-", String.Empty)), edge.ToString())
-                                  );
-                    node.FillColor = Color.Black;
-                    if (edge.Child.FillColor == Color.White) childNodes.Add(edge.Child);
-                }
 
-                if(node.ParentId != null)
+                foreach (var edge in node.Edges)
                 {
-                    item.ParentId = node.ParentId.ToString();
+                    item.Edges.Add(new AngularEdge()
+                    {
+                        Parent = edge.Parent.Id.ToString().Replace("-", String.Empty),
+                        Child = edge.Child.Id.ToString().Replace("-", String.Empty),
+                        Color = $"#{edge.Color.R:X2}{edge.Color.G:X2}{edge.Color.B:X2}",
+                        EdgeArrowType = (int)edge.EdgeArrowType,
+                        EdgeStyle = (int)edge.EdgeStyle
+                    });
                 }
 
                 angularGraph.Add(item);
             });
 
+            CheckExisting(childNodes, angularGraph);
             return (childNodes.Distinct().ToList(), ++level);
         }
 
@@ -78,15 +85,15 @@ namespace GraphForP4.Services
             return !find;
         }
 
-        /*private static void CheckExisting(List<Node> childNodes, List<AngularNode> angularGraph)
+        private static void CheckExisting(List<Node> childNodes, List<AngularNode> angularGraph)
         {
             foreach(var angularNode in angularGraph)
             {
                 for(var i = childNodes.Count - 1; i >= 0; --i)
                 {
-                    if (childNodes[i].Text == angularNode.Node.Item1) childNodes.Remove(childNodes[i]);
+                    if (childNodes[i].Id.ToString().Replace("-", String.Empty) == angularNode.Id) childNodes.Remove(childNodes[i]);
                 }
             }
-        }*/
+        }
     }
 }

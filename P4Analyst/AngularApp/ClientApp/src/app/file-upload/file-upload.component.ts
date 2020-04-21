@@ -38,7 +38,6 @@ export class FileUploadComponent {
   }
 
   onUpload(fileList: FileList): void {
-    console.log('ABLAK');
     this.file = fileList[0];
     this.fileRead();
   }
@@ -60,7 +59,6 @@ export class FileUploadComponent {
   }
 
   removeFile() {
-    console.log('DELETE');
     this.fileData.name = '';
     this.fileData.content = '';
     this.file = null;
@@ -80,7 +78,6 @@ export class FileUploadComponent {
   }
 
   onChange() {
-    console.log('KULDES');
     this.change.emit(this.fileData);
   }
 

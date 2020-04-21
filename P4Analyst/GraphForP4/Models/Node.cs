@@ -18,18 +18,9 @@ namespace GraphForP4.Models
 
         //DataFlowGraph Node
         public Guid? ParentId { get; set; }
+        public Guid? SubGraph { get; set; }
         public Operation? Operation { get; set; }
         public int? Modified { get; set; }
         public bool? ModifiedAndUse { get; set; }
-
-
-        public override string ToString()
-        {
-            return $"[label=\"{Text}\", "
-                 + $"tooltip=\"{Tooltip}\", "
-                 + $"fillcolor=\"#{FillColor.R:X2}{FillColor.G:X2}{FillColor.B:X2}\", "
-                 + $"fontcolor=\"#{FontColor.R:X2}{FontColor.G:X2}{FontColor.B:X2}\", "
-                 + $"shape=\"{Shape.ToString("g").ToLower()}\"]";
-        }
     }
 }

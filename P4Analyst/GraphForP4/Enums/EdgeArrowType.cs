@@ -1,5 +1,4 @@
-﻿
-namespace GraphForP4.Enums
+﻿namespace GraphForP4.Enums
 {
     public enum EdgeArrowType
     {

@@ -4,27 +4,25 @@
 @import './scss/theme.scss';
 @import './scss/custom-component-themes.scss';
 @import './scss/notification.scss';
-@import './scss/dialog.scss-theme.scss';
+@import './scss/dialog.scss';
 
 .my-theme {
   @include angular-material-theme($my-theme);
-  @include custom-components-theme($my-theme, $my-theme-info, 
-  $my-theme-success, $my-theme-warning, $my-theme-error);
+  @include custom-components-theme($my-theme);
 }
 
 .my-dark-theme {
   @include angular-material-theme($my-dark-theme);
-  @include custom-components-theme($my-dark-theme, $my-theme-info, 
-  $my-theme-success, $my-theme-warning, $my-theme-error);
+  @include custom-components-theme($my-dark-theme);
   .dropzone {
     background-color: rgba(255, 255, 255, 0.1) !important;
     color: rgba(255, 255, 255, 0.7) !important;
   }
 }
 
-.text-primary-color {
+/*.text-primary-color {
   color: $primary !important;
-}
+}*/
 
 a {
   color: #0366d6;
@@ -63,10 +61,6 @@ button.change-color {
 .max-height {
   height: 100%;
 }
-
-/*.mat-icon:not([disabled]):hover {
-  background-color: rgba(158, 158, 158, 0.2);
-}*/
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

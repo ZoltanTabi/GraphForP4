@@ -30,9 +30,10 @@ export class HttpErrorHandler {
       if (error.status === 404) {
         this.router.navigateByUrl('/help');
       } else {
-        this.notificationService.error(error.error['message']);
-        if (error.error['route']) {
-          this.router.navigateByUrl(error.error['route']);
+        if (error.error.length > 0) {
+          this.notificationService.error(error.error);
+        } else {
+          this.notificationService.error('Váratlan hiba!');
         }
       }
 
