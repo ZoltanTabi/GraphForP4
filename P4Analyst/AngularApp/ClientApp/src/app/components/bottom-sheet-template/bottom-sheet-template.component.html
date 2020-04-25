@@ -1,0 +1,6 @@
+<mat-nav-list *ngFor="let item of data; let index = index">
+    <mat-list-item  mat-list-item (click)="action(index)">
+        <mat-icon mat-list-icon>{{item.icon}}</mat-icon>
+        <span mat-line>{{item.text}}</span>
+    </mat-list-item>
+</mat-nav-list>

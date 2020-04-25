@@ -275,14 +275,16 @@ namespace GraphForP4.Services
         public static Graph DataFlowGraph(string input, Graph controlFlowGraph)
         {
             var graphs = new Dictionary<Guid, Graph>();
-            var graph = new Graph();
-            graph.Add(new Node()
+            var startNode = new Node()
             {
                 Text = "Start",
                 FillColor = Color.Green,
                 Tooltip = "Start",
                 Shape = NodeShape.Diamond
-            });
+            };
+
+            var graph = new Graph();
+            graph.Add(startNode);
 
             foreach(var node in controlFlowGraph.Nodes)
             {
@@ -306,10 +308,14 @@ namespace GraphForP4.Services
                 }
             }
 
+            MainNodes(graphs.First().Value).ForEach(fromStartNode =>
+            {
+                graph.AddEdge(startNode, fromStartNode);
+            });
+
             var queue = new Queue<Node>();
             foreach(var edge in controlFlowGraph[0].Edges)
             {
-                edge.Child.FillColor = Color.Gray;
                 queue.Enqueue(edge.Child);
             }
 
@@ -321,6 +327,26 @@ namespace GraphForP4.Services
                 BFSHelper(node, node, graph, graphs, ref queue);
 
                 node.FillColor = Color.Black;
+            }
+
+            var endNode = new Node()
+            {
+                Text = "End",
+                FillColor = Color.Red,
+                Tooltip = "End",
+                Shape = NodeShape.Diamond
+            };
+            graph.Add(endNode);
+
+            foreach(var controlFlowGraphNode in controlFlowGraph.Nodes)
+            {
+                if(graphs.ContainsKey(controlFlowGraphNode.Id) && controlFlowGraphNode.Edges.Any(x => x.Child == controlFlowGraph["End"]))
+                {
+                    EndNodes(graphs[controlFlowGraphNode.Id]).ForEach(node =>
+                    {
+                        graph.AddEdge(node, endNode);
+                    });
+                }
             }
 
             return graph;
@@ -423,7 +449,7 @@ namespace GraphForP4.Services
         {
             var graph = new Graph();
 
-            List<Node> previousNodes = null;
+            Node previousNode = null;
 
             foreach (var line in parentNode.Text.Split(";", StringSplitOptions.RemoveEmptyEntries))
             {
@@ -448,18 +474,12 @@ namespace GraphForP4.Services
                     graph.Add(node);
                     dataFlowGraph.Add(node);
 
-                    if (previousNodes != null)
+                    if (previousNode != null)
                     {
-                        foreach (var previousNode in previousNodes)
-                        {
-                            graph.AddEdge(previousNode, node);
-                        }
+                        graph.AddEdge(previousNode, node);
                     }
 
-                    previousNodes = new List<Node>
-                    {
-                        node
-                    };
+                    previousNode = node;
 
                     continue;
                 }
@@ -509,20 +529,12 @@ namespace GraphForP4.Services
                 dataFlowGraph.Add(firstToken);
                 dataFlowGraph.Add(secondToken);
 
-                if (previousNodes != null)
+                if (previousNode != null)
                 {
-                    foreach (var node in previousNodes)
-                    {
-                        graph.AddEdge(node, firstToken);
-                        graph.AddEdge(node, secondToken);
-                    }
+                    graph.AddEdge(previousNode, firstToken);
                 }
 
-                previousNodes = new List<Node>
-                {
-                    firstToken,
-                    secondToken
-                };
+                previousNode = secondToken;
             }
 
             return graph;
@@ -534,18 +546,21 @@ namespace GraphForP4.Services
             {
                 var childNode = edge.Child;
 
-                if (!graphs.ContainsKey(childNode.Id))
+                if (graphs.ContainsKey(parentNode.Id))
                 {
-                    BFSHelper(parentNode, childNode, graph, graphs, ref queue);
-                    continue;
-                }
-
-                var goNodes = MainNode(graphs[childNode.Id]);
-                foreach (var endNode in EndNodes(graphs[parentNode.Id]))
-                {
-                    foreach(var goNode in goNodes)
+                    if (!graphs.ContainsKey(childNode.Id))
                     {
-                        graph.AddEdge(endNode, goNode);
+                        BFSHelper(parentNode, childNode, graph, graphs, ref queue);
+                        continue;
+                    }
+
+                    var goNodes = MainNodes(graphs[childNode.Id]);
+                    foreach (var endNode in EndNodes(graphs[parentNode.Id]))
+                    {
+                        foreach (var goNode in goNodes)
+                        {
+                            graph.AddEdge(endNode, goNode);
+                        }
                     }
                 }
 
@@ -556,7 +571,7 @@ namespace GraphForP4.Services
             }
         }
 
-        private static List<Node> MainNode(Graph graph)
+        private static List<Node> MainNodes(Graph graph)
         {
             var notMainNodes = new List<Node>();
             graph.Nodes.ForEach((node) =>
@@ -575,7 +590,7 @@ namespace GraphForP4.Services
 
         private static List<Node> EndNodes(Graph graph)
         {
-            return graph.Nodes.Where(x => !x.Edges.Any()).ToList();
+            return graph.Nodes.Where(x => !x.Edges.Any(y => y.Child.ParentId == x.ParentId)).ToList();
         }
         #endregion
 

@@ -2,5 +2,5 @@ export enum NodeShape {
     Ellipse = 'ellipse',
     Diamond = 'diamond',
     Box = 'box',
-    Circle = 'circle'
+    Circle = 'egg'
 }

@@ -1,6 +1,5 @@
 <mat-icon
   [ngClass]="{'animate' : animate, 'play': animate && playAndPause, 'pause': !animate && playAndPause}"
-  color="{{animate ? colorEnd : colorStart}}"
-  (click)="toggle()">
+  color="{{animate ? colorEnd : colorStart}}">
   {{animate ? end : start}}
 </mat-icon>

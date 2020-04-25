@@ -1,5 +1,5 @@
 <ng-container *ngIf="file==null; else elseTemplate" class="max-height">
-  <div (click)="uploadFile.click()" class="col-12 rmpm dropzone dropzone-active" appDrag (files)="filesDropped($event)">
+  <div (click)="uploadFile.click()" class="col-12 rmpm dropzone dropzone-active" matRipple appDrag (files)="filesDropped($event)">
     <div class="text-wrapper">
       <div class="centered">
         <mat-icon color="primary" style="font-size: 15vw; height:100%; width: 100%;">

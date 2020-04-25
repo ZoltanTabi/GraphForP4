@@ -20,7 +20,7 @@ export class MatAnimatedIconComponent implements OnInit {
 
   ngOnInit() { }
 
-  toggle() {
+  public toggle() {
     if (!this.animateFromParent) {
       this.animate = !this.animate;
     }

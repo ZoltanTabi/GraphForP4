@@ -80,7 +80,9 @@ namespace GraphForP4.Models
                 builder.Append(GetEdgeJson(node.Edges[i]));
             }
 
-            builder.Append("],\"Type\":");
+            builder.Append("],\"Tooltip\":\"");
+            builder.Append(node.Tooltip);
+            builder.Append("\",\"Type\":");
             builder.Append((int)node.Type);
             builder.Append(",\"FillColor\":");
             builder.Append(GetColorJson(node.FillColor));
@@ -88,6 +90,33 @@ namespace GraphForP4.Models
             builder.Append(GetColorJson(node.FontColor));
             builder.Append(",\"Shape\":");
             builder.Append((int)node.Shape);
+            if (node.ParentId != null)
+            {
+                builder.Append(",\"ParentId\":\"");
+                builder.Append(node.ParentId);
+                builder.Append("\"");
+            }
+            if (node.SubGraph != null)
+            {
+                builder.Append(",\"SubGraph\":\"");
+                builder.Append(node.SubGraph);
+                builder.Append("\"");
+            }
+            if (node.Operation != null)
+            {
+                builder.Append(",\"Operation\":");
+                builder.Append((int)node.Operation);
+            }
+            if (node.Modified != null)
+            {
+                builder.Append(",\"Modified\":");
+                builder.Append((int)node.Modified);
+            }
+            if (node.ModifiedAndUse != null)
+            {
+                builder.Append(",\"ModifiedAndUse\":");
+                builder.Append(node.ModifiedAndUse.ToString().ToLower());
+            }
             builder.Append("}");
 
             return builder.ToString();
@@ -103,6 +132,10 @@ namespace GraphForP4.Models
             builder.Append(edge.Child.Id);
             builder.Append("\",\"Color\":");
             builder.Append(GetColorJson(edge.Color));
+            builder.Append(",\"EdgeArrowType\":");
+            builder.Append((int)edge.EdgeArrowType);
+            builder.Append(",\"EdgeStyle\":");
+            builder.Append((int)edge.EdgeStyle);
             builder.Append("}");
 
             return builder.ToString();

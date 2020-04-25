@@ -1,8 +1,8 @@
-import { Node } from '../models/node';
-import { NodeShape } from '../models/nodeShape';
-import { Edge } from '../models/edge';
-import { EdgeArrowType } from '../models/edgeArrowType';
-import { EdgeStyle } from '../models/edgeStyle';
+import { Node } from '../models/graph/node';
+import { NodeShape } from '../models/graph/nodeShape';
+import { Edge } from '../models/graph/edge';
+import { EdgeArrowType } from '../models/graph/edgeArrowType';
+import { EdgeStyle } from '../models/graph/edgeStyle';
 
 export function getSubGraph(id: string, graph: Array<Node>): string {
     const subGraphNodes = graph.filter(x => x.subGraph === id);
@@ -31,7 +31,7 @@ export function getEdgeText(edge: Edge, graph: Array<Node>): string {
     const parentNode = graph.find(x => x.id === edge.parent);
     const childNode = graph.find(x => x.id === edge.child);
 
-    let inResult = `id="${edge.parent} -> ${edge.child}" color="${edge.color}" arrowType="${getEdgeArrowType(edge.edgeArrowType)}" style="${getEdgeStyle(edge.edgeStyle)}"`;
+    let inResult = `id="${edge.parent} -> ${edge.child}" color="${edge.color}" dir="${getEdgeArrowType(edge.edgeArrowType)}" style="${getEdgeStyle(edge.edgeStyle)}"`;
 
     if ((parentNode.subGraph !== '' || childNode.subGraph !== '') && parentNode.subGraph !== childNode.subGraph) {
         if (parentNode.subGraph !== '') {

@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { FileData } from '../models/file';
 import { NotificationService } from '../services/notification.service';
 import { MatDialog } from '@angular/material';
-import { EditDialogComponent } from '../home/edit-dialog/edit-dialog.component';
+import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 
 @Component({
   selector: 'app-file-upload',
@@ -24,29 +24,36 @@ export class FileUploadComponent {
   }
 
   filesDropped(files: File[]): void {
-    const name = files[0].name.split('.');
-    const extension = name[name.length - 1];
-
     if (files.length > 1) {
       this.notificationService.warning('Csak egy fájlt lehet feltölteni!');
-    } else if (extension !== 'p4' && extension !== 'txt') {
-      this.notificationService.warning('Megengedett fájlformátumok: ".p4", ".txt"!');
     } else {
-      this.file = files[0];
-      this.fileRead();
+      this.fileValidation(files[0]);
     }
   }
 
   onUpload(fileList: FileList): void {
-    this.file = fileList[0];
+    const file = fileList[0];
+    this.fileValidation(file);
     this.fileRead();
+  }
+
+  fileValidation(file: File): void {
+    const name = file.name.split('.');
+    const extension = name[name.length - 1];
+
+    if (extension !== 'p4' && extension !== 'txt') {
+      this.notificationService.warning('Megengedett fájlformátumok: ".p4", ".txt"!');
+    } else {
+      this.file = file;
+      this.fileRead();
+    }
   }
 
   editFile() {
     const dialogRef = this.dialog.open(EditDialogComponent, {
       height: '30vw',
       width: '55vw',
-      panelClass: 'my-theme',
+      panelClass: 'my-dark-theme',
       data: { content: this.fileData.content }
     });
 

@@ -47,7 +47,7 @@ namespace GraphForP4.Services
                     Shape = (int)node.Shape,
                     Tooltip = node.Tooltip,
                     ParentId = node.ParentId != null ? node.ParentId.ToString().Replace("-", String.Empty) : String.Empty,
-                    SubGraph = node.SubGraph != null ? node.SubGraph.ToString().Replace("-", String.Empty) : String.Empty,
+                    SubGraph = node.SubGraph != null ? "cluster" + node.SubGraph.ToString().Replace("-", String.Empty) : String.Empty,
                     Edges = new List<AngularEdge>()
                 };
 
@@ -61,6 +61,7 @@ namespace GraphForP4.Services
                         EdgeArrowType = (int)edge.EdgeArrowType,
                         EdgeStyle = (int)edge.EdgeStyle
                     });
+                    childNodes.Add(edge.Child);
                 }
 
                 angularGraph.Add(item);
@@ -81,13 +82,13 @@ namespace GraphForP4.Services
                     find = graph.Nodes[i].Edges[j].Child == node;
                 }
             }
-
+            String.Concat(Guid.NewGuid().ToString("N").Select(c => (char)(c + 17)));
             return !find;
         }
 
         private static void CheckExisting(List<Node> childNodes, List<AngularNode> angularGraph)
         {
-            foreach(var angularNode in angularGraph)
+            foreach (var angularNode in angularGraph)
             {
                 for(var i = childNodes.Count - 1; i >= 0; --i)
                 {

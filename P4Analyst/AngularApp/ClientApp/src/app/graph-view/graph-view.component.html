@@ -1,11 +1,17 @@
-<div>
-    <h1>Gráf</h1>
-</div>
-
-<!--<div>
-    <app-graph [type]="'controlflowgraph'" [draw]="true"></app-graph>
-</div>-->
-
-<div>
-    <app-graph [type]="'dataflowgraph'" [draw]="true"></app-graph>
-</div>
+<mat-tab-group mat-stretch-tabs class="max-height" animationDuration="750ms" [selectedIndex]="selected.value" (selectedIndexChange)="onTabChange($event)" (resized)="onResized($event)">
+    <mat-tab label="Vezérlésfolyam gráf">
+        <app-graph #controlFlowGraph [type]="keys[0]" [draw]="false" [initialize]="true" [parentElementId]="'mat-tab-content-0-0'" (controlFlowGraphClick)="addDataFlowGraph($event)"></app-graph>
+    </mat-tab>
+    <mat-tab label="Adatfolyam gráf">
+        <app-graph [type]="keys[1]" [draw]="false" [initialize]="dataflowgraphIsActiveTab" [parentElementId]="'mat-tab-content-0-1'" (dataFlowGraphClick)="[controlFlowGraph.selectNode($event), selected.setValue(0)]"></app-graph>
+    </mat-tab>
+    <mat-tab *ngFor="let tab of tabs; let index = index" [label]="tab.tabName">
+        <ng-template mat-tab-label>
+            {{tab.tabName}}
+            <button mat-icon-button (click)="removeTab(index)">
+                <mat-icon>close</mat-icon>
+            </button>
+        </ng-template>
+        <app-graph [draw]="false" [parentElementId]="'mat-tab-content-0-' + index.toString()" [initialize]="index===selected.value"></app-graph>
+    </mat-tab>
+</mat-tab-group>

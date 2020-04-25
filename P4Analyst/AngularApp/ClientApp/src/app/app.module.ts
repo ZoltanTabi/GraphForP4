@@ -11,6 +11,7 @@ import { HomeComponent } from './home/home.component';
 import { HelpComponent } from './help/help.component';
 import { MatAnimatedIconComponent } from './components/mat-animated-icon/mat-animated-icon.component';
 import { SnackBarTemplateComponent } from './components/snack-bar-template/snack-bar-template.component';
+import { BottomSheetTemplateComponent } from '../app/components/bottom-sheet-template/bottom-sheet-template.component';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
@@ -21,11 +22,12 @@ import { GraphViewComponent } from './graph-view/graph-view.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DragDropDirective } from './directives/drag-drop.directive';
 import { FileUploadComponent } from './file-upload/file-upload.component';
-import { EditDialogComponent } from './home/edit-dialog/edit-dialog.component';
-import { MAT_SNACK_BAR_DATA } from '@angular/material';
+import { EditDialogComponent } from './file-upload/edit-dialog/edit-dialog.component';
+import { AngularResizedEventModule } from 'angular-resize-event';
 
 import {
   MatAutocompleteModule,
+  MatBottomSheetModule,
   MatButtonModule,
   MatButtonToggleModule,
   MatCardModule,
@@ -55,7 +57,11 @@ import {
   MatToolbarModule,
   MatTooltipModule,
   MatFormFieldModule,
+  MAT_SNACK_BAR_DATA,
+  MAT_BOTTOM_SHEET_DATA
 } from '@angular/material';
+
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @NgModule({
   declarations: [
@@ -68,6 +74,7 @@ import {
     FileUploadComponent,
     MatAnimatedIconComponent,
     SnackBarTemplateComponent,
+    BottomSheetTemplateComponent,
     EditDialogComponent,
     HoverClassDirective,
     DragDropDirective
@@ -80,9 +87,12 @@ import {
     LayoutModule,
     FormsModule,
     ReactiveFormsModule,
+    AngularResizedEventModule,
+    OverlayModule,
 
     // Material
     MatAutocompleteModule,
+    MatBottomSheetModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatCardModule,
@@ -120,12 +130,13 @@ import {
     ])
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  entryComponents: [SnackBarTemplateComponent, EditDialogComponent],
+  entryComponents: [SnackBarTemplateComponent, EditDialogComponent, BottomSheetTemplateComponent],
   providers: [
     HttpErrorHandler,
     MessageService,
     NotificationService,
-    { provide: MAT_SNACK_BAR_DATA, useValue: {} }
+    { provide: MAT_SNACK_BAR_DATA, useValue: {} },
+    { provide: MAT_BOTTOM_SHEET_DATA, useValue: {} }
   ],
   bootstrap: [AppComponent]
 })

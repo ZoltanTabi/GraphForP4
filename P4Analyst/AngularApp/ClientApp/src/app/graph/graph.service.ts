@@ -1,13 +1,9 @@
 import { Inject } from '@angular/core';
-
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { HttpHeaders } from '@angular/common/http';
-
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
 import { HttpErrorHandler, HandleError } from 'src/app/services/http-error-handler.service';
-import { Node } from '../models/node';
+import { Node } from '../models/graph/node';
 
 export class GraphService {
   private handleError: HandleError;

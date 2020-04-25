@@ -24,7 +24,7 @@ namespace AngularApp.Controllers
         [HttpGet("{type}")]
         public IActionResult GetGraph(string type)
         {
-            var success = Enum.TryParse(type, true, out Key key);
+            /*var success = Enum.TryParse(type, true, out Key key);
 
             if (!success) return BadRequest("Érvénytelen behívás!");
 
@@ -43,9 +43,9 @@ namespace AngularApp.Controllers
             //return Ok(new { graph = graph.ToJson() });
             //return Ok(graph.ToJson());
 
-            return Ok(GraphToAngular.Serialize(graph));
+            return Ok(GraphToAngular.Serialize(graph));*/
 
-            /*logger.LogInformation("Gráf lekérdezése", type);
+            logger.LogInformation("Gráf lekérdezése", type);
 
             try
             {
@@ -66,7 +66,7 @@ namespace AngularApp.Controllers
             catch (Exception)
             {
                 return BadRequest("Váratlan hiba!");
-            }*/
+            }
         }
 
         [HttpPost]

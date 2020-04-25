@@ -20,10 +20,6 @@
   }
 }
 
-/*.text-primary-color {
-  color: $primary !important;
-}*/
-
 a {
   color: #0366d6;
 }
@@ -32,13 +28,9 @@ code {
   color: #e01a76;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-.mat-icon-button:focus {
+.mat-icon-button:focus,
+.mat-mini-fab:focus,
+.button:focus {
   outline: none;
 }
 
@@ -50,16 +42,25 @@ mat-icon.pause {
   color: red;
 }
 
-.mat-mini-fab:focus {
-  outline: none;
-}
-
 button.change-color {
   margin-right: 20px !important;
 }
 
 .max-height {
   height: 100%;
+}
+
+.loading-indicator {
+  position: fixed;
+  z-index: 999;
+  height: 2em;
+  width: 2em;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
 
 html, body { height: 100%; }

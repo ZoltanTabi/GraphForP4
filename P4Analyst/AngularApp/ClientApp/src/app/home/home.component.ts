@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { catchError } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
-import { error } from '@angular/compiler/src/util';
 import { HomeService } from './home.service';
 import { FileData } from '../models/file';
 
