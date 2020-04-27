@@ -103,7 +103,7 @@ namespace GraphForP4.Services
                     else if (current.Contains('('))
                     {
                         currentNodes = ActionMethod(graph, currentNodes,
-                                       Regex.Replace(current, @"\. *" + APPLY + @" *\( *\);", String.Empty).Trim(),
+                                       Regex.Replace(current, @" *\(.*\);", String.Empty).Trim(),
                                        ingressMethod);
                     }
                     else

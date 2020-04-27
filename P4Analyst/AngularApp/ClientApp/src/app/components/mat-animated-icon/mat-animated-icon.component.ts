@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -6,7 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
   templateUrl: './mat-animated-icon.component.html',
   styleUrls: ['./mat-animated-icon.component.scss']
 })
-export class MatAnimatedIconComponent implements OnInit {
+export class MatAnimatedIconComponent {
 
   @Input() start: String;
   @Input() end: String;
@@ -15,10 +15,6 @@ export class MatAnimatedIconComponent implements OnInit {
   @Input() animate: boolean;
   @Input() animateFromParent = false;
   @Input() playAndPause = false;
-
-  constructor() { }
-
-  ngOnInit() { }
 
   public toggle() {
     if (!this.animateFromParent) {

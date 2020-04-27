@@ -1,7 +1,6 @@
 .info-notification {
   background: blue;
   color: whitesmoke;
-  font-weight: bold;
 }
 
 .success-notification {
@@ -12,14 +11,13 @@
 
 .warning-notification {
   background: yellow;
-  color: rgb(75, 75, 75);
+  color: rgb(25, 25, 25);
   font-weight: bold;
 }
 
 .error-notification{
   background-color: red;
   color: whitesmoke;
-  font-weight: bold;
 }
 
 mat-icon.notification-icon {

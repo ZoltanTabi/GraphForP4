@@ -2,12 +2,5 @@
     <mat-spinner mode="indeterminate" color="primary"></mat-spinner>
 </div>
 
-<!--<mat-spinner *ngIf="loading" color="primary" style="text-align: center;"></mat-spinner>-->
-<div *ngIf="!loading">
-    <button mat-icon-button (click)="[BFS(), animatedIcon.toggle()]">
-        <mat-animated-icon #animatedIcon start="pause_circle_filled" end="play_circle_filled" [playAndPause]="true" animate="true"></mat-animated-icon>
-    </button>
-</div>
-
 <div [id]="id" class="graph" [ngClass]="{'dont-touch': dontTouch, 'touch': !dontTouch }" (click)="onClick($event)"></div>
 

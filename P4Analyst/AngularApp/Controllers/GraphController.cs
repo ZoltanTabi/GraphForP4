@@ -55,7 +55,7 @@ namespace AngularApp.Controllers
 
                 var graph = SessionExtension.GetGraph(session, key);
 
-                if (graph == null) return BadRequest("Kérem töltsön fel először fájlt!");
+                if (graph == null || !graph.Nodes.Any()) return BadRequest("Kérem töltsön fel először fájlt!");
 
                 return Ok(GraphToAngular.Serialize(graph));
             }

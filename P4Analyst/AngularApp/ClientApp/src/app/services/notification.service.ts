@@ -22,7 +22,8 @@ export class NotificationService {
       data: data,
       panelClass: 'info-notification',
       horizontalPosition: horizontalPosition,
-      verticalPosition: verticalPosition
+      verticalPosition: verticalPosition,
+      duration: 3500
     });
   }
 
@@ -33,7 +34,8 @@ export class NotificationService {
       data: data,
       panelClass: 'success-notification',
       horizontalPosition: horizontalPosition,
-      verticalPosition: verticalPosition
+      verticalPosition: verticalPosition,
+      duration: 3500
     });
   }
 
@@ -60,7 +62,9 @@ export class NotificationService {
   }
 
   private open(configuration: MatSnackBarConfig) {
-    configuration.duration = 3000;
+    if (!configuration.duration) {
+      configuration.duration = 5000;
+    }
 
     this.zone.run(() => this.snackBar.openFromComponent(SnackBarTemplateComponent, configuration));
   }

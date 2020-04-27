@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HomeService } from './home.service';
 import { FileData } from '../models/file';
+import { SessionStorageService } from 'ngx-store';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,7 @@ export class HomeComponent implements OnInit {
   fileData: FileData;
   code: string;
 
-  constructor(private homeService: HomeService, private router: Router) {
+  constructor(private homeService: HomeService, private router: Router, private sessionStorageService: SessionStorageService) {
     this.fileData = {
       name: '',
       content: ''
@@ -47,6 +48,7 @@ export class HomeComponent implements OnInit {
     this.homeService
       .sendFileContent(this.fileData)
       .subscribe(() => {
+        this.sessionStorageService.clear('prefix');
         this.navigate();
       });
   }

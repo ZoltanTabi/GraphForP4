@@ -12,6 +12,7 @@ import { HelpComponent } from './help/help.component';
 import { MatAnimatedIconComponent } from './components/mat-animated-icon/mat-animated-icon.component';
 import { SnackBarTemplateComponent } from './components/snack-bar-template/snack-bar-template.component';
 import { BottomSheetTemplateComponent } from '../app/components/bottom-sheet-template/bottom-sheet-template.component';
+import { BottomSheetYesOrNoComponent } from '../app/components/bottom-sheet-yes-or-no/bottom-sheet-yes-or-no.component';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
@@ -24,6 +25,7 @@ import { DragDropDirective } from './directives/drag-drop.directive';
 import { FileUploadComponent } from './file-upload/file-upload.component';
 import { EditDialogComponent } from './file-upload/edit-dialog/edit-dialog.component';
 import { AngularResizedEventModule } from 'angular-resize-event';
+import { WebStorageModule } from 'ngx-store';
 
 import {
   MatAutocompleteModule,
@@ -75,6 +77,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     MatAnimatedIconComponent,
     SnackBarTemplateComponent,
     BottomSheetTemplateComponent,
+    BottomSheetYesOrNoComponent,
     EditDialogComponent,
     HoverClassDirective,
     DragDropDirective
@@ -89,6 +92,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     ReactiveFormsModule,
     AngularResizedEventModule,
     OverlayModule,
+    WebStorageModule,
 
     // Material
     MatAutocompleteModule,
@@ -130,7 +134,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     ])
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  entryComponents: [SnackBarTemplateComponent, EditDialogComponent, BottomSheetTemplateComponent],
+  entryComponents: [SnackBarTemplateComponent, EditDialogComponent, BottomSheetTemplateComponent, BottomSheetYesOrNoComponent],
   providers: [
     HttpErrorHandler,
     MessageService,

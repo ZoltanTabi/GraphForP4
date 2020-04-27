@@ -8,8 +8,13 @@ import { Edge } from '../models/graph/edge';
 import { getSubGraph, getNodeText, getEdgeText } from '../functions/graphConverter';
 import { MatBottomSheet } from '@angular/material';
 import { BottomSheetTemplateComponent } from '../components/bottom-sheet-template/bottom-sheet-template.component';
+import { Queue } from 'queue-typescript';
 import { Data } from '../models/data';
 import { Key } from '../models/key';
+import { Color } from '../models/color';
+import { BottomSheetYesOrNoComponent } from '../components/bottom-sheet-yes-or-no/bottom-sheet-yes-or-no.component';
+import { SessionStorageService } from 'ngx-store';
+import { SizeAttribute } from '../models/sizeAttribute';
 
 @Component({
   selector: 'app-graph',
@@ -21,8 +26,11 @@ export class GraphComponent {
 
   @Output() controlFlowGraphClick = new EventEmitter<string>();
   @Output() dataFlowGraphClick = new EventEmitter<string>();
+  @Output() BFSEnd = new EventEmitter();
+  @Output() drawEnd = new EventEmitter();
   @Input() type: string;
   @Input() draw: boolean;
+  @Input() inputGraph: Array<Node>;
   @Input() parentElementId: string;
   @Input() public set initialize(init: boolean) {
     if (!this.init && init) {
@@ -41,52 +49,116 @@ export class GraphComponent {
   private nextEdges: Array<Edge>;
   private init = false;
 
-  constructor(private graphService: GraphService, private notificationService: NotificationService, public bottomSheet: MatBottomSheet) {
+  private colorNodes: Array<Node>;
+  private BFSQueue: Queue<Node>;
+  private BFSIsRun = false;
+  private oldSize: SizeAttribute;
+  private timer;
+
+  constructor(private graphService: GraphService, private notificationService: NotificationService,
+    public bottomSheet: MatBottomSheet, private sessionStorageService: SessionStorageService) {
     this.loading = true;
     this.dontTouch = true;
     this.graphFord3 = '';
     this.existNodes = new Array<Node>();
     this.nextEdges = new Array<Edge>();
+    this.BFSQueue = new Queue<Node>();
+    this.colorNodes = new Array<Node>();
   }
 
-  onInit(): void {
-    this.id = `graph${this.type}`;
-    this.graphService
-    .getGraph(this.type)
-    .subscribe( result => {
-      console.log(result);
-      this.graph = result;
-
-      if (this.graph.length > 0) {
-        this.loading = false;
-        if (this.draw) {
-          this.searcNode(0);
-          this.startGraph(0);
-        } else {
-          let i = 0;
-          while (this.searcNode(i)[0]) {
-            ++i;
+  // Gráf megkapása, leszedjük szerver oldalró, vagy session-ból vagy inputból kapjuk meg
+  // Mivel a Mat-Tab content csak a aktív tab esetén jelenik meg a HTML kódban, ezért kell az async művelet és a delay
+  getGraph = () => {
+    return new Promise<void>((resolve, reject) => {
+      if (this.inputGraph) {
+        this.graph = this.inputGraph;
+        console.log(`InputGraph: ${this.inputGraph}`);
+        let delayTime = 0;
+        const time = setInterval(() => {
+          if (delayTime !== 0) {
+            ++delayTime;
+          } else {
+            clearInterval(time);
+            resolve();
           }
-          this.loading = false;
-          this.startGraph(undefined);
-          this.dontTouch = false;
-          // this.addHandler();
-        }
+        }, 1000);
       } else {
-        this.loading = false;
-        this.notificationService.warning('Üres a gráf!');
+        const sessionGraph = this.sessionStorageService.get(this.type) as Array<Node>;
+        if (sessionGraph) {
+          this.graph = sessionGraph;
+          console.log(`SessionGrap: ${sessionGraph}`);
+          let delayTime = 0;
+          const time = setInterval(() => {
+            if (delayTime !== 0) {
+              ++delayTime;
+            } else {
+              clearInterval(time);
+              resolve();
+            }
+          }, 1000);
+        } else {
+            reject('CallServer');
+        }
       }
     });
   }
 
+  onInit() {
+    this.id = `graph${this.type}`;
+    this.notificationService.info('Kérjük várja meg, amíg betöltődik!');
+    this.getGraph()
+      .then(() => { this.afterOnInit(); } )
+      .catch((reason) => {
+        if (reason === 'CallServer') {
+          this.graphService
+          .getGraph(this.type)
+          .subscribe( result => {
+            console.log(`Szerver gráf: ${result}`);
+            this.graph = result;
+            this.sessionStorageService.set(this.type, this.graph);
+            this.afterOnInit();
+          });
+        } else {
+          if (this.type === Key.ControlFlowGraph || this.type === Key.DataFlowGraph) {
+            this.notificationService.error('Hiba történt! Frissítsen rá az oldalra!');
+          } else {
+            this.notificationService.error('Zárja be a tabot és próbálja újra!');
+          }
+        }
+      });
+  }
+
+  afterOnInit() {
+    console.log('afterOnInit ' + this.graph);
+
+    if (this.graph.length > 0) {
+      this.loading = false;
+      if (this.draw) {
+        this.searcNode(0);
+        this.startGraph(0);
+      } else {
+        let i = 0;
+        while (this.searcNode(i)[0]) {
+          ++i;
+        }
+        this.loading = false;
+        this.startGraph(undefined);
+        this.dontTouch = false;
+        this.drawEnd.emit();
+      }
+    } else {
+      this.loading = false;
+      this.notificationService.warning('Üres a gráf!');
+    }
+  }
+
+  // d3-graphviz gráf kirajzolás
   startGraph(i: number) {
     const currentThis = this;
-    console.log(this.id);
     const hashTag = '#' + this.id;
     graphviz(hashTag).attributer(this.attributer).transition(this.transition)
       // tslint:disable-next-line: max-line-length
-      .renderDot('digraph { graph [id="' + this.id + '" bgcolor="none"] compound=true node [style="filled"] ' + this.graphFord3 + ' } ', function() {
-        // document.getElementById('graph0').getElementsByTagName('polygon')[0].setAttribute('fill', 'none');
+      .renderDot('digraph { graph [id="' + this.id + '" bgcolor="none" tooltip="Helyreállítésrt klikkelj!"] compound=true node [style="filled"] ' + this.graphFord3 + ' } ', function() {
         if (i === 0) {
           currentThis.graphDrawing(++i, this);
           currentThis.graphPointer = this;
@@ -101,13 +173,12 @@ export class GraphComponent {
     if (draw) {
       const currentThis = this;
       // tslint:disable-next-line: max-line-length
-      graph.renderDot('digraph { graph [id="' + this.id + '" bgcolor="none"] compound=true node [style="filled"] ' + this.graphFord3 + ' } ', function() {
-        // document.getElementById("node1").getElementsByTagName("polygon")[0].setAttribute("fill", "#008000")
+      graph.renderDot('digraph { graph [id="' + this.id + '" bgcolor="none" tooltip="Helyreállítésrt klikkelj!"] compound=true node [style="filled"] ' + this.graphFord3 + ' } ', function() {
         currentThis.graphDrawing(++i, this);
       });
     } else {
       this.dontTouch = false;
-      // this.addHandler();
+      this.drawEnd.emit();
     }
   }
 
@@ -175,12 +246,9 @@ export class GraphComponent {
 
   attributer(datum: { tag: string; attributes: { width: number; height: number; }; }, index: any, nodes: any) {
     const margin = 20;
-    // const hashTag = '#' + this.id;
-    // const selection = d3.select(hashTag);
     if (datum.tag === 'svg') {
-      // this.parentElementId
       const width = document.getElementById('mat-sidenav-content').offsetWidth;
-      const height = document.getElementById('mat-sidenav-content').offsetHeight;
+      const height = document.getElementById('mat-sidenav-content').offsetHeight - 48;
       datum.attributes.width = width - margin;
       datum.attributes.height = height - margin;
     }
@@ -193,90 +261,265 @@ export class GraphComponent {
         .duration(2000);
   }
 
+  resize = (size: SizeAttribute) => {
+    return new Promise<Node>(() => {
+      if (size && size.width !== 0 && size.height !== 0 && !this.loading && (!this.oldSize || size !== this.oldSize)) {
+        this.oldSize = size;
+        let delayTime = 0;
+        const time = setInterval(() => {
+          if (delayTime !== 0) {
+            ++delayTime;
+          } else {
+            clearInterval(time);
+            const attributes = document.getElementById(this.id).children[0];
+            attributes.setAttribute('width', size.width.toString());
+            attributes.setAttribute('height', (size.height - 60).toString());
+          }
+        }, 1000);
+      }
+    });
+  }
+
+  // Click események kezelése
   onClick(event: any) {
     if (this.dontTouch) {
       return;
     }
 
+    let otherBottomSheet = false;
     event.path.forEach((element: { id: string; }) => {
       if (this.graph.find(x => x.id === element.id)) {
         if (this.type === Key.ControlFlowGraph) {
           this.controlFlowGraphClickHandler(element.id);
+          otherBottomSheet = true;
           return;
         } else if (this.type === Key.DataFlowGraph) {
           this.dataFlowGraphClickHandler(element.id);
+          otherBottomSheet = true;
           return;
         }
       }
     });
 
-    this.reset();
+    if ((this.type === Key.ControlFlowGraph || this.type === Key.DataFlowGraph) && this.colorNodes.length > 0 && !otherBottomSheet) {
+      const data: Data = { icon: '', text: 'Biztosan helyrállítja a gráf színezést?' };
+      const bottomSheet = this.bottomSheet.open(BottomSheetYesOrNoComponent, {
+        data: data,
+        panelClass: 'my-theme'
+      });
+      bottomSheet.afterDismissed().subscribe(result => {
+        if (result) {
+          this.reset();
+        }
+      });
+    }
   }
 
   private controlFlowGraphClickHandler(id: string) {
-    const datas: Data[] = [{icon: 'brush', text: 'Csúcs lefolyásának kirajzolása'},
-                           {icon: 'add_circle', text: 'Csúcshoz tartozó adatfolyam gráf megjelenítése'}];
-    // TODO ellenőrzés, hogy van-e dataFlowGraph csúcsa
+    const datas: Data[] = [{icon: 'brush', text: 'Csúcs lefolyásának kirajzolása'}];
+
+    const sessionDataFlowGraph = this.sessionStorageService.get(Key.DataFlowGraph) as Array<Node>;
+    if (sessionDataFlowGraph && sessionDataFlowGraph.find(x => x.parentId === id)) {
+      datas.push({icon: 'add_circle', text: 'Csúcshoz tartozó adatfolyam gráf megjelenítése'});
+    }
+
     const bottomSheet = this.bottomSheet.open(BottomSheetTemplateComponent, {
       data: datas
     });
 
     bottomSheet.afterDismissed().subscribe(result => {
-      console.log(result);
-      if (result) {
-        switch (result) {
-          case 0:
-            this.drawPath(id);
-            break;
-          case 1:
-            this.controlFlowGraphClick.emit(id);
-            break;
-          default:
-            this.notificationService.error('Érvénytelen használat!');
-            break;
-        }
+      if (result === 0) {
+        this.drawPath(id);
+      } else if (result === 1) {
+        this.controlFlowGraphClick.emit(id);
       }
     });
   }
 
   private dataFlowGraphClickHandler(id: string) {
-    const datas: Data[] = [{icon: 'brush', text: 'Csúcs lefolyásának kirajzolása'},
-                           {icon: 'search', text: 'Csúcshoz tartozó vezérlésfolyam gráf csúcs kijelölése'}];
+    const datas: Data[] = [{icon: 'brush', text: 'Csúcs lefolyásának kirajzolása'}];
+
+    const parentId = this.graph.find(x => x.id === id).parentId;
+    if (parentId && parentId !== '') {
+      datas.push({icon: 'search', text: 'Csúcshoz tartozó vezérlésfolyam gráf csúcs kijelölése'});
+    }
 
     const bottomSheet = this.bottomSheet.open(BottomSheetTemplateComponent, {
       data: datas
     });
 
     bottomSheet.afterDismissed().subscribe(result => {
-      if (result) {
-        switch (result) {
-          case 0:
-            this.drawPath(id);
-            break;
-          case 1:
-            this.dataFlowGraphClick.emit(id);
-            break;
-          default:
-            this.notificationService.error('Érvénytelen használat!');
-            break;
-        }
+      if (result === 0) {
+        this.drawPath(id);
+      } else if (result === 1) {
+        this.dataFlowGraphClick.emit(parentId);
       }
     });
   }
 
+  // Szélességi bejárás szimulálása
   BFS() {
+    if (this.BFSIsRun) {
+      clearInterval(this.timer);
+      this.BFSIsRun = false;
+      return;
+    }
 
+    if (this.BFSQueue.length === 0) {
+      this.colorNodes = this.graph;
+      // tslint:disable-next-line: no-shadowed-variable
+      this.colorNodes.forEach(node => {
+        this.setNodeAttributes(node.id, Color.White, Color.Black);
+        node.isColor = false;
+        node.edges.forEach(edge => {
+          this.setEdgeAttributes(edge, Color.Black);
+        });
+      });
+      this.BFSQueue = new Queue<Node>();
+      const node = this.colorNodes.find(x => x.number === 0);
+      this.setNodeAttributes(node.id, Color.Gray);
+      this.BFSQueue.enqueue(node);
+    }
+
+    this.BFSIsRun = true;
+    this.timer = setInterval(() => {
+      if (this.BFSQueue.length === 0) {
+        clearInterval(this.timer);
+        this.BFSIsRun = false;
+        this.BFSEnd.emit();
+      } else {
+        const node = this.BFSQueue.dequeue();
+
+        node.edges.forEach(edge => {
+          const childNode = this.colorNodes.find(x => x.id === edge.child);
+          if (!childNode.isColor && !this.BFSQueue.toArray().find(x => x.id === childNode.id)) {
+            this.setNodeAttributes(childNode.id, Color.Gray);
+            childNode.isColor = true;
+            this.BFSQueue.enqueue(childNode);
+          }
+        });
+
+        this.setNodeAttributes(node.id, Color.Black, Color.White);
+      }
+    }, 1000);
   }
 
-  drawPath(id: string) {
+  stopBFS() {
+    if (this.BFSIsRun) {
+      clearInterval(this.timer);
+      this.BFSIsRun = false;
+      this.BFSEnd.emit();
+    }
+  }
 
+  // Csúcshoz vezető út és onnan tovább menő csúcsok kiszínezése
+  drawPath(id: string) {
+    this.reset();
+    const node = this.graph.find(x => x.id === id);
+    this.colorNodes.push(node);
+    let parentNodes = this.graph.filter(x => x.edges.filter(y => y.child === node.id).length > 0);
+
+    while (parentNodes.length > 0) {
+      let newParentNodes = new Array<Node>();
+      parentNodes.forEach(parentNode => {
+        this.colorNodes.push(parentNode);
+        newParentNodes = newParentNodes.concat(this.graph.filter(x => x.edges.filter(y => y.child === parentNode.id).length > 0));
+      });
+      parentNodes = newParentNodes;
+    }
+
+    let childNodes = new Array<Node>();
+    node.edges.forEach(edge => {
+      const childNode = this.graph.find(x => x.id === edge.child);
+      this.colorNodes.push(childNode);
+      childNodes.push(childNode);
+    });
+    while (childNodes.length !== 0) {
+      const newchildNodes = new Array<Node>();
+      childNodes.forEach(childNode => {
+        childNode.edges.forEach(edge => {
+          const newChildNode = this.graph.find(x => x.id === edge.child);
+          this.colorNodes.push(newChildNode);
+          newchildNodes.push(newChildNode);
+        });
+      });
+      childNodes = newchildNodes;
+    }
+
+    this.colorNodes.forEach(colorNode => {
+      this.setNodeAttributes(colorNode.id, Color.Blue, Color.Black);
+      colorNode.edges.forEach(edge => {
+        if (this.colorNodes.find(x => x.id === edge.child)) {
+          this.setEdgeAttributes(edge, Color.Blue);
+        }
+      });
+    });
+  }
+
+  // ControlFlowGraph 1 adott csúcsának kijelölése
+  getNode = (id: string) => {
+    return new Promise<Node>((resolve) => {
+      let delayTime = 0;
+      const time = setInterval(() => {
+        if (delayTime !== 0) {
+          ++delayTime;
+        } else {
+          clearInterval(time);
+          const node = this.graph.find(x => x.id === id);
+          resolve(node);
+        }
+      }, 1000);
+    });
   }
 
   selectNode(id: string) {
-
+    this.getNode(id).then(x => {
+      this.reset();
+      this.colorNodes.push(x);
+      this.setNodeAttributes(id, Color.Blue);
+    });
   }
 
-  reset() {
+  // Gráf visszaállítása az eredeti formára
+  private reset() {
+    if (this.BFSIsRun) {
+      clearInterval(this.timer);
+      this.BFSIsRun = false;
+      this.BFSQueue = new Queue<Node>();
+      this.BFSEnd.emit();
+    }
 
+    if (this.colorNodes && this.colorNodes.length !== 0) {
+      this.colorNodes = new Array<Node>();
+      this.BFSQueue = new Queue<Node>();
+      this.graph.forEach(node => {
+        node.isColor = false;
+        this.setNodeAttributes(node.id, node.fillColor, node.fontColor);
+        node.edges.forEach(edge => {
+          this.setEdgeAttributes(edge, edge.color);
+        });
+      });
+    }
+  }
+
+  // HTML attribútumok beállítása
+  private setNodeAttributes(id: string, fillColor: string, textColor?: string) {
+    const attributes = document.getElementById(id).children[1].children[0].children;
+    attributes[0].setAttribute('fill', fillColor);
+    if (textColor) {
+      attributes[0].setAttribute('stroke', textColor);
+      for (let i = 1; i < attributes.length; ++i) {
+        attributes[i].setAttribute('fill', textColor);
+      }
+    }
+  }
+
+  private setEdgeAttributes(edge: Edge, color: string) {
+    const attributes = document.getElementById(`${edge.parent} -> ${edge.child}`).children;
+    attributes[1].setAttribute('stroke', color);
+    if (edge.edgeArrowType === 0) {
+      attributes[2].setAttribute('stroke', color);
+      attributes[2].setAttribute('fill', color);
+    }
   }
 }

@@ -11,4 +11,5 @@ export interface Node {
   fillColor: string;
   fontColor: string;
   shape: number;
+  isColor: boolean;
 }
