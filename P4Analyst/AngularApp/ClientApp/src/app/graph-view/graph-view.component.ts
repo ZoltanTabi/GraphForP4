@@ -8,6 +8,7 @@ import { SessionStorageService } from 'ngx-store';
 import { TabContent } from '../models/tabContent';
 import { Node } from '../models/graph/node';
 import { SizeAttribute } from '../models/sizeAttribute';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-graph-view',
@@ -26,7 +27,7 @@ export class GraphViewComponent {
   currentSize: SizeAttribute;
   buttonsDisabled = [true, true];
 
-  constructor(private sessionStorageService: SessionStorageService) {
+  constructor(private sessionStorageService: SessionStorageService, private router: Router) {
     this.tabs = new Array<TabContent>();
   }
 
@@ -109,4 +110,7 @@ export class GraphViewComponent {
     }
   }
 
+  onNext() {
+    this.router.navigateByUrl('/analyze');
+  }
 }

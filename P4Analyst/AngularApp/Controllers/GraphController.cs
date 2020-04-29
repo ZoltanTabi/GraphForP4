@@ -24,27 +24,6 @@ namespace AngularApp.Controllers
         [HttpGet("{type}")]
         public IActionResult GetGraph(string type)
         {
-            /*var success = Enum.TryParse(type, true, out Key key);
-
-            if (!success) return BadRequest("Érvénytelen behívás!");
-
-            var graph = SessionExtension.GetGraph(session, Key.ControlFlowGraph);
-
-            if(key == Key.DataFlowGraph)
-            {
-                var content = SessionExtension.Get<String>(session, Key.File);
-                graph = P4ToGraph.ControlFlowGraph(ref content);
-                graph = P4ToGraph.DataFlowGraph(content, graph);
-
-                //return Ok(GraphToAngular.Serialize(graph));
-            }
-
-            //return Ok(new { result = graph.ToJson() });
-            //return Ok(new { graph = graph.ToJson() });
-            //return Ok(graph.ToJson());
-
-            return Ok(GraphToAngular.Serialize(graph));*/
-
             logger.LogInformation("Gráf lekérdezése", type);
 
             try

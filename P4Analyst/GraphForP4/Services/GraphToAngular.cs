@@ -82,7 +82,7 @@ namespace GraphForP4.Services
                     find = graph.Nodes[i].Edges[j].Child == node;
                 }
             }
-            String.Concat(Guid.NewGuid().ToString("N").Select(c => (char)(c + 17)));
+
             return !find;
         }
 

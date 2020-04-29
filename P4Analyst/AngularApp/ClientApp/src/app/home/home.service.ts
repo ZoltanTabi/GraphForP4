@@ -17,10 +17,7 @@ export class HomeService {
   private handleError: HandleError;
   private baseUrl: string;
 
-  constructor(
-    private http: HttpClient,
-    httpErrorHandler: HttpErrorHandler,
-    @Inject('BASE_URL') baseUrl: string) {
+  constructor(private http: HttpClient,  httpErrorHandler: HttpErrorHandler, @Inject('BASE_URL') baseUrl: string) {
     this.handleError = httpErrorHandler.createHandleError('HomeService');
     this.baseUrl = baseUrl;
   }

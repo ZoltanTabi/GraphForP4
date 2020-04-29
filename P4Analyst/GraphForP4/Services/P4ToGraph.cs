@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GraphForP4.Enums;
 using GraphForP4.Models;
+using GraphForP4.Helpers;
 
 namespace GraphForP4.Services
 {
@@ -16,7 +17,6 @@ namespace GraphForP4.Services
         const string IF = "if";
         const string ELSE = "else";
         const string ACTIONS = "actions";
-        private static readonly String[] CHARACTERS = { " ", "(", "{", "=" };
 
         #region ControlFlowGraph
         public static Graph ControlFlowGraph(ref string input)
@@ -34,13 +34,13 @@ namespace GraphForP4.Services
                 graph[0]
             };
 
-            input = InputClean(input);
+            input = FileHelper.InputClean(input);
             var matchString = Regex.Match(input, "V1Switch(.*)main").Value;
             var ingressControlName = Regex.Split(matchString, @"\(([^\(]*)\)([^,]*),")
                                           .Where(x => !string.IsNullOrWhiteSpace(x)).ToList()[2].Trim();
             
-            var ingressMethod = GetMethod(input, ingressControlName);
-            var applyMethod = SplitAndClean(GetMethod(ingressMethod, APPLY));
+            var ingressMethod = FileHelper.GetMethod(input, ingressControlName);
+            var applyMethod = FileHelper.SplitAndClean(FileHelper.GetMethod(ingressMethod, APPLY));
 
             currentNodes = Search(graph, currentNodes, applyMethod, ingressMethod);
 
@@ -161,7 +161,7 @@ namespace GraphForP4.Services
 
         private static List<Node> IfMethod(Graph graph, List<Node> currentNodes, String ifMethod, String ingressMethod)
         {
-            var ifCondition = GetMethod(ifMethod, IF, '(', ')');
+            var ifCondition = FileHelper.GetMethod(ifMethod, IF, '(', ')');
             ifCondition = ifCondition.Insert(0, $"{IF} ");
             var ifNode = new Node
             {
@@ -177,13 +177,13 @@ namespace GraphForP4.Services
                 graph.AddEdge(node, ifNode);
             }
 
-            var ifTrueMethod = GetMethod(ifMethod, ifCondition);
+            var ifTrueMethod = FileHelper.GetMethod(ifMethod, ifCondition);
             ifMethod = ifMethod.Replace(IF, String.Empty).Replace(ifCondition, String.Empty).Replace(ifTrueMethod, String.Empty);
-            currentNodes = Search(graph, new List<Node> { ifNode }, SplitAndClean(ifTrueMethod), ingressMethod);
+            currentNodes = Search(graph, new List<Node> { ifNode }, FileHelper.SplitAndClean(ifTrueMethod), ingressMethod);
 
             if(ifMethod.Contains(ELSE))
             {
-                var elseMethod = SplitAndClean(GetMethod(ifMethod, ELSE));
+                var elseMethod = FileHelper.SplitAndClean(FileHelper.GetMethod(ifMethod, ELSE));
                 currentNodes = currentNodes.Concat(Search(graph, new List<Node> { ifNode }, elseMethod, ingressMethod)).ToList();
             }
             else
@@ -219,8 +219,8 @@ namespace GraphForP4.Services
 
             currentNodes = new List<Node>();
 
-            var tableMethod = GetMethod(ingressMethod, "table " + tableName);
-            var actions = SplitAndClean(GetMethod(tableMethod, ACTIONS));
+            var tableMethod = FileHelper.GetMethod(ingressMethod, "table " + tableName);
+            var actions = FileHelper.SplitAndClean(FileHelper.GetMethod(tableMethod, ACTIONS));
             foreach(var action in actions)
             {
                 if(action.Contains(";"))
@@ -249,7 +249,7 @@ namespace GraphForP4.Services
                 graph.AddEdge(node, actionNode);
             }
 
-            var actionMethod = GetMethod(ingressMethod, "action " + actionName).Trim();
+            var actionMethod = FileHelper.GetMethod(ingressMethod, "action " + actionName).Trim();
             actionMethod = Regex.Replace(actionMethod, @" +", " ");
             
             if(String.IsNullOrWhiteSpace(actionMethod))
@@ -356,7 +356,7 @@ namespace GraphForP4.Services
         {
             var graph = new Graph();
 
-            var condition = GetMethod(parentNode.Text, IF, '(', ')');
+            var condition = FileHelper.GetMethod(parentNode.Text, IF, '(', ')');
             condition = condition.Remove(condition.Length - 1, 1).Remove(0, 1).Trim();
 
             var split = Regex.Split(condition, @"&&|\|\||==|!=").ToList();
@@ -402,11 +402,11 @@ namespace GraphForP4.Services
         {
             var graph = new Graph();
 
-            var tableMethod = GetMethod(input, "table " + parentNode.Text);
+            var tableMethod = FileHelper.GetMethod(input, "table " + parentNode.Text);
 
             if (!tableMethod.Contains("key")) return graph;
 
-            var keys = GetMethod(tableMethod, "key");
+            var keys = FileHelper.GetMethod(tableMethod, "key");
 
             if (keys.Trim().Length == 0) return graph;
 
@@ -595,55 +595,6 @@ namespace GraphForP4.Services
         #endregion
 
         #region Helper Methods
-        private static string InputClean(string input)
-        {
-            input = Regex.Replace(input, @"(<[^0-9]*>)|(//(.*?)\r?\n)|(/\*(.*)\*/)|([\n\r])", " ");
-            input = Regex.Unescape(input);
-
-            return input;
-        }
-
-        private static string GetMethod(string input, string firstEqual, char startChar = '{', char endChar = '}')
-        {
-            var result = String.Empty;
-            var count = 0;
-            var findStartChar = false;
-            var index = -1;
-            
-            for(var i = 0; i < CHARACTERS.Length && index == -1; ++i)
-            {
-                index = input.IndexOf(firstEqual + CHARACTERS[i]);
-            }
-
-            for(var i = index; i > -1 && (count != 0 || !findStartChar); ++i)
-            {
-                if(input[i] == startChar)
-                {
-                    findStartChar = true;
-                    ++count;
-                }
-                else if(input[i] == endChar)
-                {
-                    --count;
-                }
-                if(findStartChar)
-                {
-                    result += input[i];
-                }
-            }
-
-            return result;
-        }
-
-        private static List<String> SplitAndClean(String input)
-        {
-            var result = input.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
-            result.RemoveAt(0);
-            result.RemoveAt(result.Count - 1);
-
-            return result;
-        }
-
         private static (List<String>, String) Pop(List<String> list)
         {
             if (list == null || !list.Any())

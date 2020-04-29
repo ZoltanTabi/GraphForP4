@@ -26,6 +26,16 @@ namespace Test
             Assert.Equal(graph[0].Edges[1].Child, graph[2]);
             Assert.Equal(graph[0].Edges[2].Child, graph[3]);
         }
+
+        [Fact]
+        public void TestGetVariables()
+        {
+            var content = System.IO.File.ReadAllText(@"C:\Users\Tábi Zoltán\Desktop\Egyetem\Szakdolgozat\GraphForP4\P4Analyst\AngularApp\Files\hello.txt");
+
+            var variables = Analyzer.GetVariables(content);
+
+            Assert.Equal("ipv4_lpm", variables[0].Name);
+        }
     }
 }
  

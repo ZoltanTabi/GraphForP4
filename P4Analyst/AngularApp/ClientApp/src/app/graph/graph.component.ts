@@ -290,13 +290,11 @@ export class GraphComponent {
     event.path.forEach((element: { id: string; }) => {
       if (this.graph.find(x => x.id === element.id)) {
         if (this.type === Key.ControlFlowGraph) {
+          otherBottomSheet = true;
           this.controlFlowGraphClickHandler(element.id);
-          otherBottomSheet = true;
-          return;
         } else if (this.type === Key.DataFlowGraph) {
-          this.dataFlowGraphClickHandler(element.id);
           otherBottomSheet = true;
-          return;
+          this.dataFlowGraphClickHandler(element.id);
         }
       }
     });
@@ -384,9 +382,7 @@ export class GraphComponent {
     this.BFSIsRun = true;
     this.timer = setInterval(() => {
       if (this.BFSQueue.length === 0) {
-        clearInterval(this.timer);
-        this.BFSIsRun = false;
-        this.BFSEnd.emit();
+        this.stopBFS();
       } else {
         const node = this.BFSQueue.dequeue();
 

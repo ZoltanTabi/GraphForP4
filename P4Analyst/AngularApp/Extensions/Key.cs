@@ -9,6 +9,7 @@ namespace AngularApp.Extensions
     {
         ControlFlowGraph,
         DataFlowGraph,
-        File
+        File,
+        Struct
     }
 }

@@ -29,3 +29,12 @@
         <app-graph [inputGraph]="tab.graph" [type]="tab.id" [draw]="false" [parentElementId]="'mat-tab-content-0-' + index.toString()" [initialize]="index+2===selected.value"></app-graph>
     </mat-tab>
 </mat-tab-group>
+
+<div class="next-btn">
+    <button mat-raised-button color="primary" class="m-btn" (click)="onNext()">
+        Folytatás
+        <mat-icon>
+            send
+        </mat-icon>
+    </button>
+</div>

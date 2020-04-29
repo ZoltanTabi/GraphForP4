@@ -9,6 +9,7 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { GraphComponent } from './graph/graph.component';
 import { HomeComponent } from './home/home.component';
 import { HelpComponent } from './help/help.component';
+import { AnalyzeComponent } from './analyze/analyze.component';
 import { MatAnimatedIconComponent } from './components/mat-animated-icon/mat-animated-icon.component';
 import { SnackBarTemplateComponent } from './components/snack-bar-template/snack-bar-template.component';
 import { BottomSheetTemplateComponent } from '../app/components/bottom-sheet-template/bottom-sheet-template.component';
@@ -72,6 +73,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     GraphComponent,
     HomeComponent,
     HelpComponent,
+    AnalyzeComponent,
     GraphViewComponent,
     FileUploadComponent,
     MatAnimatedIconComponent,
@@ -131,6 +133,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'help', component: HelpComponent },
       { path: 'graphview', component: GraphViewComponent},
+      { path: 'analyze', component: AnalyzeComponent},
     ])
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],

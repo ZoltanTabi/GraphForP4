@@ -5,6 +5,7 @@
 @import './scss/custom-component-themes.scss';
 @import './scss/notification.scss';
 @import './scss/dialog.scss';
+@import './scss/button.scss';
 
 .my-theme {
   @include angular-material-theme($my-theme);
@@ -28,30 +29,12 @@ code {
   color: #e01a76;
 }
 
-.mat-icon-button:focus,
-.mat-mini-fab:focus,
-.button:focus {
-  outline: none;
-}
-
 mat-icon.play {
   color: green;
 }
 
 mat-icon.pause {
   color: red;
-}
-
-button.change-color {
-  margin-right: 20px !important;
-}
-
-button.bottom-sheet {
-  width: 50%;
-}
-
-button.tab-button {
-  margin-left: 15px;
 }
 
 .max-height {
