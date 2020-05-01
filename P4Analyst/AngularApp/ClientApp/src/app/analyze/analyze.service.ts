@@ -28,10 +28,10 @@ export class AnalyzeService {
       );
   }
 
-  putStructs(structs: Array<Struct>) {
+  putStructs(structs: Array<[Struct[], Struct[]]>) {
     return this.http.put<Array<Struct>>(this.baseUrl + 'analyzer', structs, httpOptions)
       .pipe(
-        catchError(this.handleError<Array<Struct>>('getVariables'))
+        catchError(this.handleError<Array<Struct>>('putStructs'))
       );
   }
 }

@@ -10,6 +10,9 @@
 .my-theme {
   @include angular-material-theme($my-theme);
   @include custom-components-theme($my-theme);
+  .mat-stepper-horizontal {
+    background-color: #fafafa;
+  }
 }
 
 .my-dark-theme {
@@ -18,6 +21,9 @@
   .dropzone {
     background-color: rgba(255, 255, 255, 0.1) !important;
     color: rgba(255, 255, 255, 0.7) !important;
+  }
+  .mat-stepper-horizontal {
+    background-color: #303030;
   }
 }
 

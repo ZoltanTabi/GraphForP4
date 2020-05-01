@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AngularApp.Extensions;
 using GraphForP4.Models;
 using GraphForP4.Services;
-using GraphForP4.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -23,10 +20,10 @@ namespace AngularApp.Controllers
         [HttpGet]
         public IActionResult GetVariables()
         {
-            logger.LogInformation("Header rész lekérdezése");
-
-            try
+            return ActionExecute(() =>
             {
+                logger.LogInformation("Header rész lekérdezése");
+
                 var file = SessionExtension.Get<string>(session, Key.File);
 
                 if (file == null) return BadRequest("Kérem töltsön fel először fájlt!");
@@ -36,26 +33,16 @@ namespace AngularApp.Controllers
                 SessionExtension.Set(session, Key.Struct, structs);
 
                 return Ok(structs);
-            }
-            catch (ApplicationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception)
-            {
-                return BadRequest("Váratlan hiba!");
-            }
+            });
         }
 
         [HttpPut]
-        public List<Struct> Update([FromBody]List<Struct> structs)
+        public IActionResult Update([FromBody]List<Tuple<List<Struct>,List<Struct>>> structs)
         {
-            if (structs.Count > 0)
+            return ActionExecute(() =>
             {
-                
-            }
-
-            return structs;
+                return Ok(structs);
+            });
         }
     }
 }

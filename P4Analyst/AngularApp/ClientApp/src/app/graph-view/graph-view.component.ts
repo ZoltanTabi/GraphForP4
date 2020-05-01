@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChildren, QueryList, ViewChild } from '@angular/core';
+import { Component, ViewChildren, QueryList } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ResizedEvent } from 'angular-resize-event';
 import { Key } from '../models/key';

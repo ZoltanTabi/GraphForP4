@@ -1,0 +1,27 @@
+::ng-deep .mat-horizontal-stepper-header {
+    pointer-events: none !important;
+    .mat-step-icon {
+        height: 36px;
+        width: 36px;
+        .mat-icon {
+          font-size: 24px;
+          height: 24px;
+          width: 24px;
+        }
+    }
+}
+
+.navigate-button-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.number-button {
+  width: 48px;
+}
+
+.text-button {
+  width: 115px;
+}

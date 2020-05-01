@@ -5,11 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { GraphComponent } from './graph/graph.component';
 import { HomeComponent } from './home/home.component';
 import { HelpComponent } from './help/help.component';
 import { AnalyzeComponent } from './analyze/analyze.component';
+import { SelectorComponent } from './selector/selector.component';
+import { DragAndDropListComponent } from './drag-and-drop-list/drag-and-drop-list.component';
 import { MatAnimatedIconComponent } from './components/mat-animated-icon/mat-animated-icon.component';
 import { SnackBarTemplateComponent } from './components/snack-bar-template/snack-bar-template.component';
 import { BottomSheetTemplateComponent } from '../app/components/bottom-sheet-template/bottom-sheet-template.component';
@@ -74,6 +77,8 @@ import { OverlayModule } from '@angular/cdk/overlay';
     HomeComponent,
     HelpComponent,
     AnalyzeComponent,
+    SelectorComponent,
+    DragAndDropListComponent,
     GraphViewComponent,
     FileUploadComponent,
     MatAnimatedIconComponent,
@@ -97,6 +102,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     WebStorageModule,
 
     // Material
+    DragDropModule,
     MatAutocompleteModule,
     MatBottomSheetModule,
     MatButtonModule,

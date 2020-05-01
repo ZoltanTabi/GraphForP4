@@ -1,12 +1,43 @@
+<mat-horizontal-stepper #stepper>
+    <mat-step label="Kezdő- és végértékek" state="select">
+        <app-selector #selector [structs]="originalStructs"></app-selector>
+    </mat-step>
+    <mat-step label="Sorbarendezés" state="sort">
+        <app-drag-and-drop-list [setSelector]="selector.selectors"></app-drag-and-drop-list>
+    </mat-step>
+    <mat-step label="Elemzés megtekintése" state="analyst">
+        Step 3
+    </mat-step>
 
-<h1>
-    Itt vagyok
-</h1>
-<div class="next-btn">
-    <button mat-raised-button color="primary" class="m-btn" (click)="onPut()">
-        Folytatás
-        <mat-icon>
-            send
-        </mat-icon>
-    </button>
+    <ng-template matStepperIcon="select">
+        <mat-icon>reorder</mat-icon>
+    </ng-template>
+    <ng-template matStepperIcon="sort">
+        <mat-icon>sort</mat-icon>
+    </ng-template>
+    <ng-template matStepperIcon="analyst">
+        <mat-icon>table_chart</mat-icon>
+    </ng-template>
+</mat-horizontal-stepper>
+
+<div class="navigate-button-group">
+    <mat-button-toggle-group #buttonGroup="matButtonToggleGroup" style="margin: 0 auto;">
+        <mat-button-toggle value="before" [disabled]="stepper.selectedIndex===0" (change)="onButtonChange($event.value)" class="text-button">
+            <mat-icon>arrow_back_ios</mat-icon>
+            előző
+        </mat-button-toggle>
+        <mat-button-toggle value="0" (change)="onButtonChange($event.value)" class="number-button">
+            1
+        </mat-button-toggle>
+        <mat-button-toggle value="1" [disabled]="selector.selectors.length===1" (change)="onButtonChange($event.value)" class="number-button">
+            2
+        </mat-button-toggle>
+        <mat-button-toggle value="2" (change)="onButtonChange($event.value)" class="number-button">
+            3
+        </mat-button-toggle>
+        <mat-button-toggle value="next" [disabled]="stepper.selectedIndex===2" (change)="onButtonChange($event.value)" class="text-button">
+            következő
+            <mat-icon>arrow_forward_ios</mat-icon>
+        </mat-button-toggle>
+    </mat-button-toggle-group>
 </div>

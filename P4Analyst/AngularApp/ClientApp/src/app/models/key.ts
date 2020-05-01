@@ -3,4 +3,5 @@ export enum Key {
   DataFlowGraph = 'dataflowgraph',
   AnalystControlFlowGraph = 'analystcontrolflowgraph',
   AnalystDataFlowGraph = 'analystdataflowgraph',
+  Structs = 'Structs'
 }

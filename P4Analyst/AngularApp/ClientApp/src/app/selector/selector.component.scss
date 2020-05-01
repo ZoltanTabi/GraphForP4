@@ -1,0 +1,24 @@
+.selector {
+    padding: 0;
+}
+
+@media screen and (min-width: 700px) {
+    .selector {
+        padding: 0 20px;
+    }
+}
+
+@media screen and (min-width: 1500px) {
+    .selector {
+        padding: 0 60px;
+    }
+}
+
+.selector-button {
+    text-align: left;
+    width: 100%;
+}
+
+::ng-deep .mat-form-field-infix {
+    width: 300px !important;
+}

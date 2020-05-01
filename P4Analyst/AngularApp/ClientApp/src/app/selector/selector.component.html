@@ -1,0 +1,50 @@
+<div class="selector" (window:resize)="onResize($event)">
+    <mat-accordion #accordion>
+        <mat-expansion-panel *ngFor="let selector of selectors">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Értékek beállítása
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{selector.id}}. verzió
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-grid-list cols="2" rowHeight="80px">
+                <mat-grid-tile [colspan]="colspan" [rowspan]="1">
+                    <mat-form-field>
+                        <mat-select [formControl]="selector.startControl" multiple>
+                            <mat-optgroup *ngFor="let viewModel of viewModels" [label]="viewModel.name">
+                              <mat-option *ngFor="let view of viewModel.views" [value]="view.value" (onSelectionChange)="onStartSelect(selector.id, $event)">
+                                {{view.viewValue}}
+                              </mat-option>
+                            </mat-optgroup>
+                        </mat-select>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="colspan" [rowspan]="1">
+                    <mat-form-field>
+                        <mat-select [formControl]="selector.endControl" multiple>
+                            <mat-optgroup *ngFor="let viewModel of viewModels" [label]="viewModel.name">
+                              <mat-option *ngFor="let view of viewModel.views" [value]="view.value" (onSelectionChange)="onEndSelect(selector.id, $event)">
+                                {{view.viewValue}}
+                              </mat-option>
+                            </mat-optgroup>
+                          </mat-select>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile *ngIf="selector.id !== 1 || selectors.length === 1" [colspan]="2" [rowspan]="1">
+                    <div class=selector-button>
+                        <button mat-stroked-button color="warn" *ngIf="selector.id !== 1" (click)="cancel(selector.id)" style="margin-right: 5px">
+                            Törlés
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                        <button mat-stroked-button color="primary" *ngIf="selectors.length === selector.id" (click)="add()">
+                            Plusz hozzáadás
+                            <mat-icon>add_box</mat-icon>
+                        </button>
+                    </div>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

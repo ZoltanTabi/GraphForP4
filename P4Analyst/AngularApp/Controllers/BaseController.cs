@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -20,18 +17,20 @@ namespace AngularApp.Controllers
             this.logger = logger;
         }
 
-        protected IActionResult ReturnAction(ActionResult action)
+        protected IActionResult ActionExecute(Func<IActionResult> logic)
         {
             try
             {
-                return action;
+                return logic();
             }
             catch (ApplicationException ex)
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.LogError(ex.ToString());
+
                 return BadRequest("Váratlan hiba!");
             }
         }
