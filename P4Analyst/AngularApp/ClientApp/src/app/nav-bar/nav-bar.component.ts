@@ -9,7 +9,7 @@ import {ChangeDetectorRef, Component, OnDestroy, EventEmitter, Output} from '@an
 export class NavBarComponent implements OnDestroy {
   @Output() change = new EventEmitter<boolean>();
   mobileQuery: MediaQueryList;
-  opened = false;
+  opened = true;
 
   private _mobileQueryListener: () => void;
 

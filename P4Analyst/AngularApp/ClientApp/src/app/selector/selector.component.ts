@@ -1,4 +1,4 @@
-import { Component, Input, QueryList, ViewChildren } from '@angular/core';
+import { Component, Input, QueryList, ViewChildren, Output, EventEmitter } from '@angular/core';
 import { Struct } from '../models/variables/struct';
 import { Selector } from '../models/selector/selector';
 import { FormControl } from '@angular/forms';
@@ -6,6 +6,7 @@ import { StructGroup } from '../models/selector/structGroup';
 import { StructViewModel } from '../models/selector/structViewModel';
 import { Header } from '../models/variables/header';
 import { MatExpansionPanel } from '@angular/material';
+import { Copy } from '../functions/copy';
 
 @Component({
   selector: 'app-selector',
@@ -16,6 +17,7 @@ export class SelectorComponent {
 
   @ViewChildren(MatExpansionPanel) panels: QueryList<MatExpansionPanel>;
 
+  @Output() change = new EventEmitter();
   @Input() public set structs(structs: Array<Struct>) {
     if (!this.originalStructs && structs) {
       this.originalStructs = structs;
@@ -38,8 +40,8 @@ export class SelectorComponent {
     });
     this.selectors.push({
       id: 1,
-      startStruct: JSON.parse(JSON.stringify(this.originalStructs)) as Array<Struct>,
-      endStruct: JSON.parse(JSON.stringify(this.originalStructs)) as Array<Struct>,
+      startStruct: Copy<Array<Struct>>(this.originalStructs),
+      endStruct: Copy<Array<Struct>>(this.originalStructs),
       startControl: new FormControl(),
       endControl: new FormControl()
     });
@@ -49,15 +51,27 @@ export class SelectorComponent {
   add() {
     this.selectors.push({
       id: this.selectors.length + 1,
-      startStruct: this.originalStructs,
-      endStruct: this.originalStructs,
+      startStruct: Copy<Array<Struct>>(this.originalStructs),
+      endStruct: Copy<Array<Struct>>(this.originalStructs),
       startControl: new FormControl(),
       endControl: new FormControl()
     });
-    /*this.panels.forEach(panel => {
+    this.change.emit();
+    this.panels.forEach(panel => {
       panel.close();
     });
-    this.panels.last.open();*/
+    this.delay().then(() => {
+      this.panels.last.open();
+    });
+  }
+
+  delay = () => {
+    return new Promise<void>((resolve) => {
+      const time = setInterval(() => {
+          clearInterval(time);
+          resolve();
+      }, 400);
+    });
   }
 
   cancel(id: number) {
@@ -67,6 +81,7 @@ export class SelectorComponent {
         --x.id;
       }
     });
+    this.change.emit();
   }
 
   onResize() {
@@ -95,7 +110,6 @@ export class SelectorComponent {
     const path = (event.source.value as string).split(' - ');
     const newValue = event.source.selected as boolean;
     this.onSelect(startStruct, path, newValue);
-    console.log(startStruct);
   }
 
   onEndSelect(id: number, event: any) {
@@ -103,7 +117,6 @@ export class SelectorComponent {
     const path = (event.source.value as string).split(' - ');
     const newValue = event.source.selected as boolean;
     this.onSelect(endStruct, path, newValue);
-    console.log(endStruct);
   }
 
   onSelect(structs: Array<Struct>, path: string[], newValue: boolean) {
@@ -129,5 +142,6 @@ export class SelectorComponent {
         }
       }
     }
+    this.change.emit();
   }
 }

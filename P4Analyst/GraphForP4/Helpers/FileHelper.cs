@@ -60,5 +60,11 @@ namespace GraphForP4.Helpers
 
             return result;
         }
+
+        public static string GetIngressControlName(String input)
+        {
+            var matchString = Regex.Match(input, "V1Switch(.*)main").Value;
+            return Regex.Split(matchString, @"\(([^\(]*)\)([^,]*),").Where(x => !string.IsNullOrWhiteSpace(x)).ToList()[2].Trim();
+        }
     }
 }

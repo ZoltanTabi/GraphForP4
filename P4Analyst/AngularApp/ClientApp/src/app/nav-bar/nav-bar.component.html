@@ -1,6 +1,7 @@
 <div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
   <mat-toolbar color="primary" class="example-toolbar">
-    <button mat-icon-button (click)="mobileQuery.matches ? [snav.toggle(), animatedIcon.toggle()] : [opened=!opened, animatedIcon.toggle()]">
+    <!--<button mat-icon-button (click)="mobileQuery.matches ? [snav.toggle(), animatedIcon.toggle()] : [opened=!opened, animatedIcon.toggle()]">-->
+    <button mat-icon-button (click)="[snav.toggle(), animatedIcon.toggle()]">
       <mat-animated-icon #animatedIcon start="keyboard_arrow_left" end="keyboard_arrow_right"
         colorStart="white" colorEnd="white" animate="false">
       </mat-animated-icon>
@@ -27,7 +28,8 @@
                          (backdropClick)="animatedIcon.toggle()">
     <mat-sidenav #snav id="mat-sidenav" [mode]="mobileQuery.matches ? 'over' : 'side'"
                  [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-                 [attr.color]="'primary'" opened="true">
+                 [attr.color]="'primary'">
+                 <!-- opened="true"-->
         <mat-nav-list>
         <a mat-list-item [routerLink]="['/home']"
          [matTooltipDisabled]="opened" matTooltipPosition="right" matTooltip="Főoldal">

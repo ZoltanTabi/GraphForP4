@@ -7,6 +7,7 @@ import { SessionStorageService } from 'ngx-store';
 import { Key } from '../models/key';
 import { SelectorComponent } from '../selector/selector.component';
 import { DragAndDropListComponent } from '../drag-and-drop-list/drag-and-drop-list.component';
+import { AnalyzeData } from '../models/variables/analyzeData';
 
 @Component({
   selector: 'app-analyze',
@@ -21,8 +22,9 @@ export class AnalyzeComponent implements OnInit {
 
   public originalStructs: Array<Struct>;
   @ViewChild('stepper', {static: true}) stepper: MatStepper;
-  @ViewChildren('buttonGroup') buttonGroup: MatButtonToggleGroup;
+  @ViewChild('buttonGroup',  {static: true}) buttonGroup: MatButtonToggleGroup;
   @ViewChild('selector', {static: true}) selector: SelectorComponent;
+  @ViewChild('dragAndDropList', {static: true}) dragAndDropList: DragAndDropListComponent;
 
   constructor(private analyzeService: AnalyzeService, private sessionStorageService: SessionStorageService) { }
 
@@ -38,10 +40,18 @@ export class AnalyzeComponent implements OnInit {
   }
 
   onPut() {
-    const message = new Array<[Struct[], Struct[]]>();
-    this.selector.selectors.forEach(x => {
-      message.push([x.startStruct, x.endStruct]);
-    });
+    const message = new Array<AnalyzeData>();
+    const toList = this.dragAndDropList.toList;
+    if (toList && toList.length > 0) {
+      for (let i = 0; i < toList.length; ++i) {
+        const selector = this.selector.selectors.find(x => x.id === toList[i].id);
+        message.push({id: selector.id, startState: selector.startStruct, endState: selector.endStruct});
+      }
+    } else {
+      this.selector.selectors.forEach(x => {
+        message.push({id: x.id, startState: x.startStruct, endState: x.endStruct});
+      });
+    }
 
     this.analyzeService.putStructs(message).subscribe((result: any) => {
       console.log(result);
@@ -67,12 +77,13 @@ export class AnalyzeComponent implements OnInit {
     if (this.stepper.selectedIndex === 2) {
       this.onPut();
     }
-    /*// tslint:disable-next-line: triple-equals
-    console.log(this.buttonGroup._buttonToggles);
-    console.log(this.buttonGroup._buttonToggles);
-
+    // tslint:disable-next-line: triple-equals
     this.buttonGroup._buttonToggles.find(x => x.value == value).checked = false;
     // tslint:disable-next-line: triple-equals
-    this.buttonGroup._buttonToggles.find(x => x.value == this.stepper.selectedIndex).checked = true;*/
+    this.buttonGroup._buttonToggles.find(x => x.value == this.stepper.selectedIndex).checked = true;
+  }
+
+  onSelectorChange() {
+    this.dragAndDropList.setSelector(this.selector.selectors);
   }
 }

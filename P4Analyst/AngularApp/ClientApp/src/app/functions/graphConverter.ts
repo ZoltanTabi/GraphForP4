@@ -54,7 +54,7 @@ export function getNodeShape(i: number): string {
         case 2:
             return NodeShape.Box;
         case 3:
-            return NodeShape.Circle;
+            return NodeShape.Egg;
     }
 }
 

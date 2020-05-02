@@ -6,6 +6,6 @@ namespace GraphForP4.Enums
         Ellipse,
         Diamond,
         Box,
-        Circle
+        Egg
     }
 }

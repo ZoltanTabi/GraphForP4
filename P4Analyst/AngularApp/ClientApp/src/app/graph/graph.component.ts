@@ -73,28 +73,18 @@ export class GraphComponent {
       if (this.inputGraph) {
         this.graph = this.inputGraph;
         console.log(`InputGraph: ${this.inputGraph}`);
-        let delayTime = 0;
         const time = setInterval(() => {
-          if (delayTime !== 0) {
-            ++delayTime;
-          } else {
             clearInterval(time);
             resolve();
-          }
         }, 1000);
       } else {
         const sessionGraph = this.sessionStorageService.get(this.type) as Array<Node>;
         if (sessionGraph) {
           this.graph = sessionGraph;
           console.log(`SessionGrap: ${sessionGraph}`);
-          let delayTime = 0;
           const time = setInterval(() => {
-            if (delayTime !== 0) {
-              ++delayTime;
-            } else {
               clearInterval(time);
               resolve();
-            }
           }, 1000);
         } else {
             reject('CallServer');
@@ -107,7 +97,7 @@ export class GraphComponent {
     this.id = `graph${this.type}`;
     this.notificationService.info('Kérjük várja meg, amíg betöltődik!');
     this.getGraph()
-      .then(() => { this.afterOnInit(); } )
+      .then(() => { this.afterOnInit(); })
       .catch((reason) => {
         if (reason === 'CallServer') {
           this.graphService
@@ -455,15 +445,10 @@ export class GraphComponent {
   // ControlFlowGraph 1 adott csúcsának kijelölése
   getNode = (id: string) => {
     return new Promise<Node>((resolve) => {
-      let delayTime = 0;
       const time = setInterval(() => {
-        if (delayTime !== 0) {
-          ++delayTime;
-        } else {
           clearInterval(time);
           const node = this.graph.find(x => x.id === id);
           resolve(node);
-        }
       }, 1000);
     });
   }

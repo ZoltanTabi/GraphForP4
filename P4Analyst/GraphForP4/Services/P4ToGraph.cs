@@ -35,10 +35,8 @@ namespace GraphForP4.Services
             };
 
             input = FileHelper.InputClean(input);
-            var matchString = Regex.Match(input, "V1Switch(.*)main").Value;
-            var ingressControlName = Regex.Split(matchString, @"\(([^\(]*)\)([^,]*),")
-                                          .Where(x => !string.IsNullOrWhiteSpace(x)).ToList()[2].Trim();
-            
+            var ingressControlName = FileHelper.GetIngressControlName(input);
+
             var ingressMethod = FileHelper.GetMethod(input, ingressControlName);
             var applyMethod = FileHelper.SplitAndClean(FileHelper.GetMethod(ingressMethod, APPLY));
 
@@ -167,7 +165,7 @@ namespace GraphForP4.Services
             {
                 Text = ifCondition,
                 Type = NodeType.If,
-                Tooltip = ifCondition
+                Tooltip = "if"
             };
 
             graph.Add(ifNode);
@@ -207,7 +205,7 @@ namespace GraphForP4.Services
             {
                 Text = tableName,
                 Type = NodeType.Table,
-                Tooltip = tableName
+                Tooltip = "Table"
             };
 
             graph.Add(tableNode);
@@ -240,7 +238,7 @@ namespace GraphForP4.Services
             {
                 Text = actionName,
                 Type = NodeType.Action,
-                Tooltip = actionName
+                Tooltip = "Action"
             };
 
             graph.Add(actionNode);
@@ -371,7 +369,7 @@ namespace GraphForP4.Services
                     Operation = Operation.Read,
                     ParentId = parentNode.Id,
                     Text = text.Trim(),
-                    Tooltip = text.Trim(),
+                    Tooltip = "if",
                     Type = NodeType.If,
                     Shape = NodeShape.Box
                 };
@@ -416,7 +414,7 @@ namespace GraphForP4.Services
 
             foreach (var dir in keys.Split(";", StringSplitOptions.RemoveEmptyEntries))
             {
-                var key = dir.Split(":")[0];
+                var key = dir.Split(":", StringSplitOptions.RemoveEmptyEntries)[0];
 
                 if(key.Trim().Length > 0)
                 {
@@ -427,8 +425,9 @@ namespace GraphForP4.Services
                         Operation = Operation.Read,
                         ParentId = parentNode.Id,
                         Text = key.Trim(),
-                        Tooltip = "Kulcs",
-                        Type = NodeType.Key
+                        Tooltip = "Key",
+                        Type = NodeType.Key,
+                        Shape = NodeShape.Box
                     };
                     graph.Add(node);
                     dataFlowGraph.Add(node);
@@ -499,7 +498,7 @@ namespace GraphForP4.Services
                     Text = Regex.Replace(tokens[0], @"{|}|;", String.Empty).Trim(),
                     Tooltip = Regex.Replace(tokens[0], @"{|}|;", String.Empty).Trim(),
                     Type = NodeType.ActionMethod,
-                    Shape = NodeShape.Circle,
+                    Shape = NodeShape.Egg,
                     SubGraph = subgraph
                 };
 

@@ -23,7 +23,7 @@ namespace GraphForP4.Services
             {
                 var header = new Header
                 {
-                    Name = block.SubStringByEndChar(0, '{').Replace('{', ' ').Trim()
+                    Name = block.SubStringByEndChar(0, '{').Trim()
                 };
                 GetDeclarationBlock(block, header.Name).ForEach(variable =>
                 {
@@ -40,7 +40,7 @@ namespace GraphForP4.Services
             {
                 var _struct = new Struct
                 {
-                    Name = block.SubStringByEndChar(0, '{').Replace('{', ' ').Trim()
+                    Name = block.SubStringByEndChar(0, '{').Trim()
                 };
                 GetDeclarationBlock(block, _struct.Name).ForEach(variable =>
                 {
@@ -84,6 +84,30 @@ namespace GraphForP4.Services
         private static List<String> GetDeclarationBlock(string block, string name)
         {
             return Regex.Replace(FileHelper.GetMethod(block, name), @"{|}", String.Empty).Trim().Split(";", StringSplitOptions.RemoveEmptyEntries).ToList();
+        }
+
+        public static void Analyze(string input)
+        {
+            var code = FileHelper.InputClean(input);
+            var ingressControlName = FileHelper.GetIngressControlName(code);
+            Regex.Replace(FileHelper.GetMethod(code, ingressControlName, '(', ')'), @"(|)", String.Empty).Trim()
+                .Split(",", StringSplitOptions.RemoveEmptyEntries).ToList().ForEach(variable =>
+                {
+                    var declarations = variable.Split(";", StringSplitOptions.RemoveEmptyEntries).ToList();
+                    switch(declarations.Count)
+                    {
+                        case 2:
+                            break;
+                        case 3:
+                            declarations.RemoveAt(0);
+                            break;
+                        default:
+                            throw new ApplicationException("Érénytelen változó átadás!");
+                    }
+
+
+
+                });
         }
     }
 }

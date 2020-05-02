@@ -1,9 +1,9 @@
 <mat-horizontal-stepper #stepper>
     <mat-step label="Kezdő- és végértékek" state="select">
-        <app-selector #selector [structs]="originalStructs"></app-selector>
+        <app-selector #selector [structs]="originalStructs" (change)="onSelectorChange()"></app-selector>
     </mat-step>
     <mat-step label="Sorbarendezés" state="sort">
-        <app-drag-and-drop-list [setSelector]="selector.selectors"></app-drag-and-drop-list>
+        <app-drag-and-drop-list #dragAndDropList></app-drag-and-drop-list>
     </mat-step>
     <mat-step label="Elemzés megtekintése" state="analyst">
         Step 3

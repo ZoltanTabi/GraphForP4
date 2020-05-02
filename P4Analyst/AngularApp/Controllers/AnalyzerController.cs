@@ -37,11 +37,11 @@ namespace AngularApp.Controllers
         }
 
         [HttpPut]
-        public IActionResult Update([FromBody]List<Tuple<List<Struct>,List<Struct>>> structs)
+        public IActionResult Update([FromBody]List<AnalyzeData> analyzeDatas)
         {
             return ActionExecute(() =>
             {
-                return Ok(structs);
+                return Ok(analyzeDatas);
             });
         }
     }
