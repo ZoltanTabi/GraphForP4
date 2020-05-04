@@ -10,7 +10,7 @@ namespace GraphForP4.Models
     {
         public Node Parent { get; set; }
         public Node Child { get; set; }
-        public Color Color { get; set; } = Color.Black;
+        public Color Color { get; set; }
         public EdgeArrowType EdgeArrowType { get; set; } = EdgeArrowType.Normal;
         public EdgeStyle EdgeStyle { get; set; } = EdgeStyle.None;
     }

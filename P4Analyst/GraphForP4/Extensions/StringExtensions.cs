@@ -22,7 +22,7 @@ namespace GraphForP4.Extensions
 
         public static string SubStringByEndChar(this string str, int startIndex, char end)
         {
-            return str.Substring(startIndex, str.IndexOf(end, startIndex) - startIndex);
+            return str.Substring(startIndex, str.IndexOf(end, startIndex) - startIndex + 1);
         }
     }
 

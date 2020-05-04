@@ -32,7 +32,7 @@ namespace Test
         {
             var content = System.IO.File.ReadAllText(@"C:\Users\Tábi Zoltán\Desktop\Egyetem\Szakdolgozat\GraphForP4\P4Analyst\AngularApp\Files\hello.txt");
 
-            var variables = Analyzer.GetVariables(content);
+            var variables = Analyzer.GetStructs(content);
 
             Assert.Equal("ipv4_lpm", variables[0].Name);
         }

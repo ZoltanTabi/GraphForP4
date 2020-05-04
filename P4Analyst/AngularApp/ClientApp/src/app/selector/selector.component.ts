@@ -94,10 +94,10 @@ export class SelectorComponent {
     for (const key in struct.headers) {
       newViewModel.views.push({value: `${newViewModel.name} - ${key}`, viewValue: `${struct.headers[key].name} - fejléc`});
     }
-    struct.variables.forEach(variable => {
+    /*struct.variables.forEach(variable => {
       const variableName = variable.name;
       newViewModel.views.push({value: `${newViewModel.name} - ${variableName}`, viewValue: `${variableName} - változó`});
-    });
+    });*/
     this.viewModels.push(newViewModel);
     // tslint:disable-next-line: forin
     for (const key in struct.structs) {

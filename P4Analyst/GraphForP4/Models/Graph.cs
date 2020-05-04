@@ -30,13 +30,14 @@ namespace GraphForP4.Models
             Nodes.Add(node);
         }
 
-        public void AddEdge(Node parent, Node child)
+        public void AddEdge(Node parent, Node child, Color? color = null)
         {
             parent.Edges.Add(new Edge
             {
                 Parent = parent,
-                Child = child
-            });
+                Child = child,
+                Color = color.GetValueOrDefault(Color.Black)
+        });
         }
 
         #region ToJson

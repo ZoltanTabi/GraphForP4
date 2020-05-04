@@ -153,7 +153,7 @@ export class GraphComponent {
           currentThis.graphDrawing(++i, this);
           currentThis.graphPointer = this;
         }
-    }).zoom(true);
+    }).zoom(window.innerWidth >= 600);
   }
 
   graphDrawing(i: number, graph: any) {
@@ -253,7 +253,8 @@ export class GraphComponent {
 
   resize = (size: SizeAttribute) => {
     return new Promise<Node>(() => {
-      if (size && size.width !== 0 && size.height !== 0 && !this.loading && (!this.oldSize || size !== this.oldSize)) {
+      if (window.innerWidth >= 600 && size && size.width !== 0 && size.height !== 0 && !this.loading
+         && (!this.oldSize || size !== this.oldSize)) {
         this.oldSize = size;
         let delayTime = 0;
         const time = setInterval(() => {

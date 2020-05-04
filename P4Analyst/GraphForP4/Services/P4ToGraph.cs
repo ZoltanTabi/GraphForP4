@@ -63,7 +63,7 @@ namespace GraphForP4.Services
                     {
                         for(var k = graph.Nodes[i].Edges[j].Child.Edges.Count - 1; k >= 0; --k)
                         {
-                            graph.AddEdge(graph.Nodes[i].Edges[j].Parent, graph.Nodes[i].Edges[j].Child.Edges[k].Child);
+                            graph.AddEdge(graph.Nodes[i].Edges[j].Parent, graph.Nodes[i].Edges[j].Child.Edges[k].Child, Color.Red);
                         }
                     }
                 }
@@ -84,7 +84,7 @@ namespace GraphForP4.Services
             return graph;
         }
 
-        private static List<Node> Search(Graph graph, List<Node> currentNodes, List<String> method, String ingressMethod)
+        private static List<Node> Search(Graph graph, List<Node> currentNodes, List<String> method, String ingressMethod, Color? edgeColor = null)
         {
             var current = String.Empty;
             (method, current) = Pop(method);
@@ -96,13 +96,13 @@ namespace GraphForP4.Services
                     {
                         currentNodes = TableMethod(graph, currentNodes,
                                        Regex.Replace(current, @"\. *" + APPLY + @" *\( *\);", String.Empty).Trim(),
-                                       ingressMethod);
+                                       ingressMethod, edgeColor);
                     }
                     else if (current.Contains('('))
                     {
                         currentNodes = ActionMethod(graph, currentNodes,
                                        Regex.Replace(current, @" *\(.*\);", String.Empty).Trim(),
-                                       ingressMethod);
+                                       ingressMethod, edgeColor);
                     }
                     else
                     {
@@ -122,7 +122,7 @@ namespace GraphForP4.Services
                         graph.Add(actionMethodNode);
                         foreach (var node in currentNodes)
                         {
-                            graph.AddEdge(node, actionMethodNode);
+                            graph.AddEdge(node, actionMethodNode, edgeColor);
                         }
 
                         currentNodes = new List<Node> { actionMethodNode };
@@ -149,7 +149,7 @@ namespace GraphForP4.Services
                         }
                     }
 
-                    currentNodes = IfMethod(graph, currentNodes, ifMethod + elseMethod, ingressMethod);
+                    currentNodes = IfMethod(graph, currentNodes, ifMethod + elseMethod, ingressMethod, edgeColor);
                 }
                 (method, current) = Pop(method);
             }
@@ -157,7 +157,7 @@ namespace GraphForP4.Services
             return currentNodes;
         }
 
-        private static List<Node> IfMethod(Graph graph, List<Node> currentNodes, String ifMethod, String ingressMethod)
+        private static List<Node> IfMethod(Graph graph, List<Node> currentNodes, String ifMethod, String ingressMethod, Color? edgeColor = null)
         {
             var ifCondition = FileHelper.GetMethod(ifMethod, IF, '(', ')');
             ifCondition = ifCondition.Insert(0, $"{IF} ");
@@ -172,17 +172,17 @@ namespace GraphForP4.Services
 
             foreach(var node in currentNodes)
             {
-                graph.AddEdge(node, ifNode);
+                graph.AddEdge(node, ifNode, edgeColor);
             }
 
             var ifTrueMethod = FileHelper.GetMethod(ifMethod, ifCondition);
             ifMethod = ifMethod.Replace(IF, String.Empty).Replace(ifCondition, String.Empty).Replace(ifTrueMethod, String.Empty);
-            currentNodes = Search(graph, new List<Node> { ifNode }, FileHelper.SplitAndClean(ifTrueMethod), ingressMethod);
+            currentNodes = Search(graph, new List<Node> { ifNode }, FileHelper.SplitAndClean(ifTrueMethod), ingressMethod, Color.Green);
 
             if(ifMethod.Contains(ELSE))
             {
                 var elseMethod = FileHelper.SplitAndClean(FileHelper.GetMethod(ifMethod, ELSE));
-                currentNodes = currentNodes.Concat(Search(graph, new List<Node> { ifNode }, elseMethod, ingressMethod)).ToList();
+                currentNodes.AddRange(Search(graph, new List<Node> { ifNode }, elseMethod, ingressMethod, Color.Red));
             }
             else
             {
@@ -199,7 +199,7 @@ namespace GraphForP4.Services
             return currentNodes;
         }
 
-        private static List<Node> TableMethod(Graph graph, List<Node> currentNodes, String tableName, String ingressMethod)
+        private static List<Node> TableMethod(Graph graph, List<Node> currentNodes, String tableName, String ingressMethod, Color? edgeColor = null)
         {
             var tableNode = new Node
             {
@@ -212,7 +212,7 @@ namespace GraphForP4.Services
             
             foreach(var node in currentNodes)
             {
-                graph.AddEdge(node, tableNode);
+                graph.AddEdge(node, tableNode, edgeColor);
             }
 
             currentNodes = new List<Node>();
@@ -223,16 +223,15 @@ namespace GraphForP4.Services
             {
                 if(action.Contains(";"))
                 {
-                    currentNodes = currentNodes
-                                   .Concat(ActionMethod(graph, new List<Node> { tableNode },
-                                   Regex.Replace(action, @"( |;)", String.Empty).Trim(), ingressMethod)).ToList();
+                    currentNodes.AddRange(ActionMethod(graph, new List<Node> { tableNode },
+                                   Regex.Replace(action, @"( |;)", String.Empty).Trim(), ingressMethod));
                 }
             }
 
             return currentNodes;
         }
 
-        private static List<Node> ActionMethod(Graph graph, List<Node> currentNodes, String actionName, String ingressMethod)
+        private static List<Node> ActionMethod(Graph graph, List<Node> currentNodes, String actionName, String ingressMethod, Color? edgeColor = null)
         {
             var actionNode = new Node
             {
@@ -244,7 +243,7 @@ namespace GraphForP4.Services
             graph.Add(actionNode);
             foreach(var node in currentNodes)
             {
-                graph.AddEdge(node, actionNode);
+                graph.AddEdge(node, actionNode, edgeColor);
             }
 
             var actionMethod = FileHelper.GetMethod(ingressMethod, "action " + actionName).Trim();
@@ -338,11 +337,12 @@ namespace GraphForP4.Services
 
             foreach(var controlFlowGraphNode in controlFlowGraph.Nodes)
             {
-                if(graphs.ContainsKey(controlFlowGraphNode.Id) && controlFlowGraphNode.Edges.Any(x => x.Child == controlFlowGraph["End"]))
+                var edge = controlFlowGraphNode.Edges.FirstOrDefault(x => x.Child == controlFlowGraph["End"]);
+                if (graphs.ContainsKey(controlFlowGraphNode.Id) && edge != null)
                 {
                     EndNodes(graphs[controlFlowGraphNode.Id]).ForEach(node =>
                     {
-                        graph.AddEdge(node, endNode);
+                        graph.AddEdge(node, endNode, edge.Color);
                     });
                 }
             }
@@ -558,7 +558,7 @@ namespace GraphForP4.Services
                     {
                         foreach (var goNode in goNodes)
                         {
-                            graph.AddEdge(endNode, goNode);
+                            graph.AddEdge(endNode, goNode, edge.Color);
                         }
                     }
                 }

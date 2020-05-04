@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AngularApp.Extensions;
 using GraphForP4.Models;
 using GraphForP4.Services;
@@ -18,7 +19,7 @@ namespace AngularApp.Controllers
             : base(logger, http) { }
 
         [HttpGet]
-        public IActionResult GetVariables()
+        public IActionResult GetStructs()
         {
             return ActionExecute(() =>
             {
@@ -28,7 +29,7 @@ namespace AngularApp.Controllers
 
                 if (file == null) return BadRequest("Kérem töltsön fel először fájlt!");
 
-                var structs = Analyzer.GetVariables(file);
+                var structs = Analyzer.GetStructs(file);
 
                 SessionExtension.Set(session, Key.Struct, structs);
 
@@ -41,6 +42,21 @@ namespace AngularApp.Controllers
         {
             return ActionExecute(() =>
             {
+                var file = SessionExtension.Get<string>(session, Key.File);
+                var controlFlowGraphJson = SessionExtension.GetGraph(session, Key.ControlFlowGraph).ToJson();
+                var dataFlowGraphJson = SessionExtension.GetGraph(session, Key.DataFlowGraph).ToJson();
+                var analyzers = new List<Analyzer>();
+
+                analyzeDatas.ForEach(x =>
+                {
+                    analyzers.Add(new Analyzer(controlFlowGraphJson, dataFlowGraphJson, x, file));
+                });
+
+                Parallel.ForEach(analyzers, (analyzer) =>
+                {
+                    analyzer.Analyze();
+                });
+
                 return Ok(analyzeDatas);
             });
         }
