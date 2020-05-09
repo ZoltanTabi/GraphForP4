@@ -229,7 +229,7 @@ namespace GraphForP4.Services
 
         private void ActionAnalyze(Node controlFlowGraphNode, Dictionary<string, Struct> ingressStartStruct)
         {
-            dataFlowGraph.Nodes.GroupBy(x => x.ParentId).ToList().ForEach(x =>
+            dataFlowGraph.Nodes.Where(x => x.ParentId == controlFlowGraphNode.Id).GroupBy(x => x.SubGraph).ToList().ForEach(x =>
             {
                 if (x.Key != null)
                 {

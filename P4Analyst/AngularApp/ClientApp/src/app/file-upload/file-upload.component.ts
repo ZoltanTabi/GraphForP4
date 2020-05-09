@@ -60,6 +60,7 @@ export class FileUploadComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.fileData.content = result;
+        this.onChange();
         this.notificationService.success('Sikeres szerkesztés!');
       }
     });

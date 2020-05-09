@@ -124,6 +124,7 @@ namespace GraphForP4.Services
                         {
                             graph.AddEdge(node, actionMethodNode, edgeColor);
                         }
+                        edgeColor = null;
 
                         currentNodes = new List<Node> { actionMethodNode };
                     }
@@ -174,6 +175,7 @@ namespace GraphForP4.Services
             {
                 graph.AddEdge(node, ifNode, edgeColor);
             }
+            edgeColor = null;
 
             var ifTrueMethod = FileHelper.GetMethod(ifMethod, ifCondition);
             ifMethod = ifMethod.Replace(IF, String.Empty).Replace(ifCondition, String.Empty).Replace(ifTrueMethod, String.Empty);
@@ -214,6 +216,7 @@ namespace GraphForP4.Services
             {
                 graph.AddEdge(node, tableNode, edgeColor);
             }
+            edgeColor = null;
 
             currentNodes = new List<Node>();
 
@@ -245,6 +248,7 @@ namespace GraphForP4.Services
             {
                 graph.AddEdge(node, actionNode, edgeColor);
             }
+            edgeColor = null;
 
             var actionMethod = FileHelper.GetMethod(ingressMethod, "action " + actionName).Trim();
             actionMethod = Regex.Replace(actionMethod, @" +", " ");
