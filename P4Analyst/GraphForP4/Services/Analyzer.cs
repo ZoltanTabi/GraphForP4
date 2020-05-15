@@ -66,22 +66,6 @@ namespace GraphForP4.Services
             {
                 NodeAnalyze(edge.Child, new List<Dictionary<string, Struct>> { Copy(ingressStartStructs) });
             }
-            /*object v = new object();
-            Struct _struct;
-            Header header;
-            Variable variable;
-            switch(v.GetType().Name)
-            {
-                case "Struct":
-                    _struct = (Struct)v;
-                    break;
-                case "Header":
-                    header = (Header)v;
-                    break;
-                case "Variable":
-                    variable = (Variable)v;
-                    break;
-            }*/
         }
 
         private void NodeAnalyze(Node node, List<Dictionary<string, Struct>> ingressStartStructsLists)
@@ -148,7 +132,7 @@ namespace GraphForP4.Services
                     }
                     else
                     {
-                        controlFlowGraphNode.Edges.Where(x => x.Color == Color.Green).ToList().ForEach(x =>
+                        controlFlowGraphNode.Edges.Where(x => x.Color == Color.Red).ToList().ForEach(x =>
                         {
                             NodeAnalyze(x.Child, new List<Dictionary<string, Struct>> { Copy(ingressStartStruct) });
                         });

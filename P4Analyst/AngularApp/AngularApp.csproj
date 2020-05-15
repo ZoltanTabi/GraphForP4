@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GraphForP4\GraphForP4.csproj" />
+    <ProjectReference Include="..\Persistence\Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AngularApp", "AngularApp\AngularApp.csproj", "{46989ACC-9944-43A4-95FC-F18ACB07D1BA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\Persistence.csproj", "{0B257F29-2CA0-4372-A20A-9C3E6C794219}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{46989ACC-9944-43A4-95FC-F18ACB07D1BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46989ACC-9944-43A4-95FC-F18ACB07D1BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46989ACC-9944-43A4-95FC-F18ACB07D1BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B257F29-2CA0-4372-A20A-9C3E6C794219}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B257F29-2CA0-4372-A20A-9C3E6C794219}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B257F29-2CA0-4372-A20A-9C3E6C794219}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B257F29-2CA0-4372-A20A-9C3E6C794219}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

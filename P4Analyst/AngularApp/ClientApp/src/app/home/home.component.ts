@@ -17,8 +17,10 @@ export class HomeComponent implements OnInit {
 
   constructor(private homeService: HomeService, private router: Router, private sessionStorageService: SessionStorageService) {
     this.fileData = {
+      id: 0,
       name: '',
-      content: ''
+      content: '',
+      createDate: new Date()
     };
     this.code = '';
   }

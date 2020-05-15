@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Persistence;
 using System;
 
 namespace AngularApp
@@ -21,6 +23,18 @@ namespace AngularApp
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<P4Context>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                sqlServerOptionsAction: sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 10,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null);
+                });
+            });
+
             services.AddDistributedMemoryCache();
 
             services.AddSession(options =>
@@ -38,7 +52,7 @@ namespace AngularApp
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -75,6 +89,8 @@ namespace AngularApp
                     spa.Options.StartupTimeout = TimeSpan.FromSeconds(200);
                 }
             });
+
+            DbInitializer.Initialize(serviceProvider);
         }
     }
 }

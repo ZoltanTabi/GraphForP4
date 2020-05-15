@@ -17,8 +17,10 @@ export class FileUploadComponent {
 
   constructor(private notificationService: NotificationService, public dialog: MatDialog) {
     this.fileData = {
+      id: 0,
       name: '',
-      content: ''
+      content: '',
+      createDate: new Date()
     };
     this.file = null;
   }
