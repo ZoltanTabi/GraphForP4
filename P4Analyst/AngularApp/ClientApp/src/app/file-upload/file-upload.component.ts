@@ -55,7 +55,6 @@ export class FileUploadComponent {
     const dialogRef = this.dialog.open(EditDialogComponent, {
       height: '30vw',
       width: '55vw',
-      panelClass: 'my-dark-theme',
       data: { content: this.fileData.content }
     });
 

@@ -31,7 +31,7 @@ h1.example-app-name {
 
 h5 {
   margin-bottom: 0;
-  margin-left: 0.5em;
+  margin-left: 1em;
 }
 
 mat-nav-list a {
@@ -52,4 +52,8 @@ mat-nav-list a {
 
 .spacer {
   flex: 1 1 auto;
+}
+
+::ng-deep .mat-list-base .mat-list-item .mat-list-item-content {
+  padding: 0 24px !important;
 }

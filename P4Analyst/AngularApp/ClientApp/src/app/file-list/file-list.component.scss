@@ -1,0 +1,22 @@
+table {
+    width: 100%;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+td, th {
+    width: 25%;
+}
+
+.file-table {
+    padding: 20px;
+}
+
+@media screen and (min-width: 700px) {
+    .file-table {
+        padding: 20px 50px;
+    }
+}

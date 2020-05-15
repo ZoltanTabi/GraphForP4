@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
 
 namespace Persistence
 {
@@ -10,6 +12,11 @@ namespace Persistence
             var context = serviceProvider.GetRequiredService<P4Context>();
 
             context.Database.EnsureCreated();
+
+            /*if (context.P4Files.Any())
+            {
+                return;
+            }*/
         }
     }
 }

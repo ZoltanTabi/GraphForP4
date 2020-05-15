@@ -9,8 +9,9 @@ using Persistence;
 
 namespace AngularApp.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("[controller]")]
+    [Produces("application/json")]
     public class FileController : BaseController<FileController>
     {
         private readonly P4Context context;

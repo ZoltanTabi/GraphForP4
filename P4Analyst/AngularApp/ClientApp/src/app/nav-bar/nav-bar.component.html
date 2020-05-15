@@ -45,6 +45,13 @@
           </mat-icon>
           <h5 *ngIf="opened">Súgó</h5>
         </a>
+        <a mat-list-item [routerLink]="['/files']"
+         [matTooltipDisabled]="opened" matTooltipPosition="right" matTooltip="Fájlok">
+          <mat-icon>
+            folder
+          </mat-icon>
+          <h5 *ngIf="opened">Fájlok</h5>
+        </a>
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content id="mat-sidenav-content">

@@ -1,22 +1,22 @@
 .info-notification {
-  background: rgb(25, 125, 220);
-  color: whitesmoke;
+  background: rgb(25, 125, 220) !important;
+  color: whitesmoke !important;
 }
 
 .success-notification {
-  background: green;
-  color: whitesmoke;
+  background: green !important;
+  color: whitesmoke !important;
 }
 
 .warning-notification {
-  background: yellow;
-  color: rgb(25, 25, 25);
-  font-weight: bold;
+  background: yellow !important;
+  color: rgb(25, 25, 25) !important;
+  font-weight: bold !important;
 }
 
 .error-notification{
-  background-color: red;
-  color: whitesmoke;
+  background-color: red !important;
+  color: whitesmoke !important;
 }
 
 mat-icon.notification-icon {

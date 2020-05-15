@@ -13,6 +13,7 @@ import { HelpComponent } from './help/help.component';
 import { AnalyzeComponent } from './analyze/analyze.component';
 import { SelectorComponent } from './selector/selector.component';
 import { DragAndDropListComponent } from './drag-and-drop-list/drag-and-drop-list.component';
+import { FileListComponent } from './file-list/file-list.component';
 import { MatAnimatedIconComponent } from './components/mat-animated-icon/mat-animated-icon.component';
 import { SnackBarTemplateComponent } from './components/snack-bar-template/snack-bar-template.component';
 import { BottomSheetTemplateComponent } from '../app/components/bottom-sheet-template/bottom-sheet-template.component';
@@ -23,6 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MessageService } from 'src/app/services/message.service';
 import { HttpErrorHandler } from 'src/app/services/http-error-handler.service';
 import { NotificationService } from './services/notification.service';
+import { FileService } from './services/file.service';
 import { GraphViewComponent } from './graph-view/graph-view.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DragDropDirective } from './directives/drag-drop.directive';
@@ -30,6 +32,7 @@ import { FileUploadComponent } from './file-upload/file-upload.component';
 import { EditDialogComponent } from './file-upload/edit-dialog/edit-dialog.component';
 import { AngularResizedEventModule } from 'angular-resize-event';
 import { WebStorageModule } from 'ngx-store';
+import { ClipboardModule } from 'ngx-clipboard';
 
 import {
   MatAutocompleteModule,
@@ -48,6 +51,7 @@ import {
   MatListModule,
   MatMenuModule,
   MatNativeDateModule,
+  MatPaginatorModule,
   MatProgressBarModule,
   MatProgressSpinnerModule,
   MatRadioModule,
@@ -57,6 +61,7 @@ import {
   MatSliderModule,
   MatSlideToggleModule,
   MatSnackBarModule,
+  MatSortModule,
   MatStepperModule,
   MatTableModule,
   MatTabsModule,
@@ -79,6 +84,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     AnalyzeComponent,
     SelectorComponent,
     DragAndDropListComponent,
+    FileListComponent,
     GraphViewComponent,
     FileUploadComponent,
     MatAnimatedIconComponent,
@@ -100,6 +106,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     AngularResizedEventModule,
     OverlayModule,
     WebStorageModule,
+    ClipboardModule,
 
     // Material
     DragDropModule,
@@ -119,6 +126,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     MatListModule,
     MatMenuModule,
     MatNativeDateModule,
+    MatPaginatorModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatRadioModule,
@@ -128,6 +136,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     MatSliderModule,
     MatSlideToggleModule,
     MatSnackBarModule,
+    MatSortModule,
     MatStepperModule,
     MatTableModule,
     MatTabsModule,
@@ -140,6 +149,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
       { path: 'help', component: HelpComponent },
       { path: 'graphview', component: GraphViewComponent},
       { path: 'analyze', component: AnalyzeComponent},
+      { path: 'files', component: FileListComponent}
     ])
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
@@ -148,6 +158,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     HttpErrorHandler,
     MessageService,
     NotificationService,
+    FileService,
     { provide: MAT_SNACK_BAR_DATA, useValue: {} },
     { provide: MAT_BOTTOM_SHEET_DATA, useValue: {} }
   ],
