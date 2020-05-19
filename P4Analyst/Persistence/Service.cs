@@ -19,8 +19,6 @@ namespace Persistence
 
         public P4File SetP4File(P4File file)
         {
-            P4File result = null;
-
             if (file.FileName == null || file.FileName.Trim().Length == 0)
             {
                 throw new ApplicationException("A fájl név megadása kötelező!");
@@ -35,18 +33,12 @@ namespace Persistence
             {
                 if (!context.P4Files.Any(x => x.Hash == hash))
                 {
-                    P4File f = new P4File()
-                    {
-                        FileName = Path.GetFileNameWithoutExtension(file.FileName),
-                        Content = file.Content,
-                        Hash = hash,
-                        CreatedDate = DateTime.Now
-                    };
+                    file.FileName = Path.GetFileNameWithoutExtension(file.FileName);
+                    file.Hash = hash;
+                    file.CreatedDate = DateTime.Now;
 
-                    context.Add(f);
+                    context.Add(file);
                     context.SaveChanges();
-
-                    result = f;
                 }
             }
             else
@@ -54,7 +46,7 @@ namespace Persistence
                 throw new ApplicationException("A hash képzése nem sikerült!");
             }    
 
-            return result;
+            return file.Hash != String.Empty ? file : null;
         }
 
         public List<P4File> GetP4Files()
@@ -70,22 +62,19 @@ namespace Persistence
         public P4File GetP4File(int id)
         {
             var file = context.P4Files.Find(id);
-            P4File result;
             if (file != null)
             {
-                result = file;
+                return file;
             }
             else
             {
                 throw new ApplicationException($"A megadott azonosítóval nincs letárolt fájl! Id: {id}");
             }
-
-            return result;
         }
 
         private string CreateHash(byte[] content)
         {
-            string result = string.Empty;
+            var result = string.Empty;
 
             using (SHA256 hashAlgorithm = SHA256.Create())
             {

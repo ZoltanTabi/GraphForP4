@@ -57,3 +57,13 @@ mat-nav-list a {
 ::ng-deep .mat-list-base .mat-list-item .mat-list-item-content {
   padding: 0 24px !important;
 }
+
+::ng-deep .mat-menu-panel {
+  overflow: hidden !important;
+}
+
+.theme-change {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

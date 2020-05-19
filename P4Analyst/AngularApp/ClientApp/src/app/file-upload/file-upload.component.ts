@@ -53,8 +53,8 @@ export class FileUploadComponent {
 
   editFile() {
     const dialogRef = this.dialog.open(EditDialogComponent, {
-      height: '30vw',
-      width: '55vw',
+      height: (window.innerWidth >= 600) ? '30vw' : '100%',
+      width: (window.innerWidth >= 600) ? '55vw' : '100%',
       data: { content: this.fileData.content }
     });
 

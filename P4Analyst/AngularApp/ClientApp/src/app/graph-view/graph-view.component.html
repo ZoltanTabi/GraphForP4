@@ -6,17 +6,19 @@
                 <mat-animated-icon #controlAnimatedIcon start="pause_circle_filled" end="play_circle_filled" [playAndPause]="true" animate="true"></mat-animated-icon>
             </button>
         </ng-template>
-        <app-graph id="controlFlowGraph" #controlFlowGraph [type]="keys[0]" [draw]="true" [initialize]="true" [parentElementId]="'mat-tab-content-0-0'"
-                   (controlFlowGraphClick)="addDataFlowGraph($event)" (BFSEnd)="setIconToogle(0)" (drawEnd)="buttonsDisabled[0] = false;"></app-graph>
+        <app-graph id="controlFlowGraph" #controlFlowGraph [type]="keys[0]" [draw]="true" [initialize]="true"
+                   (controlFlowGraphClick)="addDataFlowGraph($event)" (BFSEnd)="setIconToogle(0)" (drawEnd)="buttonsDisabled[0] = false;"
+                   [parentElementId]="'mat-sidenav-content'"></app-graph>
     </mat-tab>
     <mat-tab #tab>
         <ng-template mat-tab-label>
             Adatfolyam gráf
             <button mat-icon-button [disabled]="buttonsDisabled[1]" class="tab-button" (click)="[dataFlowGraph.BFS(), dataAnimatedIcon.toggle()]">
-                <mat-animated-icon #dataAnimatedIcon start="pause_circle_filled" end="play_circle_filled" [playAndPause]="true" animate="true"></mat-animated-icon>
+                <mat-animated-icon #dataAnimatedIcon start="pause_circle_filled" end="play_circle_filled" [playAndPause]="true" animate="true"
+                [parentElementId]="'mat-sidenav-content'"></mat-animated-icon>
             </button>
         </ng-template>
-        <app-graph #dataFlowGraph [type]="keys[1]" [draw]="true" [initialize]="dataflowgraphIsActiveTab" [parentElementId]="'mat-tab-content-0-1'"
+        <app-graph #dataFlowGraph [type]="keys[1]" [draw]="true" [initialize]="dataflowgraphIsActiveTab"
                 (dataFlowGraphClick)="callControlFlowGraphSelect($event)" (BFSEnd)="setIconToogle(1)" (drawEnd)="buttonsDisabled[1] = false;"></app-graph>
     </mat-tab>
     <mat-tab *ngFor="let tab of tabs; let index = index" [label]="tab.name">
@@ -26,7 +28,7 @@
                 <mat-icon>close</mat-icon>
             </button>
         </ng-template>
-        <app-graph [inputGraph]="tab.graph" [type]="tab.id" [draw]="false" [parentElementId]="'mat-tab-content-0-' + index.toString()" [initialize]="index+2===selected.value"></app-graph>
+        <app-graph [inputGraph]="tab.graph" [type]="tab.id" [draw]="false" [initialize]="index+2===selected.value" [parentElementId]="'mat-sidenav-content'"></app-graph>
     </mat-tab>
 </mat-tab-group>
 

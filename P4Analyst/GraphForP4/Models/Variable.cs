@@ -15,9 +15,9 @@
         public bool IsInitialize { get; set; }
 
         // Elemzéshez
-        public int Use { get; set; }
         public int Write { get; set; }
         public int Read { get; set; }
-        public bool ModifiedAndUse { get; set; }
+        public bool Modified { get; set; }
+        public int ModifiedAndUse { get; set; }
     }
 }

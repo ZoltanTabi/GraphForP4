@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { HttpErrorHandler, HandleError } from 'src/app/services/http-error-handler.service';
 import { Struct } from '../models/variables/struct';
 import { AnalyzeData } from '../models/variables/analyzeData';
+import { CalculatedData } from '../models/calculate/calculatedData';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -29,10 +30,10 @@ export class AnalyzeService {
       );
   }
 
-  putStructs(analyzeDatas: Array<AnalyzeData>) {
-    return this.http.put<Array<AnalyzeData>>(this.baseUrl + 'analyzer', analyzeDatas, httpOptions)
+  putStructs(analyzeDatas: Array<AnalyzeData>): Observable<CalculatedData> {
+    return this.http.put<CalculatedData>(this.baseUrl + 'analyzer', analyzeDatas, httpOptions)
       .pipe(
-        catchError(this.handleError<Array<AnalyzeData>>('putStructs'))
+        catchError(this.handleError<CalculatedData>('putStructs'))
       );
   }
 }

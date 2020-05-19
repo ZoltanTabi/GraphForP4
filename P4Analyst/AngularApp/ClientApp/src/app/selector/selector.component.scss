@@ -2,9 +2,17 @@
     padding: 0;
 }
 
+::ng-deep .mat-form-field-infix {
+    width: 160px !important;
+}
+
 @media screen and (min-width: 700px) {
     .selector {
         padding: 0 20px;
+    }
+
+    ::ng-deep .mat-form-field-infix {
+        width: 300px !important;
     }
 }
 
@@ -17,8 +25,4 @@
 .selector-button {
     text-align: left;
     width: 100%;
-}
-
-::ng-deep .mat-form-field-infix {
-    width: 300px !important;
 }

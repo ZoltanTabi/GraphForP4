@@ -8,6 +8,7 @@ import { Key } from '../models/key';
 import { SelectorComponent } from '../selector/selector.component';
 import { DragAndDropListComponent } from '../drag-and-drop-list/drag-and-drop-list.component';
 import { AnalyzeData } from '../models/variables/analyzeData';
+import { ChartsDisplayComponent } from '../charts-display/charts-display.component';
 
 @Component({
   selector: 'app-analyze',
@@ -25,6 +26,7 @@ export class AnalyzeComponent implements OnInit {
   @ViewChild('buttonGroup',  {static: true}) buttonGroup: MatButtonToggleGroup;
   @ViewChild('selector', {static: true}) selector: SelectorComponent;
   @ViewChild('dragAndDropList', {static: true}) dragAndDropList: DragAndDropListComponent;
+  @ViewChild('chartsDisplay', {static: true}) chartsDisplay: ChartsDisplayComponent;
 
   constructor(private analyzeService: AnalyzeService, private sessionStorageService: SessionStorageService) { }
 
@@ -55,6 +57,7 @@ export class AnalyzeComponent implements OnInit {
 
     this.analyzeService.putStructs(message).subscribe((result: any) => {
       console.log(result);
+      this.chartsDisplay.calculatedDataSetter = result;
     });
   }
 

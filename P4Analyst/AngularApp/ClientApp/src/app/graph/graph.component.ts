@@ -32,6 +32,7 @@ export class GraphComponent {
   @Input() draw: boolean;
   @Input() inputGraph: Array<Node>;
   @Input() parentElementId: string;
+  @Input() zoom = false;
   @Input() public set initialize(init: boolean) {
     if (!this.init && init) {
       this.init = init;
@@ -43,7 +44,6 @@ export class GraphComponent {
   public dontTouch: boolean;
   public id: string;
   public graphFord3: string;
-  private graphPointer: any;
   private graph: Array<Node>;
   private existNodes: Array<Node>;
   private nextEdges: Array<Edge>;
@@ -72,7 +72,6 @@ export class GraphComponent {
     return new Promise<void>((resolve, reject) => {
       if (this.inputGraph) {
         this.graph = this.inputGraph;
-        console.log(`InputGraph: ${this.inputGraph}`);
         const time = setInterval(() => {
             clearInterval(time);
             resolve();
@@ -81,7 +80,6 @@ export class GraphComponent {
         const sessionGraph = this.sessionStorageService.get(this.type) as Array<Node>;
         if (sessionGraph) {
           this.graph = sessionGraph;
-          console.log(`SessionGrap: ${sessionGraph}`);
           const time = setInterval(() => {
               clearInterval(time);
               resolve();
@@ -103,7 +101,6 @@ export class GraphComponent {
           this.graphService
           .getGraph(this.type)
           .subscribe( result => {
-            console.log(`Szerver gráf: ${result}`);
             this.graph = result;
             this.sessionStorageService.set(this.type, this.graph);
             this.afterOnInit();
@@ -119,8 +116,6 @@ export class GraphComponent {
   }
 
   afterOnInit() {
-    console.log('afterOnInit ' + this.graph);
-
     if (this.graph.length > 0) {
       this.loading = false;
       if (this.draw) {
@@ -151,9 +146,8 @@ export class GraphComponent {
       .renderDot('digraph { graph [id="' + this.id + '" bgcolor="none" tooltip="Helyreállítésrt klikkelj!"] compound=true node [style="filled"] ' + this.graphFord3 + ' } ', function() {
         if (i === 0) {
           currentThis.graphDrawing(++i, this);
-          currentThis.graphPointer = this;
         }
-    }).zoom(window.innerWidth >= 600);
+    }).zoom(this.zoom || window.innerWidth >= 600);
   }
 
   graphDrawing(i: number, graph: any) {
@@ -234,9 +228,10 @@ export class GraphComponent {
     return [true, i];
   }
 
-  attributer(datum: { tag: string; attributes: { width: number; height: number; }; }, index: any, nodes: any) {
+  attributer(datum: { tag: string; attributes: { width: number; height: number; }; }) {
     const margin = 20;
     if (datum.tag === 'svg') {
+      // this.parentElementId
       const width = document.getElementById('mat-sidenav-content').offsetWidth;
       const height = document.getElementById('mat-sidenav-content').offsetHeight - 48;
       datum.attributes.width = width - margin;

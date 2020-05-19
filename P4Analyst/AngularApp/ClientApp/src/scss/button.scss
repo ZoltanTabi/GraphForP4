@@ -1,6 +1,13 @@
 .next-btn {
   text-align: right;
-  padding: 0px 40px 20px 0px;
+  padding: 0;
+}
+
+@media screen and (min-width: 600px) {
+  .next-btn {
+    text-align: right;
+    padding: 0px 20px 20px 0px;
+  }
 }
 
 button.change-color {
@@ -17,10 +24,11 @@ button.tab-button {
 
 .mat-icon-button:focus,
 .mat-mini-fab:focus,
-.button:focus {
-  outline: none;
+.button:focus,
+.mat-sort-header-button {
+  outline: none !important;
 }
 
 button.m-btn {
-    margin: 1em;
+    margin: 20px;
 }

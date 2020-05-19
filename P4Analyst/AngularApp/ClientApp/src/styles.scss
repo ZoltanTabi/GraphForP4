@@ -25,6 +25,12 @@
   .mat-stepper-horizontal {
     background-color: #303030;
   }
+  .theme-change {
+    color: whitesmoke;
+  }
+  .drag-drop-list {
+    background-color: #424242 !important;
+  }
 }
 
 a {
@@ -43,8 +49,22 @@ mat-icon.pause {
   color: red;
 }
 
+.mat-menu-item:focus {
+  outline: none;
+}
+
 .max-height {
   height: 100%;
+}
+
+.cdk-overlay-pane {
+  max-width: 100% !important;
+}
+
+@media screen and (min-width: 600px) {
+  .mat-tooltip {
+    font-size: 12px;
+  }
 }
 
 .loading-indicator {

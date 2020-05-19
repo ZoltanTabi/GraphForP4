@@ -259,7 +259,7 @@ namespace GraphForP4.Models
                 {
                     Parent = node,
                     Child = Nodes.First(x => x.Id == Guid.Parse(attributes[1].Substring(9, attributes[1].Length - 10))),
-                    Color = Color.FromName(attributes[2].Substring(9, attributes[2].Length - 11)),
+                    Color = Color.FromName(attributes[2].Substring(9, attributes[2].Length - 10)),
                     EdgeArrowType = (EdgeArrowType)Convert.ToInt32(attributes[3].Split(':')[1]),
                     EdgeStyle = (EdgeStyle)Convert.ToInt32(attributes[4].Split(':', '}')[1])
                 });

@@ -1,6 +1,9 @@
 using System;
 using Xunit;
 using GraphForP4.Services;
+using GraphForP4.Models;
+using System.Collections.Generic;
+using System.Text.Json;
 
 namespace Test
 {
@@ -28,13 +31,36 @@ namespace Test
         }
 
         [Fact]
-        public void TestGetVariables()
+        public void TestGetStructs()
         {
             var content = System.IO.File.ReadAllText(@"..\..\..\..\AngularApp\Files\hello.txt");
 
-            var variables = Analyzer.GetStructs(content);
+            var structs = Analyzer.GetStructs(content);
+            var graph = P4ToGraph.ControlFlowGraph(ref content);
+            var graph1 = P4ToGraph.DataFlowGraph(content, graph);
 
-            Assert.Equal("ipv4_lpm", variables[0].Name);
+            structs.ForEach(_struct =>
+            {
+                foreach (var header in _struct.Headers.Values)
+                {
+                    header.Valid = true;
+                    header.Variables.ForEach(x => x.IsInitialize = true);
+                }
+            });
+
+            var analyzeData = new AnalyzeData
+            {
+                EndState = structs,
+                Id = 1,
+                StartState = JsonSerializer.Deserialize<List<Struct>>(JsonSerializer.Serialize(structs))
+            };
+
+            var analyzer = new Analyzer(graph.ToJson(), graph1.ToJson(), analyzeData, content);
+            analyzer.Analyze();
+            analyzer.FinishOperations();
+
+
+            Assert.Equal("ipv4_lpm", structs[0].Name);
         }
     }
 }

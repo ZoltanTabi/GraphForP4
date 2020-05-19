@@ -1,0 +1,35 @@
+<mat-grid-list [cols]="cols" (window:resize)="onResize($event)" rowHeight="7:5">
+    <mat-grid-tile [colspan]="1" [rowspan]="1">
+        <canvas baseChart
+            [datasets]="lineChartData"
+            [labels]="lineChartLabels"
+            [options]="lineChartOptions"
+            [legend]="lineChartLegend"
+            [chartType]="lineChartType"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)">
+        </canvas>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="1" [rowspan]="1">
+        <canvas baseChart
+            [data]="pieChartData"
+            [labels]="pieChartLabels"
+            [chartType]="pieChartType"
+            [options]="pieChartOptions"
+            [colors]="pieChartColors"
+            [legend]="pieChartLegend">
+        </canvas>
+    </mat-grid-tile>
+    <mat-grid-tile *ngIf="calculatedData!=null" [colspan]="1" [rowspan]="1">
+        <canvas baseChart
+            [datasets]="barChartData"
+            [labels]="calculatedData.barChartData.labels"
+            [options]="barChartOptions"
+            [legend]="barChartLegend"
+            [chartType]="barChartType">
+        </canvas>
+    </mat-grid-tile>
+</mat-grid-list>
+
+<app-graph *ngIf="calculatedData!=null" [inputGraph]="calculatedData.controlFlowGraphs[0]" [draw]="false" [type]="'controlFlow'" [initialize]="true"></app-graph>
+<app-graph *ngIf="calculatedData!=null" [inputGraph]="calculatedData.dataFlowGraphs[0]" [draw]="false" [type]="'dataFlow'" [initialize]="true"></app-graph>

@@ -12,9 +12,9 @@ namespace GraphForP4.Helpers
 
         public static string InputClean(string input)
         {
-            input = Regex.Replace(input, @"(<[^0-9]*>)|([\n\r])", " ");
             input = Regex.Replace(input, @"(//(.*?)\r?\n)", " ");
-            input = Regex.Replace(input, @"(/\*(.*)\*/)", " ");
+            input = Regex.Replace(input, @"(/\*(?:(?!\*/)(?:.|[\r\n]+))*\*/)", " ");
+            input = Regex.Replace(input, @"(<[^0-9]*>)|([\n\r])", " ");
             input = Regex.Unescape(input);
 
             return input;

@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginatorIntl } from '@angular/material';
 import { FileService } from '../services/file.service';
-import { TempStorageService, SessionStorageService } from 'ngx-store';
+import { SessionStorageService, LocalStorageService } from 'ngx-store';
 import { FileData } from '../models/file';
 import { NotificationService } from '../services/notification.service';
 import { ClipboardService } from 'ngx-clipboard';
@@ -25,7 +25,8 @@ export class FileListComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  constructor(private matPaginatorIntl: MatPaginatorIntl, private fileService: FileService, private tempStorageService: TempStorageService,
+  // tslint:disable-next-line:max-line-length
+  constructor(private matPaginatorIntl: MatPaginatorIntl, private fileService: FileService, private localStorageService: LocalStorageService,
     private notificationService: NotificationService, private clipboardService: ClipboardService, private homeService: HomeService,
     private router: Router, private sessionStorageService: SessionStorageService) { }
 
@@ -69,12 +70,12 @@ export class FileListComponent implements OnInit {
   }
 
   getFileData(id: number): FileData {
-    const file = this.tempStorageService.get(id.toString()) as FileData;
+    const file = this.localStorageService.get(id.toString()) as FileData;
     if (file && file.content && file.content.length > 0) {
       return file;
     } else {
       this.fileService.getFile(id).subscribe((result) => {
-        this.tempStorageService.set(id.toString(), result);
+        this.localStorageService.set(id.toString(), result);
         return result;
       });
     }

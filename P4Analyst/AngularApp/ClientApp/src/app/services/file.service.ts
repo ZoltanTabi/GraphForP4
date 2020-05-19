@@ -37,7 +37,7 @@ export class FileService {
       );
   }
 
-  UploadFile(fileData: FileData): Observable<FileData> {
+  uploadFile(fileData: FileData): Observable<FileData> {
     return this.http.post<FileData>(this.baseUrl + 'file', fileData, httpOptions)
       .pipe(
         catchError(this.handleError('UploadFile', fileData))

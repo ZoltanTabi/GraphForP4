@@ -15,23 +15,22 @@ namespace GraphForP4.Services
     public class Analyzer
     {
         private readonly string code;
-        private readonly Graph controlFlowGraph;
-        private readonly Graph dataFlowGraph;
         private readonly AnalyzeData analyzeData;
-        private readonly AnalyzeData originalAnalyzeData;
         private readonly Dictionary<string, Struct> ingressEndStructs;
-        private readonly List<Dictionary<string, Struct>> allStructs;
+        
+        public Graph ControlFlowGraph { get; set; }
+        public Graph DataFlowGraph { get; set; }
+        public List<Dictionary<string, Struct>> AllStructs { get; set; }
 
         public Analyzer(string controlFlowGrapJson, string dataFlowGraphJson, AnalyzeData analyzeData, string code)
         {
-            controlFlowGraph = new Graph();
-            controlFlowGraph.FromJson(controlFlowGrapJson);
-            dataFlowGraph = new Graph();
-            dataFlowGraph.FromJson(dataFlowGraphJson);
+            ControlFlowGraph = new Graph();
+            ControlFlowGraph.FromJson(controlFlowGrapJson);
+            DataFlowGraph = new Graph();
+            DataFlowGraph.FromJson(dataFlowGraphJson);
             this.analyzeData = analyzeData;
-            originalAnalyzeData = Copy(analyzeData);
             ingressEndStructs = new Dictionary<string, Struct>();
-            allStructs = new List<Dictionary<string, Struct>>();
+            AllStructs = new List<Dictionary<string, Struct>>();
             this.code = FileHelper.InputClean(code);
         }
 
@@ -39,10 +38,10 @@ namespace GraphForP4.Services
         {
             var ingressStartStructs = new Dictionary<string, Struct>();
             var ingressControlName = FileHelper.GetIngressControlName(code);
-            Regex.Replace(FileHelper.GetMethod(code, ingressControlName, '(', ')'), @"(|)", String.Empty).Trim()
+            Regex.Replace(FileHelper.GetMethod(code, ingressControlName, '(', ')'), @"\(|\)", String.Empty).Trim()
                 .Split(",", StringSplitOptions.RemoveEmptyEntries).ToList().ForEach(variable =>
                 {
-                    var declarations = variable.Split(";", StringSplitOptions.RemoveEmptyEntries).ToList();
+                    var declarations = variable.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
                     switch (declarations.Count)
                     {
                         case 2:
@@ -62,7 +61,7 @@ namespace GraphForP4.Services
                     ingressEndStructs.Add(name, endStruct);
                 });
             
-            foreach (var edge in controlFlowGraph.Nodes[0].Edges)
+            foreach (var edge in ControlFlowGraph.Nodes[0].Edges)
             {
                 NodeAnalyze(edge.Child, new List<Dictionary<string, Struct>> { Copy(ingressStartStructs) });
             }
@@ -72,49 +71,57 @@ namespace GraphForP4.Services
         {
             node.ModifiedAndUse = true;
             node.Modified = node.Modified == null ? 1 : ++node.Modified;
-            var ifNodeWithValue = false;
+            var correct = true;
             ingressStartStructsLists.ForEach(x =>
             {
                 switch(node.Type)
                 {
                     case NodeType.If:
-                        ifNodeWithValue = IfAnalyze(node, x);
+                        correct = IfAnalyze(node, x);
                         break;
 
                     case NodeType.Table:
-                        TableAnalyze(node, x);
+                        correct = TableAnalyze(node, x);
                         break;
 
                     case NodeType.ActionMethod:
-                        ActionAnalyze(node, x);
+                        var dataFlowGraphNodes = DataFlowGraph.Nodes.Where(y => y.ParentId == node.Id).ToList();
+
+                        correct = ActionAnalyze(dataFlowGraphNodes, x, MainNodes(dataFlowGraphNodes).FirstOrDefault());
+                        break;
+
+                    default:
+                        node.FillColor = Color.Green;
                         break;
                 }
             });
 
-            if (!ifNodeWithValue)
+            if (correct && node.Text != "End")
             {
                 foreach (var edge in node.Edges)
                 {
-                    if (node.Text != "End")
+                    var toChild = new List<Dictionary<string, Struct>>();
+                    ingressStartStructsLists.ForEach(x =>
                     {
-                        var toChild = new List<Dictionary<string, Struct>>();
-                        ingressStartStructsLists.ForEach(x =>
-                        {
-                            toChild.Add(Copy(x));
-                        });
-                        NodeAnalyze(edge.Child, toChild);
-                    }
-                    else
-                    {
-                        allStructs.AddRange(ingressStartStructsLists);
-                    }
+                        toChild.Add(Copy(x));
+                    });
+                    NodeAnalyze(edge.Child, toChild);
                 }
+            }
+            else
+            {
+                if (node.Text == "End")
+                {
+                    node.FillColor = Color.Green;
+                }
+
+                AllStructs.AddRange(ingressStartStructsLists);
             }
         }
 
         private bool IfAnalyze(Node controlFlowGraphNode, Dictionary<string, Struct> ingressStartStruct)
         {
-            var dataFlowGraphNode = dataFlowGraph.Nodes.Where(x => x.ParentId == controlFlowGraphNode.Id).ToList();
+            var dataFlowGraphNode = DataFlowGraph.Nodes.Where(x => x.ParentId == controlFlowGraphNode.Id).ToList();
             if (dataFlowGraphNode.Count == 1 && dataFlowGraphNode[0].Text.Contains("isValid()"))
             {
                 var header = GetHeaderFromStruct(ingressStartStruct, dataFlowGraphNode[0].Text.Split(".").ToList()).Item1;
@@ -128,7 +135,7 @@ namespace GraphForP4.Services
                             NodeAnalyze(x.Child, new List<Dictionary<string, Struct>> { Copy(ingressStartStruct) });
                         });
 
-                        return true;
+                        return false;
                     }
                     else
                     {
@@ -137,89 +144,87 @@ namespace GraphForP4.Services
                             NodeAnalyze(x.Child, new List<Dictionary<string, Struct>> { Copy(ingressStartStruct) });
                         });
 
-                        return true;
+                        return false;
                     }
                 }
             }
             else
             {
+                var result = true;
                 dataFlowGraphNode.ForEach(x =>
                 {
+                    result = result && UseVariable(x, ingressStartStruct);
+                });
+
+                return result;
+            }
+
+            return true;
+        }
+
+        private bool TableAnalyze(Node controlFlowGraphNode, Dictionary<string, Struct> ingressStartStruct)
+        {
+            var result = true;
+            DataFlowGraph.Nodes.Where(x => x.ParentId == controlFlowGraphNode.Id).ToList().ForEach(x =>
+            {
+                result = result && UseVariable(x, ingressStartStruct);
+            });
+
+            return result;
+        }
+
+        private bool ActionAnalyze(List<Node> dataFlowGraphNodes, Dictionary<string, Struct> ingressStartStruct, Node node)
+        {
+            if (node.SubGraph == null)
+            {
+                if (node.Text.Contains("valid", StringComparison.OrdinalIgnoreCase))
+                {
                     Header header;
-                    string variableName;
-                    (header, variableName) = GetHeaderFromStruct(ingressStartStruct, x.Text.Split(".").ToList());
-                    if (header != null)
+                    string command;
+                    (header, command) = GetHeaderFromStruct(ingressStartStruct, node.Text.Split(".", StringSplitOptions.RemoveEmptyEntries).ToList());
+                    command =  Regex.Replace(command, @"\(|\)|\;|,", String.Empty).Trim();
+                    if (header != null && (command.Equals("setinvalid", StringComparison.OrdinalIgnoreCase) || command.Equals("setvalid", StringComparison.OrdinalIgnoreCase)))
                     {
                         ++header.Use;
-                        var variable = header.Variables.FirstOrDefault(x => x.Name == variableName);
-                        if (variable != null)
+                        header.Valid = command.Equals("setvalid", StringComparison.OrdinalIgnoreCase);
+                        header.Variables.ForEach(variable =>
                         {
-                            if (variable.IsInitialize)
-                            {
-                                ++variable.Read;
-                                x.FillColor = Color.Green;
-                            }
-                            else
-                            {
-                                if (x.FillColor == Color.Green)
-                                {
-                                    x.FillColor = Color.Yellow;
-                                }
-                                else
-                                {
-                                    x.FillColor = Color.Red;
-                                }
-                            }
-                        }
+                            variable.IsInitialize = false;
+                        });
                     }
-                });
+                }
             }
-            return false;
-        }
-
-        private void TableAnalyze(Node controlFlowGraphNode, Dictionary<string, Struct> ingressStartStruct)
-        {
-            dataFlowGraph.Nodes.Where(x => x.ParentId == controlFlowGraphNode.Id).ToList().ForEach(x =>
+            else
             {
-                Header header;
-                string variableName;
-                (header, variableName) = GetHeaderFromStruct(ingressStartStruct, x.Text.Split(".").ToList());
-                if (header != null)
-                {
-                    ++header.Use;
-                    var variable = header.Variables.FirstOrDefault(x => x.Name == variableName);
-                    if (variable != null)
-                    {
-                        if (variable.IsInitialize)
-                        {
-                            ++variable.Read;
-                            x.FillColor = Color.Green;
-                        }
-                        else
-                        {
-                            if (x.FillColor == Color.Green)
-                            {
-                                x.FillColor = Color.Yellow;
-                            }
-                            else
-                            {
-                                x.FillColor = Color.Red;
-                            }
-                        }
-                    }
-                }
-            });
-        }
+                var actionNodes = dataFlowGraphNodes.Where(x => x.SubGraph == node.SubGraph).ToList();
 
-        private void ActionAnalyze(Node controlFlowGraphNode, Dictionary<string, Struct> ingressStartStruct)
-        {
-            dataFlowGraph.Nodes.Where(x => x.ParentId == controlFlowGraphNode.Id).GroupBy(x => x.SubGraph).ToList().ForEach(x =>
+                var correct = true;
+
+                Regex.Split(actionNodes.FirstOrDefault(x => x.Operation == Operation.Read).Text, @"\+|\-|\*|\/").ToList().ForEach(x =>
+                {
+                    correct = correct && UseVariable(new Node { Text = x }, ingressStartStruct);
+                });
+
+                if (!correct)
+                {
+                    return false;
+                }
+
+                if (!UseVariable(actionNodes.FirstOrDefault(x => x.Operation == Operation.Write), ingressStartStruct, false))
+                {
+                    return false;
+                }
+
+                node = actionNodes.FirstOrDefault(x => x.Operation == Operation.Read);
+            }
+
+
+            if (dataFlowGraphNodes.Contains(node.Edges.FirstOrDefault().Child))
             {
-                if (x.Key != null)
-                {
+                ActionAnalyze(dataFlowGraphNodes, ingressStartStruct, node.Edges.FirstOrDefault().Child);
+            }
 
-                }
-            });
+            return true;
         }
 
         private (Header, string) GetHeaderFromStruct(Dictionary<string, Struct> dics, List<String> stringList)
@@ -243,6 +248,107 @@ namespace GraphForP4.Services
         private T Copy<T>(T someThing)
         {
             return JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(someThing));
+        }
+
+        private bool UseVariable (Node node, Dictionary<string, Struct> ingressStartStruct, bool isRead = true)
+        {
+            Header header;
+            string variableName;
+            (header, variableName) = GetHeaderFromStruct(ingressStartStruct, node.Text.Split(".", StringSplitOptions.RemoveEmptyEntries).ToList());
+            if (header != null)
+            {
+                ++header.Use;
+                var variable = header.Variables.FirstOrDefault(x => x.Name == variableName);
+                if (variable != null)
+                {
+                    if (isRead)
+                    {
+                        ++variable.Read;
+                        if (variable.Modified)
+                        {
+                            ++variable.ModifiedAndUse;
+                            variable.Modified = false;
+                        }
+                    }
+                    else
+                    {
+                        ++variable.Write;
+                        variable.Modified = true;
+                    }
+
+                    if (node.FillColor == Color.White)
+                    {
+                        node.FillColor = variable.IsInitialize ? Color.Green : Color.Red;
+                    }
+                    else if ((node.FillColor == Color.Red && variable.IsInitialize) || (node.FillColor == Color.Green && !variable.IsInitialize))
+                    {
+                        node.FillColor = Color.Yellow;
+                    }
+
+                    return isRead ? variable.IsInitialize : true;
+                }
+            }
+
+            return true;
+        }
+
+        private static List<Node> MainNodes(List<Node> nodes)
+        {
+            var notMainNodes = new List<Node>();
+            nodes.ForEach((node) =>
+            {
+                foreach (var otherNode in nodes)
+                {
+                    foreach (var edge in otherNode.Edges)
+                    {
+                        if (edge.Child == node) notMainNodes.Add(node);
+                    }
+                }
+            });
+
+            return nodes.Except(notMainNodes).ToList();
+        }
+
+        public void FinishOperations()
+        {
+            AllStructs.ForEach(dict =>
+            {
+                foreach(var pair in dict)
+                {
+                    if (pair.Value == null) continue;
+
+                    var endStruct = ingressEndStructs[pair.Key];
+                    foreach(var headerPair in pair.Value.Headers)
+                    {
+                        var headerForEndStruct = endStruct.Headers[headerPair.Key];
+                        headerPair.Value.Variables.ForEach(headerPairVariable =>
+                        {
+                            headerForEndStruct.Variables.ForEach(headerForEndStructVariable =>
+                            { 
+                                if (headerPairVariable.Modified && headerForEndStructVariable.IsInitialize)
+                                {
+                                    headerPairVariable.Modified = false;
+                                    ++headerPairVariable.ModifiedAndUse;
+                                }
+                            });
+                        });
+                    }
+                }
+            });
+
+            ControlFlowGraph.Nodes.ForEach(node =>
+            {
+                var dataFlowGraphNodes = DataFlowGraph.Nodes.Where(x => x.ParentId == node.Id).ToList();
+                if (dataFlowGraphNodes.Count == 1)
+                {
+                    node.FillColor = dataFlowGraphNodes.First().FillColor;
+                }
+                else if (dataFlowGraphNodes.Any())
+                {
+                    var colors = dataFlowGraphNodes.Select(x => x.FillColor).Distinct().Except(new List<Color> { Color.Black, Color.White }).ToList();
+                    node.FillColor = colors.Count == 1 ? colors.First() : Color.Yellow;
+                }
+            });
         }
 
         #region Struktúrák

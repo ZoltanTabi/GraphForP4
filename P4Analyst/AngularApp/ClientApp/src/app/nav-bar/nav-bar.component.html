@@ -13,13 +13,14 @@
         format_color_fill
       </mat-icon>
     </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item hover-class='my-theme-change' (click)='changeTheme(true)'>
-        <span>Eredeti</span>
-      </button>
-      <button mat-menu-item hover-class='my-dark-theme-change' (click)='changeTheme(false)'>
-        <span>Sötét</span>
-      </button>
+    <mat-menu #menu="matMenu" style="overflow: hidden;">
+      <div class="theme-change">
+        <button mat-menu-item (click)="[$event.stopPropagation(), toggle.checked=!toggle.checked, changeToggle(toggle.checked)]">
+          <mat-icon style="margin:0 8px">brightness_4</mat-icon>
+          <span>Sötét mód</span>
+          <mat-slide-toggle #toggle (click)="$event.stopPropagation()" (change)="changeToggle($event.checked)" style="margin:0 8px" color="primary" [checked]="toggleChecked"></mat-slide-toggle>
+        </button>
+      </div>
     </mat-menu>
   </mat-toolbar>
 

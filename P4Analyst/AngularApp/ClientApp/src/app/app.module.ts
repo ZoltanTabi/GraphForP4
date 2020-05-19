@@ -14,6 +14,7 @@ import { AnalyzeComponent } from './analyze/analyze.component';
 import { SelectorComponent } from './selector/selector.component';
 import { DragAndDropListComponent } from './drag-and-drop-list/drag-and-drop-list.component';
 import { FileListComponent } from './file-list/file-list.component';
+import { ChartsDisplayComponent } from './charts-display/charts-display.component';
 import { MatAnimatedIconComponent } from './components/mat-animated-icon/mat-animated-icon.component';
 import { SnackBarTemplateComponent } from './components/snack-bar-template/snack-bar-template.component';
 import { BottomSheetTemplateComponent } from '../app/components/bottom-sheet-template/bottom-sheet-template.component';
@@ -33,6 +34,7 @@ import { EditDialogComponent } from './file-upload/edit-dialog/edit-dialog.compo
 import { AngularResizedEventModule } from 'angular-resize-event';
 import { WebStorageModule } from 'ngx-store';
 import { ClipboardModule } from 'ngx-clipboard';
+import { ChartsModule } from 'ng2-charts';
 
 import {
   MatAutocompleteModule,
@@ -84,6 +86,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     AnalyzeComponent,
     SelectorComponent,
     DragAndDropListComponent,
+    ChartsDisplayComponent,
     FileListComponent,
     GraphViewComponent,
     FileUploadComponent,
@@ -107,6 +110,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     OverlayModule,
     WebStorageModule,
     ClipboardModule,
+    ChartsModule,
 
     // Material
     DragDropModule,

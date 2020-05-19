@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AngularApp.Extensions;
+using GraphForP4.Helpers;
 using GraphForP4.Models;
 using GraphForP4.Services;
+using GraphForP4.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -42,8 +45,8 @@ namespace AngularApp.Controllers
             return ActionExecute(() =>
             {
                 var file = SessionExtension.Get<string>(session, Key.File);
-                var controlFlowGraphJson = SessionExtension.GetGraph(session, Key.ControlFlowGraph).ToJson();
-                var dataFlowGraphJson = SessionExtension.GetGraph(session, Key.DataFlowGraph).ToJson();
+                var controlFlowGraphJson = session.GetString(Key.ControlFlowGraph.ToString("g"));
+                var dataFlowGraphJson = session.GetString(Key.DataFlowGraph.ToString("g"));
                 var analyzers = new List<Analyzer>();
 
                 analyzeDatas.ForEach(x =>
@@ -51,12 +54,22 @@ namespace AngularApp.Controllers
                     analyzers.Add(new Analyzer(controlFlowGraphJson, dataFlowGraphJson, x, file));
                 });
 
+                analyzers = analyzers.Distinct().ToList();
+
                 Parallel.ForEach(analyzers, (analyzer) =>
                 {
                     analyzer.Analyze();
+                    analyzer.FinishOperations();
                 });
 
-                return Ok(analyzeDatas);
+                var calculateData = new CalculatedData
+                {
+                    ControlFlowGraphs = analyzers.Select(x => GraphToAngular.Serialize(x.ControlFlowGraph)),
+                    DataFlowGraphs = analyzers.Select(x => GraphToAngular.Serialize(x.DataFlowGraph)),
+                    BarChartData = analyzers.BarChartData()
+                };
+
+                return Ok(calculateData);
             });
         }
     }

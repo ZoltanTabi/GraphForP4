@@ -1,4 +1,4 @@
-<div class="dialog-header" [attr.backgroundColor]="'primary'">
+<div class="dialog-header" [attr.color]="'primary'">
     <h1 mat-dialog-title>Szerkesztés</h1>
     <button mat-icon-button class="dialog-close-button" (click)="onNoClick()">
       <mat-icon>
@@ -6,6 +6,7 @@
       </mat-icon>
     </button>
 </div>
+<mat-divider style="margin-bottom: 5px"></mat-divider>
 <div mat-dialog-content class="dialog-content-with-title-actions">
     <mat-form-field appearance="fill" class="input-textarea">
         <textarea matInput [(ngModel)]="data.content"></textarea>

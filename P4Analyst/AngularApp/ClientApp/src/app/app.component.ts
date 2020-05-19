@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-root',
@@ -7,13 +6,6 @@ import { OverlayContainer } from '@angular/cdk/overlay';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  defaultTheme = true;
-  overlay: HTMLElement;
-
-  constructor(overlayContainer: OverlayContainer) {
-    this.overlay = overlayContainer.getContainerElement();
-  }
-
   // tslint:disable-next-line: use-lifecycle-interface
   ngOnInit() { }
 }

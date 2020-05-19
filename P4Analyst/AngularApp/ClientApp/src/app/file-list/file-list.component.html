@@ -8,26 +8,26 @@
         <table mat-table [dataSource]="dataSource" matSort>
 
             <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Név </th>
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="header-width"> Név </mat-header-cell>
                 <td mat-cell *matCellDef="let row"> {{row.name}} </td>
             </ng-container>
         
             <ng-container matColumnDef="createDate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Létrehozás dátuma </th>
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="header-width"> Létrehozás dátuma </mat-header-cell>
                 <td mat-cell *matCellDef="let row"> {{row.createDate}} </td>
             </ng-container>
         
             <ng-container matColumnDef="copy">
-                <th mat-header-cell *matHeaderCellDef> Másolás </th>
-                <td mat-cell *matCellDef="let row"><button mat-icon-button (click)="copy(row.id)"><mat-icon>file_copy</mat-icon></button></td>
+                <mat-header-cell *matHeaderCellDef> Másolás </mat-header-cell>
+                <td mat-cell *matCellDef="let row" class="table-icon"><button mat-icon-button (click)="copy(row.id)"><mat-icon>file_copy</mat-icon></button></td>
             </ng-container>
         
             <ng-container matColumnDef="runGraph">
-                <th mat-header-cell *matHeaderCellDef> Lejátszás </th>
-                <td mat-cell *matCellDef="let row"><button mat-icon-button (click)="runGraph(row.id)"><mat-icon>play_circle_filled</mat-icon></button></td>
+                <mat-header-cell *matHeaderCellDef> Lejátszás </mat-header-cell>
+                <td mat-cell *matCellDef="let row" class="table-icon"><button mat-icon-button (click)="runGraph(row.id)"><mat-icon>play_circle_filled</mat-icon></button></td>
             </ng-container>
         
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
 
