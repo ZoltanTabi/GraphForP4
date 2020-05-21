@@ -15,6 +15,7 @@ import { SelectorComponent } from './selector/selector.component';
 import { DragAndDropListComponent } from './drag-and-drop-list/drag-and-drop-list.component';
 import { FileListComponent } from './file-list/file-list.component';
 import { ChartsDisplayComponent } from './charts-display/charts-display.component';
+import { GraphCarouselComponent } from './components/graph-carousel/graph-carousel.component';
 import { MatAnimatedIconComponent } from './components/mat-animated-icon/mat-animated-icon.component';
 import { SnackBarTemplateComponent } from './components/snack-bar-template/snack-bar-template.component';
 import { BottomSheetTemplateComponent } from '../app/components/bottom-sheet-template/bottom-sheet-template.component';
@@ -87,6 +88,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     SelectorComponent,
     DragAndDropListComponent,
     ChartsDisplayComponent,
+    GraphCarouselComponent,
     FileListComponent,
     GraphViewComponent,
     FileUploadComponent,

@@ -1,5 +1,4 @@
 export interface BarChartData {
   labels: Array<string>;
-  reads: Array<number>;
-  writes: Array<number>;
+  doubleDatas: Map<string, number[]>;
 }

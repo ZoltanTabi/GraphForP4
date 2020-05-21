@@ -4,7 +4,7 @@ $my-theme-primary: mat-palette($mat-indigo, 700, 300, 900);
 $my-theme-accent: mat-palette($mat-light-blue, 700, 300, 900);
 $my-theme-warn: mat-palette($mat-red, 700, 300, 900);
 
-$my-dark-theme-primary: mat-palette($mat-deep-purple);
+$my-dark-theme-primary: mat-palette($mat-purple, 500, 500, 500);
 
 $my-theme: mat-light-theme($my-theme-primary, $my-theme-accent, $my-theme-warn);
 $my-dark-theme: mat-dark-theme($my-dark-theme-primary, $my-theme-accent, $my-theme-warn);

@@ -54,19 +54,23 @@ namespace AngularApp.Controllers
                     analyzers.Add(new Analyzer(controlFlowGraphJson, dataFlowGraphJson, x, file));
                 });
 
-                analyzers = analyzers.Distinct().ToList();
-
                 Parallel.ForEach(analyzers, (analyzer) =>
                 {
                     analyzer.Analyze();
                     analyzer.FinishOperations();
                 });
 
+                analyzers.DistinctGraphs(out List<List<AngularNode>> controlFlowGraphs, out List<List<AngularNode>> dataFlowGraphs);
+                analyzers.CreateCharts(out BarChartData readAndWriteChartData, out PieChartData useVariable, out PieChartData useful, out BarChartData headers);
+
                 var calculateData = new CalculatedData
                 {
-                    ControlFlowGraphs = analyzers.Select(x => GraphToAngular.Serialize(x.ControlFlowGraph)),
-                    DataFlowGraphs = analyzers.Select(x => GraphToAngular.Serialize(x.DataFlowGraph)),
-                    BarChartData = analyzers.BarChartData()
+                    ControlFlowGraphs = controlFlowGraphs,
+                    DataFlowGraphs = dataFlowGraphs,
+                    ReadAndWriteChartData = readAndWriteChartData,
+                    UseVariable = useVariable,
+                    Useful = useful,
+                    Headers = headers
                 };
 
                 return Ok(calculateData);

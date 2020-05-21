@@ -40,7 +40,7 @@ namespace GraphForP4.Services
             var ingressMethod = FileHelper.GetMethod(input, ingressControlName);
             var applyMethod = FileHelper.SplitAndClean(FileHelper.GetMethod(ingressMethod, APPLY));
 
-            currentNodes = Search(graph, currentNodes, applyMethod, ingressMethod);
+            currentNodes = Search(graph, currentNodes, applyMethod, ingressMethod, null);
 
             graph.Add(new Node
             {
@@ -84,7 +84,7 @@ namespace GraphForP4.Services
             return graph;
         }
 
-        private static List<Node> Search(Graph graph, List<Node> currentNodes, List<String> method, String ingressMethod, Color? edgeColor = null)
+        private static List<Node> Search(Graph graph, List<Node> currentNodes, List<String> method, String ingressMethod, Color? edgeColor)
         {
             var current = String.Empty;
             (method, current) = Pop(method);
@@ -96,13 +96,13 @@ namespace GraphForP4.Services
                     {
                         currentNodes = TableMethod(graph, currentNodes,
                                        Regex.Replace(current, @"\. *" + APPLY + @" *\( *\);", String.Empty).Trim(),
-                                       ingressMethod, edgeColor);
+                                       ingressMethod, ref edgeColor);
                     }
                     else if (current.Contains('('))
                     {
                         currentNodes = ActionMethod(graph, currentNodes,
                                        Regex.Replace(current, @" *\(.*\);", String.Empty).Trim(),
-                                       ingressMethod, edgeColor);
+                                       ingressMethod, ref edgeColor);
                     }
                     else
                     {
@@ -150,7 +150,7 @@ namespace GraphForP4.Services
                         }
                     }
 
-                    currentNodes = IfMethod(graph, currentNodes, ifMethod + elseMethod, ingressMethod, edgeColor);
+                    currentNodes = IfMethod(graph, currentNodes, ifMethod + elseMethod, ingressMethod, ref edgeColor);
                 }
                 (method, current) = Pop(method);
             }
@@ -158,7 +158,7 @@ namespace GraphForP4.Services
             return currentNodes;
         }
 
-        private static List<Node> IfMethod(Graph graph, List<Node> currentNodes, String ifMethod, String ingressMethod, Color? edgeColor = null)
+        private static List<Node> IfMethod(Graph graph, List<Node> currentNodes, String ifMethod, String ingressMethod, ref Color? edgeColor)
         {
             var ifCondition = FileHelper.GetMethod(ifMethod, IF, '(', ')');
             ifCondition = ifCondition.Insert(0, $"{IF} ");
@@ -178,7 +178,7 @@ namespace GraphForP4.Services
             edgeColor = null;
 
             var ifTrueMethod = FileHelper.GetMethod(ifMethod, ifCondition);
-            ifMethod = ifMethod.Replace(IF, String.Empty).Replace(ifCondition, String.Empty).Replace(ifTrueMethod, String.Empty);
+            ifMethod = new string(ifMethod.Skip(ifCondition.Length).ToArray()).Trim().Replace(ifTrueMethod, String.Empty);
             currentNodes = Search(graph, new List<Node> { ifNode }, FileHelper.SplitAndClean(ifTrueMethod), ingressMethod, Color.Green);
 
             if(ifMethod.Contains(ELSE))
@@ -201,7 +201,7 @@ namespace GraphForP4.Services
             return currentNodes;
         }
 
-        private static List<Node> TableMethod(Graph graph, List<Node> currentNodes, String tableName, String ingressMethod, Color? edgeColor = null)
+        private static List<Node> TableMethod(Graph graph, List<Node> currentNodes, String tableName, String ingressMethod,  ref Color? edgeColor)
         {
             var tableNode = new Node
             {
@@ -227,14 +227,14 @@ namespace GraphForP4.Services
                 if(action.Contains(";"))
                 {
                     currentNodes.AddRange(ActionMethod(graph, new List<Node> { tableNode },
-                                   Regex.Replace(action, @"( |;)", String.Empty).Trim(), ingressMethod));
+                                   Regex.Replace(action, @"( |;)", String.Empty).Trim(), ingressMethod, ref edgeColor));
                 }
             }
 
             return currentNodes;
         }
 
-        private static List<Node> ActionMethod(Graph graph, List<Node> currentNodes, String actionName, String ingressMethod, Color? edgeColor = null)
+        private static List<Node> ActionMethod(Graph graph, List<Node> currentNodes, String actionName, String ingressMethod, ref Color? edgeColor)
         {
             var actionNode = new Node
             {

@@ -1,0 +1,17 @@
+<div class="slider-container" (resized)="onResized($event)">
+	<div class="sliders">
+		<ng-container *ngFor="let graph of graphs; let i = index">
+			<div class="slider" *ngIf="current == i">
+        <app-graph [inputGraph]="graph" [draw]="false" [type]="id + i" [initialize]="true" [skipInfoMessage]="true"></app-graph>
+			</div>
+        </ng-container>
+        <ng-container>
+            <button mat-icon-button class="carousel-prev-button" (click)="prev()">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <button mat-icon-button class="carousel-next-button" (click)="next()">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </ng-container>
+    </div>
+</div>

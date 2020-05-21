@@ -15,6 +15,7 @@ import { Color } from '../models/color';
 import { BottomSheetYesOrNoComponent } from '../components/bottom-sheet-yes-or-no/bottom-sheet-yes-or-no.component';
 import { SessionStorageService } from 'ngx-store';
 import { SizeAttribute } from '../models/sizeAttribute';
+import { Copy } from '../functions/copy';
 
 @Component({
   selector: 'app-graph',
@@ -33,6 +34,7 @@ export class GraphComponent {
   @Input() inputGraph: Array<Node>;
   @Input() parentElementId: string;
   @Input() zoom = false;
+  @Input() skipInfoMessage = false;
   @Input() public set initialize(init: boolean) {
     if (!this.init && init) {
       this.init = init;
@@ -53,7 +55,7 @@ export class GraphComponent {
   private BFSQueue: Queue<Node>;
   private BFSIsRun = false;
   private oldSize: SizeAttribute;
-  private timer;
+  private timer: any;
 
   constructor(private graphService: GraphService, private notificationService: NotificationService,
     public bottomSheet: MatBottomSheet, private sessionStorageService: SessionStorageService) {
@@ -93,7 +95,9 @@ export class GraphComponent {
 
   onInit() {
     this.id = `graph${this.type}`;
-    this.notificationService.info('Kérjük várja meg, amíg betöltődik!');
+    if (!this.skipInfoMessage) {
+      this.notificationService.info('Kérjük várja meg, amíg betöltődik!');
+    }
     this.getGraph()
       .then(() => { this.afterOnInit(); })
       .catch((reason) => {
@@ -116,6 +120,8 @@ export class GraphComponent {
   }
 
   afterOnInit() {
+    console.log(this.graph);
+
     if (this.graph.length > 0) {
       this.loading = false;
       if (this.draw) {
@@ -185,7 +191,7 @@ export class GraphComponent {
         edgeToNode = edgeToNode.concat(graphNode.edges.filter(x => x.child === node.id && this.existNodes.find(y => y.id === x.parent)));
       });
       node.edges.forEach(edge => {
-        if (this.existNodes.find(x => x.id === edge.child)) {
+        if (this.existNodes.find(x => x.id === edge.child) || currentGraph.find(x => x.id === edge.child)) {
           this.nextEdges.push(edge);
         }
       });
@@ -248,8 +254,8 @@ export class GraphComponent {
 
   resize = (size: SizeAttribute) => {
     return new Promise<Node>(() => {
-      if (window.innerWidth >= 600 && size && size.width !== 0 && size.height !== 0 && !this.loading
-         && (!this.oldSize || size !== this.oldSize)) {
+      // tslint:disable-next-line:max-line-length
+      if (window.innerWidth >= 600 && size && size.width >= 0 && size.height >= 60 && !this.loading && (!this.oldSize || size !== this.oldSize)) {
         this.oldSize = size;
         let delayTime = 0;
         const time = setInterval(() => {
@@ -399,14 +405,27 @@ export class GraphComponent {
     this.reset();
     const node = this.graph.find(x => x.id === id);
     this.colorNodes.push(node);
-    let parentNodes = this.graph.filter(x => x.edges.filter(y => y.child === node.id).length > 0);
+    let parentNodes = Copy<Node[]>(this.graph.filter(x => x.edges.filter(y => y.child === node.id).length > 0));
+    parentNodes.forEach(x => {
+      x.edges = new Array<Edge>();
+      x.edges.push({child: id, parent: x.id, color: Color.Black, edgeArrowType: 0, edgeStyle: 0});
+    });
 
     while (parentNodes.length > 0) {
       let newParentNodes = new Array<Node>();
       parentNodes.forEach(parentNode => {
         this.colorNodes.push(parentNode);
-        newParentNodes = newParentNodes.concat(this.graph.filter(x => x.edges.filter(y => y.child === parentNode.id).length > 0));
+        // tslint:disable-next-line:max-line-length
+        newParentNodes = newParentNodes.concat(Copy<Node[]>(this.graph.filter(x => x.edges.filter(y => y.child === parentNode.id).length > 0)));
       });
+
+      for (let i = newParentNodes.length - 1; i >= 0; --i) {
+        for (let j = newParentNodes[i].edges.length - 1; j >= 0; --j) {
+          if (newParentNodes[i].edges[j] && parentNodes.filter(x => x.id === newParentNodes[i].edges[j].child).length === 0) {
+            newParentNodes[i].edges.splice(j, 1);
+          }
+        }
+      }
       parentNodes = newParentNodes;
     }
 

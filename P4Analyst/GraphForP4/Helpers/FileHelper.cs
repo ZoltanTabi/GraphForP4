@@ -13,23 +13,34 @@ namespace GraphForP4.Helpers
         public static string InputClean(string input)
         {
             input = Regex.Replace(input, @"(//(.*?)\r?\n)", " ");
-            input = Regex.Replace(input, @"(/\*(?:(?!\*/)(?:.|[\r\n]+))*\*/)", " ");
-            input = Regex.Replace(input, @"(<[^0-9]*>)|([\n\r])", " ");
+            input = Regex.Replace(input, @"(/\*(?:(?!\*/)(?:.|[\r\n\t]+))*\*/)", " ");
+            input = Regex.Replace(input, @"(<[^0-9]*>)|([\n\r\t])", " ");
             input = Regex.Unescape(input);
 
             return input;
         }
 
-        public static string GetMethod(string input, string firstEqual, char startChar = '{', char endChar = '}')
+        public static string GetMethod(string input, string firstEqual, char startChar = '{', char endChar = '}', bool skipCheck = false)
         {
             var result = String.Empty;
             var count = 0;
             var findStartChar = false;
             var index = -1;
 
-            for (var i = 0; i < CHARACTERS.Length && index == -1; ++i)
+            if (!skipCheck)
             {
-                index = input.IndexOf(firstEqual + CHARACTERS[i]);
+                for (var i = 0; i < CHARACTERS.Length && index == -1; ++i)
+                {
+                    index = input.IndexOf(firstEqual + CHARACTERS[i]);
+                }
+                if (index == -1)
+                {
+                    index = input.IndexOf(firstEqual + startChar);
+                }
+            }
+            else
+            {
+                index = input.IndexOf(firstEqual);
             }
 
             for (var i = index; i > -1 && (count != 0 || !findStartChar); ++i)

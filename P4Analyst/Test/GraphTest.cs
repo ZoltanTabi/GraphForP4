@@ -33,7 +33,7 @@ namespace Test
         [Fact]
         public void TestGetStructs()
         {
-            var content = System.IO.File.ReadAllText(@"..\..\..\..\AngularApp\Files\hello.txt");
+            var content = System.IO.File.ReadAllText(@"..\..\..\..\AngularApp\Files\demo7.txt");
 
             var structs = Analyzer.GetStructs(content);
             var graph = P4ToGraph.ControlFlowGraph(ref content);

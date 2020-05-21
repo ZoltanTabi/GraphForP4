@@ -1,35 +1,62 @@
-<mat-grid-list [cols]="cols" (window:resize)="onResize($event)" rowHeight="7:5">
+<app-graph-carousel [graphsSetter]="getControlFlowGraphs()" [id]="'ControlFlowGraph'"></app-graph-carousel>
+<div style="height: 10px;"></div>
+<app-graph-carousel [graphsSetter]="getDataFlowGraphs()"  [id]="'DataFlowGraph'"></app-graph-carousel>
+
+<mat-grid-list *ngIf="calculatedData!=null" [cols]="cols" (window:resize)="onResize($event)" rowHeight="8:5">
     <mat-grid-tile [colspan]="1" [rowspan]="1">
-        <canvas baseChart
-            [datasets]="lineChartData"
-            [labels]="lineChartLabels"
-            [options]="lineChartOptions"
-            [legend]="lineChartLegend"
-            [chartType]="lineChartType"
-            (chartHover)="chartHovered($event)"
-            (chartClick)="chartClicked($event)">
-        </canvas>
+        <div class="chart-mat-figure">
+            <div class="chart-title">
+                Változók felhasználása
+            </div>
+            <canvas baseChart
+                [datasets]="readAndWriteChartData"
+                [labels]="calculatedData.readAndWriteChartData.labels"
+                [legend]="true"
+                [chartType]="'bar'"
+                [options]="barChartOptions">
+            </canvas>
+        </div>
     </mat-grid-tile>
     <mat-grid-tile [colspan]="1" [rowspan]="1">
-        <canvas baseChart
-            [data]="pieChartData"
-            [labels]="pieChartLabels"
-            [chartType]="pieChartType"
-            [options]="pieChartOptions"
-            [colors]="pieChartColors"
-            [legend]="pieChartLegend">
-        </canvas>
+        <div class="chart-mat-figure">
+            <div class="chart-title">
+                Változók felhasználása
+            </div>
+            <canvas baseChart
+                [data]="calculatedData.useVariable.doubleDatas"
+                [labels]="calculatedData.useVariable.labels"
+                [legend]="true"
+                [chartType]="'pie'"
+                [options]="pieChartOptions">
+            </canvas>
+        </div>
     </mat-grid-tile>
-    <mat-grid-tile *ngIf="calculatedData!=null" [colspan]="1" [rowspan]="1">
-        <canvas baseChart
-            [datasets]="barChartData"
-            [labels]="calculatedData.barChartData.labels"
-            [options]="barChartOptions"
-            [legend]="barChartLegend"
-            [chartType]="barChartType">
-        </canvas>
+    <mat-grid-tile [colspan]="1" [rowspan]="1">
+        <div class="chart-mat-figure">
+            <div class="chart-title">
+                Módosítás és használat
+            </div>
+            <canvas baseChart
+                [data]="calculatedData.useful.datas"
+                [labels]="calculatedData.useful.labels"
+                [legend]="true"
+                [chartType]="'pie'"
+                [options]="pieChartOptions">
+            </canvas>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="1" [rowspan]="1">
+        <div class="chart-mat-figure">
+            <div class="chart-title">
+                Fejlécek
+            </div>
+            <canvas baseChart
+                [datasets]="headersChartData"
+                [labels]="calculatedData.headers.labels"
+                [legend]="true"
+                [chartType]="'bar'"
+                [options]="barChartOptions">
+            </canvas>
+        </div>
     </mat-grid-tile>
 </mat-grid-list>
-
-<app-graph *ngIf="calculatedData!=null" [inputGraph]="calculatedData.controlFlowGraphs[0]" [draw]="false" [type]="'controlFlow'" [initialize]="true"></app-graph>
-<app-graph *ngIf="calculatedData!=null" [inputGraph]="calculatedData.dataFlowGraphs[0]" [draw]="false" [type]="'dataFlow'" [initialize]="true"></app-graph>

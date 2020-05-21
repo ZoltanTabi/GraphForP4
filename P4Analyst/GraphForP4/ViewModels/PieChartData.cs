@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace GraphForP4.ViewModels
 {
     public class PieChartData
     {
-        public List<string> Labels { get; set; }
-        public List<int> Datas { get; set; }
+        public List<string> Labels { get; set; } = new List<string>();
+        public List<int> Datas { get; set; } = new List<int>();
+        public List<double> DoubleDatas { get; set; } = new List<double>();
     }
 }

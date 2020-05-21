@@ -1,4 +1,5 @@
 ﻿using GraphForP4.Enums;
+using GraphForP4.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -158,18 +159,14 @@ namespace GraphForP4.Models
 
             foreach (var nodeString in nodeList)
             {
-                string firstObject = string.Empty;
-                string otherObjects = string.Empty;
+                string processNodeString = GetColor(nodeString, "FillColor", out Color fillColor);
+                processNodeString = GetColor(processNodeString, "FontColor", out Color fontColor);
 
-                Color fillColor = new Color();
-                Color fontColor = new Color();
+                var firstObject = FileHelper.GetMethod(processNodeString, "\"Edges\":", '[', ']');
 
-                string nodeString2 = GetColor(nodeString, "FillColor", out fillColor);
-                nodeString2 = GetColor(nodeString2, "FontColor", out fontColor);
-
-                if (GetFirstJsonObject(nodeString2, "[]", out firstObject, out otherObjects))
+                if (firstObject.Length > 0)
                 {
-                    var node = DeserializeJson<Node>(nodeString2.Replace($",\"Edges\":{firstObject}", ""));
+                    var node = DeserializeJson<Node>(processNodeString.Replace($",\"Edges\":{firstObject}", string.Empty));
                     node.FillColor = fillColor;
                     node.FontColor = fontColor;
                     Add(node);
