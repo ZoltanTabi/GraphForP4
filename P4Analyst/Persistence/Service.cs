@@ -39,14 +39,18 @@ namespace Persistence
 
                     context.Add(file);
                     context.SaveChanges();
+
+                    return file;
+                }
+                else
+                {
+                    return null;
                 }
             }
             else
             {
                 throw new ApplicationException("A hash képzése nem sikerült!");
-            }    
-
-            return file.Hash != String.Empty ? file : null;
+            }
         }
 
         public List<P4File> GetP4Files()
@@ -74,8 +78,6 @@ namespace Persistence
 
         private string CreateHash(byte[] content)
         {
-            var result = string.Empty;
-
             using (SHA256 hashAlgorithm = SHA256.Create())
             {
                 byte[] data = hashAlgorithm.ComputeHash(content);
@@ -86,10 +88,8 @@ namespace Persistence
                     stringBuilder.Append(data[i].ToString("x2"));
                 }
 
-                result = stringBuilder.ToString();
+                return stringBuilder.ToString();
             }
-
-            return result;
         }
 
         public void Dispose()

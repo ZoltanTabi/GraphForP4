@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace GraphForP4.Models
 {
@@ -38,7 +37,7 @@ namespace GraphForP4.Models
                 Parent = parent,
                 Child = child,
                 Color = color.GetValueOrDefault(Color.Black)
-        });
+            });
         }
 
         #region ToJson
@@ -255,7 +254,7 @@ namespace GraphForP4.Models
                 result.Add(new Edge
                 {
                     Parent = node,
-                    Child = Nodes.First(x => x.Id == Guid.Parse(attributes[1].Substring(9, attributes[1].Length - 10))),
+                    Child = Nodes.First(x => x.Id == Guid.Parse(attributes[1][9..^1])),
                     Color = Color.FromName(attributes[2].Substring(9, attributes[2].Length - 10)),
                     EdgeArrowType = (EdgeArrowType)Convert.ToInt32(attributes[3].Split(':')[1]),
                     EdgeStyle = (EdgeStyle)Convert.ToInt32(attributes[4].Split(':', '}')[1])
@@ -276,7 +275,7 @@ namespace GraphForP4.Models
             string attributePair = result.Substring(attributePos - 1, lastPos + 2);
             string attributeValue = attributePair.Split(":")[1];
 
-            color = Color.FromName(attributeValue.Substring(1, attributeValue.Length - 3));
+            color = Color.FromName(attributeValue[1..^2]);
 
             result = result.Replace(attributePair, "");
 

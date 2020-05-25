@@ -27,20 +27,15 @@ namespace GraphForP4.Helpers
             var findStartChar = false;
             var index = -1;
 
-            if (!skipCheck)
+            if (skipCheck) index = input.IndexOf(firstEqual);
+
+            for (var i = 0; i < CHARACTERS.Length && index == -1; ++i)
             {
-                for (var i = 0; i < CHARACTERS.Length && index == -1; ++i)
-                {
-                    index = input.IndexOf(firstEqual + CHARACTERS[i]);
-                }
-                if (index == -1)
-                {
-                    index = input.IndexOf(firstEqual + startChar);
-                }
+                index = input.IndexOf(firstEqual + CHARACTERS[i]);
             }
-            else
+            if (index == -1)
             {
-                index = input.IndexOf(firstEqual);
+                index = input.IndexOf(firstEqual + startChar);
             }
 
             for (var i = index; i > -1 && (count != 0 || !findStartChar); ++i)
