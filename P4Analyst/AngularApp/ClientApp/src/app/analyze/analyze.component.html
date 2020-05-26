@@ -2,7 +2,7 @@
     <mat-step label="Kezdő- és végértékek" state="select">
         <app-selector #selector [structs]="originalStructs" (change)="onSelectorChange()"></app-selector>
     </mat-step>
-    <mat-step label="Sorbarendezés" state="sort">
+    <mat-step label="Sorba rendezés" state="sort">
         <app-drag-and-drop-list #dragAndDropList></app-drag-and-drop-list>
     </mat-step>
     <mat-step label="Elemzés megtekintése" state="analyst">
@@ -21,7 +21,7 @@
 </mat-horizontal-stepper>
 
 <div class="navigate-button-group">
-    <mat-button-toggle-group #buttonGroup="matButtonToggleGroup" style="margin: 0 auto;">
+    <mat-button-toggle-group #buttonGroup="matButtonToggleGroup" style="margin: 0 auto;" [disabled]="originalStructs==null || originalStructs.length==0">
         <mat-button-toggle value="before" [disabled]="stepper.selectedIndex===0" (change)="onButtonChange($event.value)" class="text-button">
             <mat-icon>arrow_back_ios</mat-icon>
             előző

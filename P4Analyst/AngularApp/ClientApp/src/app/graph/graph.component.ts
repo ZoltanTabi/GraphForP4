@@ -263,9 +263,14 @@ export class GraphComponent {
             ++delayTime;
           } else {
             clearInterval(time);
-            const attributes = document.getElementById(this.id).children[0];
-            attributes.setAttribute('width', size.width.toString());
-            attributes.setAttribute('height', (size.height - 60).toString());
+            const element = document.getElementById(this.id);
+            if (element) {
+              const firstChildren = element.children[0];
+              if (firstChildren) {
+                firstChildren.setAttribute('width', size.width.toString());
+                firstChildren.setAttribute('height', (size.height - 60).toString());
+              }
+            }
           }
         }, 1000);
       }

@@ -1,7 +1,7 @@
 <mat-tab-group mat-stretch-tabs class="max-height" animationDuration="750ms" [selectedIndex]="selected.value" (selectedIndexChange)="onTabChange($event)" (resized)="onResized($event)">
     <mat-tab>
         <ng-template mat-tab-label>
-            Vezérlésfolyam gráf
+            Vezérlésfolyamgráf
             <button mat-icon-button [disabled]="buttonsDisabled[0]" class="tab-button" (click)="[controlFlowGraph.BFS(), controlAnimatedIcon.toggle()]">
                 <mat-animated-icon #controlAnimatedIcon start="pause_circle_filled" end="play_circle_filled" [playAndPause]="true" animate="true"></mat-animated-icon>
             </button>
@@ -12,7 +12,7 @@
     </mat-tab>
     <mat-tab #tab>
         <ng-template mat-tab-label>
-            Adatfolyam gráf
+            Adatfolyamgráf
             <button mat-icon-button [disabled]="buttonsDisabled[1]" class="tab-button" (click)="[dataFlowGraph.BFS(), dataAnimatedIcon.toggle()]">
                 <mat-animated-icon #dataAnimatedIcon start="pause_circle_filled" end="play_circle_filled" [playAndPause]="true" animate="true"
                 [parentElementId]="'mat-sidenav-content'"></mat-animated-icon>
