@@ -9,6 +9,7 @@ table {
 
 td, th {
     width: 25%;
+    padding-left: 40px !important;
 }
 
 .file-table {
@@ -24,16 +25,4 @@ td, th {
 mat-cell.table-icon {
     display:flex !important;
     justify-content:center!important;
-}
-
-::ng-deep mat-header-cell {
-    display:flex;
-    justify-content:center;
-    width: 15%;
-}
-
-::ng-deep mat-header-cell.header-width {
-    display:flex;
-    justify-content:center;
-    width: 35% !important;
 }

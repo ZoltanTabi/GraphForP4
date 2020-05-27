@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChildren, ViewChild } from '@angular/core';
 import { AnalyzeService } from './analyze.service';
 import { Struct } from '../models/variables/struct';
-import { MatStepper, MatButtonToggleGroup } from '@angular/material';
+import { MatStepper, MatButtonToggleGroup, MatDialog } from '@angular/material';
 import { MAT_STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { SessionStorageService } from 'ngx-store';
 import { Key } from '../models/key';
@@ -9,6 +9,10 @@ import { SelectorComponent } from '../selector/selector.component';
 import { DragAndDropListComponent } from '../drag-and-drop-list/drag-and-drop-list.component';
 import { AnalyzeData } from '../models/variables/analyzeData';
 import { ChartsDisplayComponent } from '../charts-display/charts-display.component';
+import { NameDialogComponent } from './name-dialog/name-dialog.component';
+import { CalculatedData } from '../models/calculate/calculatedData';
+import { NotificationService } from '../services/notification.service';
+import { FileService } from '../services/file.service';
 
 @Component({
   selector: 'app-analyze',
@@ -28,7 +32,8 @@ export class AnalyzeComponent implements OnInit {
   @ViewChild('dragAndDropList', {static: true}) dragAndDropList: DragAndDropListComponent;
   @ViewChild('chartsDisplay', {static: true}) chartsDisplay: ChartsDisplayComponent;
 
-  constructor(private analyzeService: AnalyzeService, private sessionStorageService: SessionStorageService) { }
+  constructor(private analyzeService: AnalyzeService, private sessionStorageService: SessionStorageService, public dialog: MatDialog,
+    private notificationService: NotificationService, private fileService: FileService) { }
 
   ngOnInit() {
     this.originalStructs = this.sessionStorageService.get(Key.Structs) as Array<Struct>;
@@ -58,6 +63,26 @@ export class AnalyzeComponent implements OnInit {
     this.analyzeService.putStructs(message).subscribe((result: any) => {
       console.log(result);
       this.chartsDisplay.calculatedDataSetter = result;
+      const question = this.sessionStorageService.get(Key.Question) as boolean;
+      if (!question) {
+        const fileData = (result as CalculatedData).file;
+        const dialogRef = this.dialog.open(NameDialogComponent, {
+          height: (window.innerWidth >= 600) ? '35%' : '100%',
+          width: (window.innerWidth >= 600) ? '40%' : '100%',
+          data: { name: fileData.name },
+          disableClose: true
+        });
+
+        dialogRef.afterClosed().subscribe(dialogResult => {
+          if (dialogResult) {
+            fileData.name = dialogResult;
+            this.fileService.uploadFile(fileData).subscribe(() => {
+              this.notificationService.success('Sikeres feltöltés!');
+            });
+          }
+          this.sessionStorageService.set(Key.Question, true);
+        });
+      }
     });
   }
 

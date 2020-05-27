@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Text.Json;
 using System.Drawing;
+using GraphForP4.ViewModels;
 
 namespace GraphForP4.Services
 {
@@ -86,10 +87,22 @@ namespace GraphForP4.Services
                         correct = TableAnalyze(node, x);
                         break;
 
+                    case NodeType.Action:
+                        var dataFlowGraphNodesAction = DataFlowGraph.Nodes.Where(y => y.ParentId == node.Id).ToList();
+                        if (dataFlowGraphNodesAction.Any())
+                        {
+                            correct = ActionAnalyze(dataFlowGraphNodesAction, x, MainNodes(dataFlowGraphNodesAction).FirstOrDefault());
+                        }
+                        correct = true;
+                        break;
+
                     case NodeType.ActionMethod:
-                        var dataFlowGraphNodes = DataFlowGraph.Nodes.Where(y => y.ParentId == node.Id).ToList();
-                        
-                        correct = ActionAnalyze(dataFlowGraphNodes, x, MainNodes(dataFlowGraphNodes).FirstOrDefault());
+                        var dataFlowGraphNodesActionMethod = DataFlowGraph.Nodes.Where(y => y.ParentId == node.Id).ToList();
+                        if (dataFlowGraphNodesActionMethod.Any())
+                        {
+                            correct = ActionAnalyze(dataFlowGraphNodesActionMethod, x, MainNodes(dataFlowGraphNodesActionMethod).FirstOrDefault());
+                        }
+                        correct = true;
                         break;
 
                     default:

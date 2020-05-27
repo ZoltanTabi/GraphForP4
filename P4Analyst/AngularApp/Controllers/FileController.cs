@@ -58,11 +58,6 @@ namespace AngularApp.Controllers
             {
                 logger.LogInformation("Fájl feltöltés");
 
-                if (file.Name == null || file.Name == string.Empty)
-                {
-                    file.Name = $"P4{context.P4Files.Count()}.p4";
-                }
-
                 using var service = new Service(context);
 
                 return Ok(service.SetP4File(file.ToP4File()).ToFileData());

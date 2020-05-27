@@ -250,7 +250,9 @@ namespace GraphForP4.Services
             }
             edgeColor = null;
 
-            var actionMethod = FileHelper.GetMethod(ingressMethod, "action " + actionName).Trim();
+            return new List<Node> { actionNode };
+
+            /*var actionMethod = FileHelper.GetMethod(ingressMethod, "action " + actionName).Trim();
             actionMethod = Regex.Replace(actionMethod, @" +", " ");
             
             if(String.IsNullOrWhiteSpace(actionMethod))
@@ -268,7 +270,7 @@ namespace GraphForP4.Services
             graph.Add(actionMethodNode);
             graph.AddEdge(actionNode, actionMethodNode);
 
-            return new List<Node> { actionMethodNode };
+            return new List<Node> { actionMethodNode };*/
         }
         #endregion
 
@@ -300,6 +302,14 @@ namespace GraphForP4.Services
                         if(tableGraph.Nodes.Any())
                         {
                             graphs.Add(node.Id, tableGraph);
+                        }
+                        break;
+
+                    case NodeType.Action:
+                        var actionGraph = ActionNode(node, graph, input);
+                        if (actionGraph != null && actionGraph.Nodes.Any())
+                        {
+                            graphs.Add(node.Id, actionGraph);
                         }
                         break;
 
@@ -364,6 +374,12 @@ namespace GraphForP4.Services
             var split = Regex.Split(condition, @"&&|\|\||==|!=").ToList();
             split = split.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
 
+            Guid? subGraph = null;
+            if (split.Count > 1)
+            {
+                subGraph = Guid.NewGuid();
+            }
+
             foreach (var text in split)
             {
                 var node = new Node()
@@ -375,7 +391,8 @@ namespace GraphForP4.Services
                     Text = text.Trim(),
                     Tooltip = "if",
                     Type = NodeType.If,
-                    Shape = NodeShape.Box
+                    Shape = NodeShape.Box,
+                    SubGraph = subGraph
                 };
                 graph.Add(node);
                 dataFlowGraph.Add(node);
@@ -404,7 +421,8 @@ namespace GraphForP4.Services
         {
             var graph = new Graph();
 
-            var tableMethod = FileHelper.GetMethod(input, "table " + parentNode.Text);
+            var ingressMethod = FileHelper.GetMethod(input, FileHelper.GetIngressControlName(input));
+            var tableMethod = FileHelper.GetMethod(ingressMethod, "table " + parentNode.Text);
 
             if (!tableMethod.Contains("key")) return graph;
 
@@ -446,6 +464,27 @@ namespace GraphForP4.Services
             }
 
             return graph;
+        }
+
+        private static Graph ActionNode(Node parentNode, Graph dataFlowGraph, string input)
+        {
+            var ingressMethod = FileHelper.GetMethod(input, FileHelper.GetIngressControlName(input));
+            var actionMethod = FileHelper.GetMethod(ingressMethod, "action " + parentNode.Text).Trim();
+            actionMethod = Regex.Replace(actionMethod, @" +", " ");
+
+            if (String.IsNullOrWhiteSpace(actionMethod))
+            {
+                return null;
+            }
+
+            var actionMethodNode = new Node
+            {
+                Text = actionMethod,
+                Type = NodeType.ActionMethod,
+                Id = parentNode.Id
+            };
+
+            return ActionMethodNode(actionMethodNode, dataFlowGraph);
         }
 
         private static Graph ActionMethodNode(Node parentNode, Graph dataFlowGraph)

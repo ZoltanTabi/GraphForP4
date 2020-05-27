@@ -367,7 +367,7 @@ export class GraphComponent {
         this.setNodeAttributes(node.id, Color.White, Color.Black);
         node.isColor = false;
         node.edges.forEach(edge => {
-          this.setEdgeAttributes(edge, Color.Black);
+          this.setEdgeAttributes(edge, Color.Black, Color.Black);
         });
       });
       this.BFSQueue = new Queue<Node>();
@@ -453,10 +453,10 @@ export class GraphComponent {
     }
 
     this.colorNodes.forEach(colorNode => {
-      this.setNodeAttributes(colorNode.id, Color.Blue, Color.Black);
+      this.setNodeAttributes(colorNode.id, Color.LightBlue, Color.Black);
       colorNode.edges.forEach(edge => {
         if (this.colorNodes.find(x => x.id === edge.child)) {
-          this.setEdgeAttributes(edge, Color.Blue);
+          this.setEdgeAttributes(edge, Color.LightBlue, Color.DarkBlue);
         }
       });
     });
@@ -477,7 +477,7 @@ export class GraphComponent {
     this.getNode(id).then(x => {
       this.reset();
       this.colorNodes.push(x);
-      this.setNodeAttributes(id, Color.Blue);
+      this.setNodeAttributes(id, Color.LightBlue);
     });
   }
 
@@ -497,7 +497,7 @@ export class GraphComponent {
         node.isColor = false;
         this.setNodeAttributes(node.id, node.fillColor, node.fontColor);
         node.edges.forEach(edge => {
-          this.setEdgeAttributes(edge, edge.color);
+          this.setEdgeAttributes(edge, edge.color, edge.color);
         });
       });
     }
@@ -515,12 +515,12 @@ export class GraphComponent {
     }
   }
 
-  private setEdgeAttributes(edge: Edge, color: string) {
+  private setEdgeAttributes(edge: Edge, fillColor: string, strokeColor: string) {
     const attributes = document.getElementById(`${edge.parent} -> ${edge.child}`).children;
-    attributes[1].setAttribute('stroke', color);
+    attributes[1].setAttribute('stroke', strokeColor);
     if (edge.edgeArrowType === 0) {
-      attributes[2].setAttribute('stroke', color);
-      attributes[2].setAttribute('fill', color);
+      attributes[2].setAttribute('stroke', strokeColor);
+      attributes[2].setAttribute('fill', fillColor);
     }
   }
 }

@@ -10,5 +10,6 @@ namespace GraphForP4.ViewModels
         public PieChartData UseVariable { get; set; }
         public PieChartData Useful { get; set; }
         public BarChartData Headers { get; set; }
+        public FileData File { get; set; }
     }
 }

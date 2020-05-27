@@ -1,6 +1,7 @@
 import { Node } from '../graph/node';
 import { BarChartData } from './barChartData';
 import { PieChartData } from './pieChartData';
+import { FileData } from '../file';
 
 export interface CalculatedData {
   controlFlowGraphs: Array<Node[]>;
@@ -9,4 +10,5 @@ export interface CalculatedData {
   useVariable: PieChartData;
   useful: PieChartData;
   headers: BarChartData;
+  file: FileData;
 }

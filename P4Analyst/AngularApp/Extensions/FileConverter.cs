@@ -1,5 +1,6 @@
 ﻿using GraphForP4.ViewModels;
 using Persistence;
+using System;
 
 namespace AngularApp.Extensions
 {
@@ -16,6 +17,11 @@ namespace AngularApp.Extensions
 
         public static FileData ToFileData(this P4File file)
         {
+            if (file == null)
+            {
+                throw new ApplicationException("Ez a fájl már feltöltésre került!");
+            }
+
             return new FileData
             {
                 Id = file.Id,

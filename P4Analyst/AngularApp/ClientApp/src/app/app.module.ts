@@ -32,6 +32,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DragDropDirective } from './directives/drag-drop.directive';
 import { FileUploadComponent } from './file-upload/file-upload.component';
 import { EditDialogComponent } from './file-upload/edit-dialog/edit-dialog.component';
+import { NameDialogComponent } from './analyze/name-dialog/name-dialog.component';
 import { AngularResizedEventModule } from 'angular-resize-event';
 import { WebStorageModule } from 'ngx-store';
 import { ClipboardModule } from 'ngx-clipboard';
@@ -97,6 +98,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     BottomSheetTemplateComponent,
     BottomSheetYesOrNoComponent,
     EditDialogComponent,
+    NameDialogComponent,
     HoverClassDirective,
     DragDropDirective
   ],
@@ -159,7 +161,13 @@ import { OverlayModule } from '@angular/cdk/overlay';
     ])
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  entryComponents: [SnackBarTemplateComponent, EditDialogComponent, BottomSheetTemplateComponent, BottomSheetYesOrNoComponent],
+  entryComponents: [
+    SnackBarTemplateComponent,
+    EditDialogComponent,
+    BottomSheetTemplateComponent,
+    BottomSheetYesOrNoComponent,
+    NameDialogComponent
+  ],
   providers: [
     HttpErrorHandler,
     MessageService,

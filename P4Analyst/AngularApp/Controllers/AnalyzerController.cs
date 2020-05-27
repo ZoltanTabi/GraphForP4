@@ -27,11 +27,11 @@ namespace AngularApp.Controllers
             {
                 logger.LogInformation("Header rész lekérdezése");
 
-                var file = SessionExtension.Get<string>(session, Key.File);
+                var file = SessionExtension.Get<FileData>(session, Key.File);
 
                 if (file == null) return BadRequest("Kérem töltsön fel először fájlt!");
 
-                var structs = Analyzer.GetStructs(file);
+                var structs = Analyzer.GetStructs(file.Content);
 
                 SessionExtension.Set(session, Key.Struct, structs);
 
@@ -44,14 +44,14 @@ namespace AngularApp.Controllers
         {
             return ActionExecute(() =>
             {
-                var file = SessionExtension.Get<string>(session, Key.File);
+                var file = SessionExtension.Get<FileData>(session, Key.File);
                 var controlFlowGraphJson = session.GetString(Key.ControlFlowGraph.ToString("g"));
                 var dataFlowGraphJson = session.GetString(Key.DataFlowGraph.ToString("g"));
                 var analyzers = new List<Analyzer>();
 
                 analyzeDatas.ForEach(x =>
                 {
-                    analyzers.Add(new Analyzer(controlFlowGraphJson, dataFlowGraphJson, x, file));
+                    analyzers.Add(new Analyzer(controlFlowGraphJson, dataFlowGraphJson, x, file.Content));
                 });
 
                 Parallel.ForEach(analyzers, (analyzer) =>
@@ -70,7 +70,8 @@ namespace AngularApp.Controllers
                     ReadAndWriteChartData = readAndWriteChartData,
                     UseVariable = useVariable,
                     Useful = useful,
-                    Headers = headers
+                    Headers = headers,
+                    File = file
                 };
 
                 return Ok(calculateData);

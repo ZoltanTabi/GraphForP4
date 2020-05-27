@@ -1,0 +1,29 @@
+.dialog-btn {
+    float: right;
+}
+
+.dialog-body-with-question {
+    width: 100%;
+    height: 100%;
+    padding: 24px;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+.centered {
+    text-align: center;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 200px;
+}
+
+.fix-btton-size {
+    width: 90px;
+    margin-left: 10px;
+}
+
+/*.mat-form-field-infix.name-edit {
+    width: 200px !important;
+}*/

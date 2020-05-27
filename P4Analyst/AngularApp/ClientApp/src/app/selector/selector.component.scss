@@ -2,8 +2,12 @@
     padding: 0;
 }
 
-::ng-deep .mat-form-field-infix {
+/*::ng-deep .mat-form-field-infix {
     width: 160px !important;
+}*/
+.mat-form-field {
+    font-size: 14px;
+    width: 160px;
 }
 
 @media screen and (min-width: 700px) {
@@ -11,8 +15,12 @@
         padding: 0 20px;
     }
 
-    ::ng-deep .mat-form-field-infix {
+    /*::ng-deep .mat-form-field-infix {
         width: 300px !important;
+    }*/
+    .mat-form-field {
+        font-size: 14px;
+        width: 300px;
     }
 }
 

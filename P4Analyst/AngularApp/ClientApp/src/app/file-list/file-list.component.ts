@@ -21,6 +21,7 @@ export class FileListComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'createDate', 'copy', 'runGraph'];
   dataSource: MatTableDataSource<FileData>;
+  formatDate = 'yyyy-MM-dd';
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -56,7 +57,7 @@ export class FileListComponent implements OnInit {
   copy(id: number) {
     const file = this.getFileData(id);
     this.clipboardService.copyFromContent(file.content);
-    this.notificationService.success('Sikeres másolás');
+    this.notificationService.success('Sikeres másolás!');
   }
 
   runGraph(id: number) {

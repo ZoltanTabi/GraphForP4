@@ -1,0 +1,25 @@
+<div class="dialog-header" [attr.color]="'primary'">
+    <h1 mat-dialog-title>Fájl feltöltése</h1>
+    <button mat-icon-button class="dialog-close-button" (click)="onNoClick()">
+    <mat-icon>
+        close
+    </mat-icon>
+    </button>
+</div>
+<mat-divider style="margin-bottom: 5px"></mat-divider>
+<div mat-dialog-content class="dialog-content-with-title-actions">
+    <div class="dialog-body-with-question">
+        <p>Amennyiben szeretné, hogy feltöltött kódja elmentésre kerüljön, akkor nyomjon az Igen gombra!</p>
+        <p>Név megadása kötelező!</p>
+        <div style="margin-top: 25px;" class="centered">
+            <mat-form-field class="name-edit">
+                <mat-label>Kötelező!</mat-label>
+                <input matInput [(ngModel)]="data.name">
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions class="dialog-btn">
+    <button mat-raised-button class="fix-btton-size" (click)="onNoClick()">Nem</button>
+    <button mat-raised-button class="fix-btton-size" color="primary" [disabled]="data.name==''" [mat-dialog-close]="data.name" cdkFocusInitial>Igen</button>
+</div>

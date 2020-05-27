@@ -48,7 +48,7 @@ namespace AngularApp.Controllers
 
                 var content = file.Content;
 
-                SessionExtension.Set(session, Key.File, content);
+                SessionExtension.Set(session, Key.File, file);
 
                 var controlFlowGraph = P4ToGraph.ControlFlowGraph(ref content);
                 SessionExtension.SetGraph(session, Key.ControlFlowGraph, controlFlowGraph);

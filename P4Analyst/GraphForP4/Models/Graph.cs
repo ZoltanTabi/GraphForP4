@@ -180,6 +180,14 @@ namespace GraphForP4.Models
                 if(node.Type == NodeType.ActionMethod)
                 {
                     node.Text = Regex.Replace(node.Text, @" *; *", ";" + Environment.NewLine);
+                    if (node.Text.Contains('{'))
+                    {
+                        node.Text = node.Text.Substring(node.Text.IndexOf('{'), 1);
+                    }
+                    if (node.Text.Contains('}'))
+                    {
+                        node.Text = node.Text.Substring(node.Text.LastIndexOf('}'), 1);
+                    }
                 }
             }
         }
