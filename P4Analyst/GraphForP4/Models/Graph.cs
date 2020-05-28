@@ -91,6 +91,8 @@ namespace GraphForP4.Models
             builder.Append(GetColorJson(node.FontColor));
             builder.Append(",\"Shape\":");
             builder.Append((int)node.Shape);
+            builder.Append(",\"Modified\":");
+            builder.Append(node.Use);
             if (node.ParentId != null)
             {
                 builder.Append(",\"ParentId\":\"");
@@ -108,16 +110,6 @@ namespace GraphForP4.Models
                 builder.Append(",\"Operation\":");
                 builder.Append((int)node.Operation);
             }
-            if (node.Modified != null)
-            {
-                builder.Append(",\"Modified\":");
-                builder.Append((int)node.Modified);
-            }
-            if (node.ModifiedAndUse != null)
-            {
-                builder.Append(",\"ModifiedAndUse\":");
-                builder.Append(node.ModifiedAndUse.ToString().ToLower());
-            }
             builder.Append("}");
 
             return builder.ToString();
@@ -134,9 +126,9 @@ namespace GraphForP4.Models
             builder.Append("\",\"Color\":");
             builder.Append(GetColorJson(edge.Color));
             builder.Append(",\"EdgeArrowType\":");
-            builder.Append((int)edge.EdgeArrowType);
+            builder.Append((int)edge.ArrowType);
             builder.Append(",\"EdgeStyle\":");
-            builder.Append((int)edge.EdgeStyle);
+            builder.Append((int)edge.Style);
             builder.Append("}");
 
             return builder.ToString();
@@ -264,8 +256,8 @@ namespace GraphForP4.Models
                     Parent = node,
                     Child = Nodes.First(x => x.Id == Guid.Parse(attributes[1][9..^1])),
                     Color = Color.FromName(attributes[2].Substring(9, attributes[2].Length - 10)),
-                    EdgeArrowType = (EdgeArrowType)Convert.ToInt32(attributes[3].Split(':')[1]),
-                    EdgeStyle = (EdgeStyle)Convert.ToInt32(attributes[4].Split(':', '}')[1])
+                    ArrowType = (EdgeArrowType)Convert.ToInt32(attributes[3].Split(':')[1]),
+                    Style = (EdgeStyle)Convert.ToInt32(attributes[4].Split(':', '}')[1])
                 });
             }
 

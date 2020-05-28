@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GraphForP4.Models;
 using GraphForP4.ViewModels;
@@ -58,8 +55,8 @@ namespace GraphForP4.Services
                         Parent = edge.Parent.Id.ToString().Replace("-", String.Empty),
                         Child = edge.Child.Id.ToString().Replace("-", String.Empty),
                         Color = $"#{edge.Color.R:X2}{edge.Color.G:X2}{edge.Color.B:X2}",
-                        EdgeArrowType = (int)edge.EdgeArrowType,
-                        EdgeStyle = (int)edge.EdgeStyle
+                        EdgeArrowType = (int)edge.ArrowType,
+                        EdgeStyle = (int)edge.Style
                     });
                     childNodes.Add(edge.Child);
                 }

@@ -39,8 +39,8 @@ export class NavBarComponent implements OnDestroy {
     let overrides: ChartOptions;
     const index = document.getElementById('index');
     if (checked) {
-      index.classList.remove('my-theme');
-      index.classList.add('my-dark-theme');
+      index.classList.remove('theme');
+      index.classList.add('dark-theme');
       overrides = {
         legend: {
           labels: { fontColor: 'white' }
@@ -57,8 +57,8 @@ export class NavBarComponent implements OnDestroy {
         }
       };
     } else {
-      index.classList.remove('my-dark-theme');
-      index.classList.add('my-theme');
+      index.classList.remove('dark-theme');
+      index.classList.add('theme');
       overrides = {};
     }
     this.themeService.setColorschemesOptions(overrides);

@@ -1,32 +1,27 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AngularApp.Extensions;
 using GraphForP4.Helpers;
-using GraphForP4.Models;
 using GraphForP4.Services;
 using GraphForP4.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace AngularApp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     [Produces("application/json")]
-    public class AnalyzerController : BaseController<AnalyzerController>
+    public class AnalyzerController : BaseController
     {
-        public AnalyzerController(ILogger<AnalyzerController> logger, IHttpContextAccessor http)
-            : base(logger, http) { }
+        public AnalyzerController(IHttpContextAccessor http)
+            : base(http) { }
 
         [HttpGet]
         public IActionResult GetStructs()
         {
             return ActionExecute(() =>
             {
-                logger.LogInformation("Header rész lekérdezése");
-
                 var file = SessionExtension.Get<FileData>(session, Key.File);
 
                 if (file == null) return BadRequest("Kérem töltsön fel először fájlt!");

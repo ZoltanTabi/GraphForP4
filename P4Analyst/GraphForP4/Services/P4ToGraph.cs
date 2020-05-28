@@ -384,8 +384,6 @@ namespace GraphForP4.Services
             {
                 var node = new Node()
                 {
-                    ModifiedAndUse = false,
-                    Modified = 0,
                     Operation = Operation.Read,
                     ParentId = parentNode.Id,
                     Text = text.Trim(),
@@ -408,8 +406,8 @@ namespace GraphForP4.Services
                     {
                         Parent = node,
                         Child = otherNode,
-                        EdgeArrowType = EdgeArrowType.None,
-                        EdgeStyle = EdgeStyle.Dotted
+                        ArrowType = EdgeArrowType.None,
+                        Style = EdgeStyle.Dotted
                     });
                 }
             }
@@ -442,8 +440,6 @@ namespace GraphForP4.Services
                 {
                     var node = new Node()
                     {
-                        ModifiedAndUse = false,
-                        Modified = 0,
                         Operation = Operation.Read,
                         ParentId = parentNode.Id,
                         Text = key.Trim(),
@@ -503,8 +499,6 @@ namespace GraphForP4.Services
                 {
                     var node = new Node()
                     {
-                        ModifiedAndUse = false,
-                        Modified = 0,
                         Operation = Operation.Read,
                         ParentId = parentNode.Id,
                         Text = newLine,
@@ -534,8 +528,6 @@ namespace GraphForP4.Services
 
                 var firstToken = new Node()
                 {
-                    ModifiedAndUse = false,
-                    Modified = 0,
                     Operation = Operation.Write,
                     ParentId = parentNode.Id,
                     Text = Regex.Replace(tokens[0], @"{|}|;", String.Empty).Trim(),
@@ -547,8 +539,6 @@ namespace GraphForP4.Services
 
                 var secondToken = new Node()
                 {
-                    ModifiedAndUse = false,
-                    Modified = 0,
                     Operation = Operation.Read,
                     ParentId = parentNode.Id,
                     Text = Regex.Replace(tokens[1], @"{|}|;", String.Empty).Trim(),
@@ -562,8 +552,8 @@ namespace GraphForP4.Services
                 {
                     Parent = firstToken,
                     Child = secondToken,
-                    EdgeArrowType = EdgeArrowType.None,
-                    EdgeStyle = EdgeStyle.Dotted
+                    ArrowType = EdgeArrowType.None,
+                    Style = EdgeStyle.Dotted
                 });
                 
                 graph.Add(firstToken);

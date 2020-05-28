@@ -71,8 +71,7 @@ namespace GraphForP4.Services
 
         private void NodeAnalyze(Node node, List<Dictionary<string, Struct>> ingressStartStructsLists)
         {
-            node.ModifiedAndUse = true;
-            node.Modified = node.Modified == null ? 1 : ++node.Modified;
+            ++node.Use;
             var correct = true;
             var addAllStruct = true;
             ingressStartStructsLists.ForEach(x =>

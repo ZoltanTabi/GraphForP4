@@ -31,7 +31,7 @@ export function getEdgeText(edge: Edge, graph: Array<Node>): string {
     const parentNode = graph.find(x => x.id === edge.parent);
     const childNode = graph.find(x => x.id === edge.child);
 
-    let inResult = `id="${edge.parent} -> ${edge.child}" color="${edge.color}" dir="${getEdgeArrowType(edge.edgeArrowType)}" style="${getEdgeStyle(edge.edgeStyle)}"`;
+    let inResult = `id="${edge.parent} -> ${edge.child}" color="${edge.color}" dir="${getEdgeArrowType(edge.arrowType)}" style="${getEdgeStyle(edge.style)}"`;
 
     if ((parentNode.subGraph !== '' || childNode.subGraph !== '') && parentNode.subGraph !== childNode.subGraph) {
         if (parentNode.subGraph !== '') {

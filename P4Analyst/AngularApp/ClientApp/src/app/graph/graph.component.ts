@@ -300,7 +300,7 @@ export class GraphComponent {
       const data: Data = { icon: '', text: 'Biztosan helyrállítja a gráf színezést?' };
       const bottomSheet = this.bottomSheet.open(BottomSheetYesOrNoComponent, {
         data: data,
-        panelClass: 'my-theme'
+        panelClass: 'theme'
       });
       bottomSheet.afterDismissed().subscribe(result => {
         if (result) {
@@ -413,7 +413,7 @@ export class GraphComponent {
     let parentNodes = Copy<Node[]>(this.graph.filter(x => x.edges.filter(y => y.child === node.id).length > 0));
     parentNodes.forEach(x => {
       x.edges = new Array<Edge>();
-      x.edges.push({child: id, parent: x.id, color: Color.Black, edgeArrowType: 0, edgeStyle: 0});
+      x.edges.push({child: id, parent: x.id, color: Color.Black, arrowType: 0, style: 0});
     });
 
     while (parentNodes.length > 0) {
@@ -518,7 +518,7 @@ export class GraphComponent {
   private setEdgeAttributes(edge: Edge, fillColor: string, strokeColor: string) {
     const attributes = document.getElementById(`${edge.parent} -> ${edge.child}`).children;
     attributes[1].setAttribute('stroke', strokeColor);
-    if (edge.edgeArrowType === 0) {
+    if (edge.arrowType === 0) {
       attributes[2].setAttribute('stroke', strokeColor);
       attributes[2].setAttribute('fill', fillColor);
     }

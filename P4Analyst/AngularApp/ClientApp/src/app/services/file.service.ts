@@ -8,7 +8,7 @@ import { FileData } from '../models/file';
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
-    'Authorization': 'my-auth-token'
+    'Authorization': 'auth-token'
   })
 };
 

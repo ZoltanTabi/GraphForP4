@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using GraphForP4.Services;
 using GraphForP4.ViewModels;
 using AngularApp.Extensions;
@@ -12,10 +11,10 @@ namespace AngularApp.Controllers
     [ApiController]
     [Route("[controller]")]
     [Produces("application/json")]
-    public class GraphController : BaseController<GraphController>
+    public class GraphController : BaseController
     {
-        public GraphController(ILogger<GraphController> logger, IHttpContextAccessor http)
-            : base(logger, http) { }
+        public GraphController(IHttpContextAccessor http)
+            : base(http) { }
 
 
         [HttpGet("{type}")]
@@ -23,8 +22,6 @@ namespace AngularApp.Controllers
         {
             return ActionExecute(() =>
             {
-                logger.LogInformation("Gráf lekérdezése", type);
-
                 var success = Enum.TryParse(type, true, out Key key);
 
                 if (!success) return BadRequest("Érvénytelen behívás!");
@@ -42,8 +39,6 @@ namespace AngularApp.Controllers
         {
             return ActionExecute(() =>
             {
-                logger.LogInformation("Fájl beküldése", file);
-
                 if (file.Content == null || string.IsNullOrWhiteSpace(file.Content)) return BadRequest("Üres fájl!");
 
                 var content = file.Content;

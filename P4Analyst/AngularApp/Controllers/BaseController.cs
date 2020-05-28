@@ -1,20 +1,17 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace AngularApp.Controllers
 {
     [ApiController]
-    public class BaseController<T> : ControllerBase
+    public class BaseController : ControllerBase
     {
         protected readonly ISession session;
-        protected readonly ILogger<T> logger;
 
-        public BaseController(ILogger<T> logger, IHttpContextAccessor http)
+        public BaseController(IHttpContextAccessor http)
         {
-            this.session = http.HttpContext.Session;
-            this.logger = logger;
+            session = http.HttpContext.Session;
         }
 
         protected IActionResult ActionExecute(Func<IActionResult> logic)
@@ -29,8 +26,6 @@ namespace AngularApp.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError(ex.ToString());
-
                 return BadRequest("Váratlan hiba!");
             }
         }

@@ -15,12 +15,11 @@ namespace GraphForP4.Models
         public Color FillColor { get; set; } = Color.White;
         public Color FontColor { get; set; } = Color.Black;
         public NodeShape Shape { get; set; } = NodeShape.Ellipse;
+        public int Use { get; set; }
 
         //DataFlowGraph Node
         public Guid? ParentId { get; set; }
         public Guid? SubGraph { get; set; }
         public Operation? Operation { get; set; }
-        public int? Modified { get; set; }
-        public bool? ModifiedAndUse { get; set; }
     }
 }

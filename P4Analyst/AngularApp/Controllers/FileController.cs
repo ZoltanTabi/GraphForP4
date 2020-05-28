@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using AngularApp.Extensions;
 using GraphForP4.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Persistence;
 
 namespace AngularApp.Controllers
@@ -12,14 +10,14 @@ namespace AngularApp.Controllers
     [ApiController]
     [Route("[controller]")]
     [Produces("application/json")]
-    public class FileController : BaseController<FileController>
+    public class FileController : BaseController
     {
         private readonly P4Context context;
 
-        public FileController(ILogger<FileController> logger, IHttpContextAccessor http, P4Context context)
-            : base(logger, http)
+        public FileController(IHttpContextAccessor http, P4Context context)
+            : base(http)
         {
-            this.context = context;        
+            this.context = context;
         }
 
 
@@ -28,8 +26,6 @@ namespace AngularApp.Controllers
         {
             return ActionExecute(() =>
             {
-                logger.LogInformation($"Fájl lekérdezés: {id}");
-
                 using var service = new Service(context);
 
                 return Ok(service.GetP4File(id).ToFileData());
@@ -41,8 +37,6 @@ namespace AngularApp.Controllers
         {
             return ActionExecute(() =>
             {
-                logger.LogInformation("Fájlok lekérdezés");
-
                 using var service = new Service(context);
                 var fileDatas = new List<FileData>();
                 service.GetP4Files().ForEach(x => fileDatas.Add(x.ToFileData()));
@@ -56,8 +50,6 @@ namespace AngularApp.Controllers
         {
             return ActionExecute(() =>
             {
-                logger.LogInformation("Fájl feltöltés");
-
                 using var service = new Service(context);
 
                 return Ok(service.SetP4File(file.ToP4File()).ToFileData());

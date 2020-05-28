@@ -1,12 +1,12 @@
-<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
-  <mat-toolbar color="primary" class="example-toolbar">
+<div class="p4-analyzer-container" [class.p4-analyzer-is-mobile]="mobileQuery.matches">
+  <mat-toolbar color="primary" class="p4-analyzer-toolbar">
     <!--<button mat-icon-button (click)="mobileQuery.matches ? [snav.toggle(), animatedIcon.toggle()] : [opened=!opened, animatedIcon.toggle()]">-->
     <button mat-icon-button (click)="[snav.toggle(), animatedIcon.toggle()]">
       <mat-animated-icon #animatedIcon start="keyboard_arrow_left" end="keyboard_arrow_right"
         colorStart="white" colorEnd="white" animate="false">
       </mat-animated-icon>
     </button>
-    <h1 class="example-app-name">P4 Analyst</h1>
+    <h1 class="p4-analyzer-app-name">P4 Analyst</h1>
     <span class="spacer"></span>
     <button mat-icon-button class="change-color" [matMenuTriggerFor]="menu">
       <mat-icon>
@@ -24,7 +24,7 @@
     </mat-menu>
   </mat-toolbar>
 
-  <mat-sidenav-container autosize class="example-sidenav-container"
+  <mat-sidenav-container autosize class="p4-analyzer-sidenav-container"
                          [style.marginTop.px]="mobileQuery.matches ? 56 : 0"
                          (backdropClick)="animatedIcon.toggle()">
     <mat-sidenav #snav id="mat-sidenav" [mode]="mobileQuery.matches ? 'over' : 'side'"

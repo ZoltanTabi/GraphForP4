@@ -1,4 +1,4 @@
-.example-container {
+.p4-analyzer-container {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -8,20 +8,20 @@
   right: 0;
 }
 
-.example-is-mobile .example-toolbar {
+.p4-analyzer-is-mobile .p4-analyzer-toolbar {
   position: fixed;
   z-index: 2;
 }
 
-h1.example-app-name {
+h1.p4-analyzer-app-name {
   margin-left: 8px;
 }
 
-.example-sidenav-container {
+.p4-analyzer-sidenav-container {
   flex: 1;
 }
 
-.example-is-mobile .example-sidenav-container {
+.p4-analyzer-is-mobile .p4-analyzer-sidenav-container {
   flex: 1 0 auto;
 }
 
@@ -36,18 +36,6 @@ h5 {
 
 mat-nav-list a {
   color: white !important;
-}
-
-.my-theme-change {
-  background-color: #303f9f !important;
-  color: white;
-  font-size: x-large;
-}
-
-.my-dark-theme-change {
-  background-color: #7b1fa2 !important;
-  color: white;
-  font-size: x-large;
 }
 
 .spacer {
