@@ -63,8 +63,7 @@ export class GraphViewComponent {
         });
         this.sessionStorageService.set(id, subGraph);
       }
-      let name = (this.sessionStorageService.get(Key.ControlFlowGraph) as Array<Node>).find(x => x.id === id).text;
-      name = (name && name.length < 20) ? name : name.substr(0, 15) + '...';
+      const name = (this.sessionStorageService.get(Key.ControlFlowGraph) as Array<Node>).find(x => x.id === id).text;
       this.tabs.push({graph: subGraph, id: id, name: name});
       this.selected.setValue(this.tabs.length + 1);
     }

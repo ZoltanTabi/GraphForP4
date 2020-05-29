@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using GraphForP4.Enums;
 using GraphForP4.Models;
 using GraphForP4.Helpers;
+using GraphForP4.Extensions;
 
 namespace GraphForP4.Services
 {
@@ -39,6 +38,8 @@ namespace GraphForP4.Services
 
             var ingressMethod = FileHelper.GetMethod(input, ingressControlName);
             var applyMethod = FileHelper.SplitAndClean(FileHelper.GetMethod(ingressMethod, APPLY));
+
+            if (Regex.IsMatch(string.Join(" ", applyMethod), @"else +if", RegexOptions.IgnoreCase)) throw new ApplicationException("Nem megengedett nyelvi elem! (else if)");
 
             currentNodes = Search(graph, currentNodes, applyMethod, ingressMethod, null);
 
@@ -251,26 +252,6 @@ namespace GraphForP4.Services
             edgeColor = null;
 
             return new List<Node> { actionNode };
-
-            /*var actionMethod = FileHelper.GetMethod(ingressMethod, "action " + actionName).Trim();
-            actionMethod = Regex.Replace(actionMethod, @" +", " ");
-            
-            if(String.IsNullOrWhiteSpace(actionMethod))
-            {
-                return new List<Node> { actionNode };
-            }
-
-            var actionMethodNode = new Node
-            {
-                Text = actionMethod,
-                Type = NodeType.ActionMethod,
-                Tooltip = actionMethod
-            };
-
-            graph.Add(actionMethodNode);
-            graph.AddEdge(actionNode, actionMethodNode);
-
-            return new List<Node> { actionMethodNode };*/
         }
         #endregion
 
@@ -319,7 +300,7 @@ namespace GraphForP4.Services
                 }
             }
 
-            MainNodes(graphs.First().Value).ForEach(fromStartNode =>
+            graphs.First().Value.MainNodes().ForEach(fromStartNode =>
             {
                 graph.AddEdge(startNode, fromStartNode);
             });
@@ -354,7 +335,7 @@ namespace GraphForP4.Services
                 var edge = controlFlowGraphNode.Edges.FirstOrDefault(x => x.Child == controlFlowGraph["End"]);
                 if (graphs.ContainsKey(controlFlowGraphNode.Id) && edge != null)
                 {
-                    EndNodes(graphs[controlFlowGraphNode.Id]).ForEach(node =>
+                    graphs[controlFlowGraphNode.Id].EndNodes().ForEach(node =>
                     {
                         graph.AddEdge(node, endNode, edge.Color);
                     });
@@ -485,6 +466,8 @@ namespace GraphForP4.Services
 
         private static Graph ActionMethodNode(Node parentNode, Graph dataFlowGraph)
         {
+            if (Regex.IsMatch(parentNode.Text, @" if *\(", RegexOptions.IgnoreCase)) throw new ApplicationException("Nem megengedett nyelvi elem! (Akción belüli elágazás)");
+
             var graph = new Graph();
 
             Node previousNode = null;
@@ -586,8 +569,8 @@ namespace GraphForP4.Services
                         continue;
                     }
 
-                    var goNodes = MainNodes(graphs[childNode.Id]);
-                    foreach (var endNode in EndNodes(graphs[parentNode.Id]))
+                    var goNodes = graphs[childNode.Id].MainNodes();
+                    foreach (var endNode in graphs[parentNode.Id].EndNodes())
                     {
                         foreach (var goNode in goNodes)
                         {
@@ -603,30 +586,9 @@ namespace GraphForP4.Services
             }
         }
 
-        private static List<Node> MainNodes(Graph graph)
-        {
-            var notMainNodes = new List<Node>();
-            graph.Nodes.ForEach((node) =>
-            {
-                foreach(var otherNode in graph.Nodes)
-                {
-                    foreach(var edge in otherNode.Edges)
-                    {
-                        if (edge.Child == node) notMainNodes.Add(node);
-                    }
-                }
-            });
-
-            return graph.Nodes.Except(notMainNodes).ToList();
-        }
-
-        private static List<Node> EndNodes(Graph graph)
-        {
-            return graph.Nodes.Where(x => !x.Edges.Any(y => y.Child.ParentId == x.ParentId)).ToList();
-        }
         #endregion
 
-        #region Helper Methods
+        #region Helper Method
         private static (List<String>, String) Pop(List<String> list)
         {
             if (list == null || !list.Any())

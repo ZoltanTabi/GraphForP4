@@ -90,7 +90,7 @@ namespace GraphForP4.Services
                         var dataFlowGraphNodesAction = DataFlowGraph.Nodes.Where(y => y.ParentId == node.Id).ToList();
                         if (dataFlowGraphNodesAction.Any())
                         {
-                            correct = ActionAnalyze(dataFlowGraphNodesAction, x, MainNodes(dataFlowGraphNodesAction).FirstOrDefault());
+                            correct = ActionAnalyze(dataFlowGraphNodesAction, x, dataFlowGraphNodesAction.MainNodes().FirstOrDefault());
                         }
                         correct = true;
                         break;
@@ -99,7 +99,7 @@ namespace GraphForP4.Services
                         var dataFlowGraphNodesActionMethod = DataFlowGraph.Nodes.Where(y => y.ParentId == node.Id).ToList();
                         if (dataFlowGraphNodesActionMethod.Any())
                         {
-                            correct = ActionAnalyze(dataFlowGraphNodesActionMethod, x, MainNodes(dataFlowGraphNodesActionMethod).FirstOrDefault());
+                            correct = ActionAnalyze(dataFlowGraphNodesActionMethod, x, dataFlowGraphNodesActionMethod.MainNodes().FirstOrDefault());
                         }
                         correct = true;
                         break;
@@ -315,7 +315,7 @@ namespace GraphForP4.Services
             }
             else
             {
-                node.FillColor = Color.Green;
+                BrushNode(node, true);
             }
 
             return true;
@@ -327,27 +327,10 @@ namespace GraphForP4.Services
             {
                 node.FillColor = correct ? Color.Green : Color.Red;
             }
-            else if ((node.FillColor == Color.Red && correct) || (node.FillColor == Color.Green && correct))
+            else if ((node.FillColor == Color.Red && correct) || (node.FillColor == Color.Green && !correct))
             {
                 node.FillColor = Color.Yellow;
             }
-        }
-
-        private static List<Node> MainNodes(List<Node> nodes)
-        {
-            var notMainNodes = new List<Node>();
-            nodes.ForEach((node) =>
-            {
-                foreach (var otherNode in nodes)
-                {
-                    foreach (var edge in otherNode.Edges)
-                    {
-                        if (edge.Child == node) notMainNodes.Add(node);
-                    }
-                }
-            });
-
-            return nodes.Except(notMainNodes).ToList();
         }
 
         public void FinishOperations()

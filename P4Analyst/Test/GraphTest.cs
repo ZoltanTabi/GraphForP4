@@ -5,6 +5,7 @@ using GraphForP4.Models;
 using System.Collections.Generic;
 using System.Text.Json;
 using GraphForP4.ViewModels;
+using GraphForP4.Extensions;
 
 namespace Test
 {
@@ -18,8 +19,8 @@ namespace Test
             //var json = graph.ToJson();
             var graph1 = P4ToGraph.DataFlowGraph(content, graph);
 
-            var angularGraph = GraphToAngular.Serialize(graph);
-            var angularGraph1 = GraphToAngular.Serialize(graph1);
+            var angularGraph = graph.Serialize();
+            var angularGraph1 = graph1.Serialize();
 
             Assert.Equal("ipv4_lpm", graph[0].Text);
             Assert.Equal("ipv4_forward", graph[1].Text);

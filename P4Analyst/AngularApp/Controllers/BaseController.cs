@@ -24,7 +24,7 @@ namespace AngularApp.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest("Váratlan hiba!");
             }

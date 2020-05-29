@@ -27,7 +27,8 @@ button.tab-button {
 .mat-raised-button:focus,
 .mat-button-toggle-button:focus,
 .button:focus,
-.mat-sort-header-button {
+.mat-stroked-button:focus,
+.mat-sort-header-button:focus {
   outline: none !important;
 }
 

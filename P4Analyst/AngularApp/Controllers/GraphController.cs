@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using GraphForP4.Services;
 using GraphForP4.ViewModels;
 using AngularApp.Extensions;
+using GraphForP4.Extensions;
 
 namespace AngularApp.Controllers
 {
@@ -30,7 +31,7 @@ namespace AngularApp.Controllers
 
                 if (graph == null || !graph.Nodes.Any()) return BadRequest("Kérem töltsön fel először fájlt!");
 
-                return Ok(GraphToAngular.Serialize(graph));
+                return Ok(graph.Serialize());
             });
         }
 

@@ -1,4 +1,5 @@
-﻿using GraphForP4.Models;
+﻿using GraphForP4.Extensions;
+using GraphForP4.Models;
 using GraphForP4.Services;
 using GraphForP4.ViewModels;
 using System;
@@ -33,37 +34,7 @@ namespace GraphForP4.Helpers
                     {
                         if (structPair.Value == null) continue;
 
-                        foreach(var headerPair in structPair.Value.Headers)
-                        {
-                            var headerKey = $"{structPair.Key}.{headerPair.Key}";
-                            if (!headersHelper.ContainsKey(headerKey))
-                            {
-                                headersHelper[headerKey] = new HeaderHelper();
-                            }
-                            var headerHelper = headersHelper[headerKey];
-                            headerHelper.Use += headerPair.Value.Use;
-                            ++headerHelper.Count;
-
-                            foreach (var variable in headerPair.Value.Variables)
-                            {
-                                var variableSize = GetVariableSize(variable.Type);
-                                headerHelper.VariablesSize += variableSize;
-
-                                if (variable.Modified) ++unUsefulModified;
-                                else if (variable.ModifiedAndUse > 0) ++usefulModified;
-
-                                if (variable.Read + variable.Write == 0) continue;
-
-                                headerHelper.VariableUsefulSize += variableSize;
-
-                                var key = $"{structPair.Key}.{headerPair.Key}.{variable.Name}";
-                                if (!readAndWriteChartDataHelper.ContainsKey(key))
-                                {
-                                    readAndWriteChartDataHelper[key] = new List<Variable>();
-                                }
-                                readAndWriteChartDataHelper[key].Add(variable);
-                            }
-                        }
+                        RecursiveStruct(structPair, headersHelper, readAndWriteChartDataHelper, ref usefulModified, ref unUsefulModified);
                     }
                 });
             });
@@ -115,6 +86,49 @@ namespace GraphForP4.Helpers
             }
         }
 
+        private static void RecursiveStruct(KeyValuePair<string, Struct> structPair, Dictionary<string, HeaderHelper> headersHelper, Dictionary<string, List<Variable>> readAndWriteChartDataHelper, ref int usefulModified, ref int unUsefulModified, string prefix = "")
+        {
+            foreach(var keyStructPair in structPair.Value.Structs)
+            {
+                if (keyStructPair.Value != null)
+                {
+                    RecursiveStruct(keyStructPair, headersHelper, readAndWriteChartDataHelper, ref usefulModified, ref unUsefulModified, prefix != "" ? $"{prefix}.{structPair.Key}" : structPair.Key);
+                }
+            }
+
+            foreach (var headerPair in structPair.Value.Headers)
+            {
+                var headerKey = prefix != "" ? $"{prefix}.{structPair.Key}.{headerPair.Key}" : $"{structPair.Key}.{headerPair.Key}";
+                if (!headersHelper.ContainsKey(headerKey))
+                {
+                    headersHelper[headerKey] = new HeaderHelper();
+                }
+                var headerHelper = headersHelper[headerKey];
+                headerHelper.Use += headerPair.Value.Use;
+                ++headerHelper.Count;
+
+                foreach (var variable in headerPair.Value.Variables)
+                {
+                    var variableSize = GetVariableSize(variable.Type);
+                    headerHelper.VariablesSize += variableSize;
+
+                    if (variable.Modified) ++unUsefulModified;
+                    else if (variable.ModifiedAndUse > 0) ++usefulModified;
+
+                    if (variable.Read + variable.Write == 0) continue;
+
+                    headerHelper.VariableUsefulSize += variableSize;
+
+                    var key = prefix != "" ?  $"{prefix}.{structPair.Key}.{headerPair.Key}.{variable.Name}" : $"{headerPair.Key}.{variable.Name}";
+                    if (!readAndWriteChartDataHelper.ContainsKey(key))
+                    {
+                        readAndWriteChartDataHelper[key] = new List<Variable>();
+                    }
+                    readAndWriteChartDataHelper[key].Add(variable);
+                }
+            }
+        }
+
         private static int GetVariableSize(string type)
         {
             if (type.Contains('<') && type.Contains('>'))
@@ -136,8 +150,8 @@ namespace GraphForP4.Helpers
             foreach(var x in analyzers.GroupBy(x => x.Id))
             {
                 var analyzer = x.FirstOrDefault();
-                controlFlowGraphs.Add(GraphToAngular.Serialize(analyzer.ControlFlowGraph).ToList());
-                dataFlowGraphs.Add(GraphToAngular.Serialize(analyzer.DataFlowGraph).ToList());
+                controlFlowGraphs.Add(analyzer.ControlFlowGraph.Serialize().ToList());
+                dataFlowGraphs.Add(analyzer.DataFlowGraph.Serialize().ToList());
             }
         }
     }

@@ -5,7 +5,7 @@
         public string Parent { get; set; }
         public string Child { get; set; }
         public string Color { get; set; }
-        public int EdgeArrowType { get; set; }
-        public int EdgeStyle { get; set; }
+        public int ArrowType { get; set; }
+        public int Style { get; set; }
     }
 }
