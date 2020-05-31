@@ -14,6 +14,8 @@ namespace Test
     {
         private readonly P4Context context;
         private readonly List<P4File> files;
+        private readonly string txt = "txt";
+        private readonly string p4 = "p4";
 
         public PersistenceTest()
         {
@@ -37,25 +39,34 @@ namespace Test
             context.SaveChanges();
         }
 
-        [Fact]
-        public void SetP4FileTest()
+        [Theory]
+        [InlineData(3)]
+        [InlineData(5)]
+        public void SetP4FileTest(int no)
         {
             using var service = new Service(context);
-            var f = ReadFile(@"..\..\..\..\AngularApp\Files\demo3.txt");
-            var p4File = new P4File { Id = 3, FileName = "demo3.txt", Content = f.Item1, Hash = f.Item2, CreatedDate = Convert.ToDateTime("2019.11.23") };
+            var f = ReadFile($@"..\..\..\..\AngularApp\Files\demo{no}.txt");
+            var p4File = new P4File { Id = no, FileName = $"demo{no}.{(no == 3 ? txt : p4)}", Content = f.Item1, Hash = f.Item2, CreatedDate = Convert.ToDateTime("2019.11.23") };
             var file = service.SetP4File(p4File);
 
             Assert.Equal(p4File.Id, file.Id);
             Assert.Equal(Path.GetFileNameWithoutExtension(p4File.FileName), file.FileName);
             Assert.Equal(p4File.Hash, file.Hash);
             Assert.Equal(p4File.Content, file.Content);
-            Assert.NotEqual(p4File.CreatedDate, file.CreatedDate);
+            Assert.Equal(p4File.CreatedDate, file.CreatedDate);
+        }
 
-            var f1 = ReadFile(@"..\..\..\..\AngularApp\Files\demo1.txt");
-            var p4File1 = new P4File { FileName = "demo8.txt", Content = f1.Item1, Hash = f1.Item2, CreatedDate = DateTime.Now };
-            var file1 = service.SetP4File(p4File1);
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public void SetP4FileWithExistingFileTest(int no)
+        {
+            using var service = new Service(context);
+            var f = ReadFile($@"..\..\..\..\AngularApp\Files\demo{no}.txt");
+            var p4File = new P4File { FileName = $"demo{no}.txt", Content = f.Item1, Hash = f.Item2, CreatedDate = DateTime.Now };
+            var file = service.SetP4File(p4File);
 
-            Assert.Null(file1);
+            Assert.Null(file);
         }
 
         [Theory]
@@ -69,16 +80,19 @@ namespace Test
             Assert.Equal(files[no].Id, file.Id);
             Assert.Equal(files[no].FileName, file.FileName);
             Assert.Equal(files[no].Hash, file.Hash);
+            Assert.Equal(files[no].Content, file.Content);
         }
 
-        [Fact]
-        public void GetP4FileInvalidIdTest()
+        [Theory]
+        [InlineData(3)]
+        [InlineData(4)]
+        public void GetP4FileInvalidIdTest(int no)
         {
             using var service = new Service(context);
-            var ex = Record.Exception(() => service.GetP4File(3));
+            var ex = Record.Exception(() => service.GetP4File(no));
 
             Assert.IsType<ApplicationException>(ex);
-            Assert.Equal("A megadott azonosítóval nincs letárolt fájl! Id: 3", ex.Message);
+            Assert.Equal($"A megadott azonosítóval nincs letárolt fájl! Id: {no}", ex.Message);
         }
 
         [Fact]
