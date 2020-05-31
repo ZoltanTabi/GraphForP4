@@ -1,6 +1,6 @@
 ﻿namespace GraphForP4.ViewModels
 {
-    public class AngularEdge
+    public class ViewEdge
     {
         public string Parent { get; set; }
         public string Child { get; set; }

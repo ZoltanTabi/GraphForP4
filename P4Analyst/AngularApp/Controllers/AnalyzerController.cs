@@ -28,8 +28,6 @@ namespace AngularApp.Controllers
 
                 var structs = Analyzer.GetStructs(file.Content);
 
-                SessionExtension.Set(session, Key.Struct, structs);
-
                 return Ok(structs);
             });
         }
@@ -44,6 +42,8 @@ namespace AngularApp.Controllers
                 var dataFlowGraphJson = session.GetString(Key.DataFlowGraph.ToString("g"));
                 var analyzers = new List<Analyzer>();
 
+                if (file == null || controlFlowGraphJson == null || dataFlowGraphJson == null) return BadRequest("Kérem töltsön fel először fájlt!");
+
                 analyzeDatas.ForEach(x =>
                 {
                     analyzers.Add(new Analyzer(controlFlowGraphJson, dataFlowGraphJson, x, file.Content));
@@ -55,7 +55,7 @@ namespace AngularApp.Controllers
                     analyzer.FinishOperations();
                 });
 
-                analyzers.DistinctGraphs(out List<List<AngularNode>> controlFlowGraphs, out List<List<AngularNode>> dataFlowGraphs);
+                analyzers.DistinctGraphs(out List<List<ViewNode>> controlFlowGraphs, out List<List<ViewNode>> dataFlowGraphs);
                 analyzers.CreateCharts(out BarChartData readAndWriteChartData, out PieChartData useVariable, out PieChartData useful, out BarChartData headers);
 
                 var calculateData = new CalculatedData

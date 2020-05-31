@@ -62,7 +62,7 @@ namespace GraphForP4.Services
                     ingressEndStructs.Add(name, endStruct);
                 });
             
-            foreach (var edge in ControlFlowGraph.Nodes[0].Edges)
+            foreach (var edge in ControlFlowGraph[0].Edges)
             {
                 edge.Color = Color.Green;
                 NodeAnalyze(edge.Child, new List<Dictionary<string, Struct>> { Copy(ingressStartStructs) });
@@ -258,11 +258,11 @@ namespace GraphForP4.Services
             return true;
         }
 
-        private (Header, string) GetHeaderFromStruct(Dictionary<string, Struct> dics, List<String> stringList)
+        private (Header, string) GetHeaderFromStruct(Dictionary<string, Struct> dict, List<String> stringList)
         {
-            if (stringList.Any() && dics.ContainsKey(stringList[0]))
+            if (stringList.Any() && dict.ContainsKey(stringList[0]))
             {
-                var _struct = dics[stringList[0]];
+                var _struct = dict[stringList[0]];
                 var i = 1;
                 while (i < stringList.Count && _struct != null && _struct.Structs.ContainsKey(stringList[i]))
                 {
@@ -383,8 +383,8 @@ namespace GraphForP4.Services
         }
 
         #region Struktúrák
-        const string HEADER = "header ";
-        const string STRUCT = "struct "; 
+        private const string HEADER = "header ";
+        private const string STRUCT = "struct "; 
 
         public static List<Struct> GetStructs(string input)
         {
@@ -453,7 +453,7 @@ namespace GraphForP4.Services
             return blocks;
         }
 
-        private static List<String> GetDeclarationBlock(string block, string name)
+        private static List<string> GetDeclarationBlock(string block, string name)
         {
             return Regex.Replace(FileHelper.GetMethod(block, name), @"{|}", String.Empty).Trim().Split(";", StringSplitOptions.RemoveEmptyEntries).ToList();
         }

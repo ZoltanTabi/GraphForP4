@@ -12,10 +12,10 @@ namespace GraphForP4.Services
 {
     public static class P4ToGraph
     {
-        const string APPLY = "apply";
-        const string IF = "if";
-        const string ELSE = "else";
-        const string ACTIONS = "actions";
+        private const string APPLY = "apply";
+        private const string IF = "if";
+        private const string ELSE = "else";
+        private const string ACTIONS = "actions";
 
         #region ControlFlowGraph
         public static Graph ControlFlowGraph(ref string input)
@@ -58,13 +58,13 @@ namespace GraphForP4.Services
 
             for(var i = graph.Nodes.Count - 1; i >= 0; --i)
             {
-                for(var j = graph.Nodes[i].Edges.Count -1; j >= 0; --j)
+                for(var j = graph[i].Edges.Count -1; j >= 0; --j)
                 {
-                    if(graph.Nodes[i].Edges[j].Child.Type == NodeType.Skip)
+                    if(graph[i].Edges[j].Child.Type == NodeType.Skip)
                     {
-                        for(var k = graph.Nodes[i].Edges[j].Child.Edges.Count - 1; k >= 0; --k)
+                        for(var k = graph[i].Edges[j].Child.Edges.Count - 1; k >= 0; --k)
                         {
-                            graph.AddEdge(graph.Nodes[i].Edges[j].Parent, graph.Nodes[i].Edges[j].Child.Edges[k].Child, Color.Red);
+                            graph.AddEdge(graph[i].Edges[j].Parent, graph[i].Edges[j].Child.Edges[k].Child, Color.Red);
                         }
                     }
                 }
@@ -95,15 +95,11 @@ namespace GraphForP4.Services
                 {
                     if (current.Contains(APPLY))
                     {
-                        currentNodes = TableMethod(graph, currentNodes,
-                                       Regex.Replace(current, @"\. *" + APPLY + @" *\( *\);", String.Empty).Trim(),
-                                       ingressMethod, ref edgeColor);
+                        currentNodes = TableMethod(graph, currentNodes, Regex.Replace(current, @"\. *" + APPLY + @" *\( *\);", String.Empty).Trim(), ingressMethod, ref edgeColor);
                     }
                     else if (current.Contains('('))
                     {
-                        currentNodes = ActionMethod(graph, currentNodes,
-                                       Regex.Replace(current, @" *\(.*\);", String.Empty).Trim(),
-                                       ingressMethod, ref edgeColor);
+                        currentNodes = ActionMethod(graph, currentNodes, Regex.Replace(current, @" *\(.*\);", String.Empty).Trim(), ref edgeColor);
                     }
                     else
                     {
@@ -228,14 +224,14 @@ namespace GraphForP4.Services
                 if(action.Contains(";"))
                 {
                     currentNodes.AddRange(ActionMethod(graph, new List<Node> { tableNode },
-                                   Regex.Replace(action, @"( |;)", String.Empty).Trim(), ingressMethod, ref edgeColor));
+                                   Regex.Replace(action, @"( |;)", String.Empty).Trim(), ref edgeColor));
                 }
             }
 
             return currentNodes;
         }
 
-        private static List<Node> ActionMethod(Graph graph, List<Node> currentNodes, String actionName, String ingressMethod, ref Color? edgeColor)
+        private static List<Node> ActionMethod(Graph graph, List<Node> currentNodes, String actionName, ref Color? edgeColor)
         {
             var actionNode = new Node
             {
@@ -316,7 +312,7 @@ namespace GraphForP4.Services
                 var node = queue.Dequeue();
                 node.FillColor = Color.Gray;
 
-                BFSHelper(node, node, graph, graphs, ref queue);
+                BFSHelper(node, node, graph, graphs, queue);
 
                 node.FillColor = Color.Black;
             }
@@ -555,7 +551,7 @@ namespace GraphForP4.Services
             return graph;
         }
 
-        private static void BFSHelper(Node parentNode, Node currentNode, Graph graph, Dictionary<Guid, Graph> graphs, ref Queue<Node> queue)
+        private static void BFSHelper(Node parentNode, Node currentNode, Graph graph, Dictionary<Guid, Graph> graphs, Queue<Node> queue)
         {
             foreach (var edge in currentNode.Edges)
             {
@@ -565,7 +561,7 @@ namespace GraphForP4.Services
                 {
                     if (!graphs.ContainsKey(childNode.Id))
                     {
-                        BFSHelper(parentNode, childNode, graph, graphs, ref queue);
+                        BFSHelper(parentNode, childNode, graph, graphs, queue);
                         continue;
                     }
 
@@ -589,11 +585,11 @@ namespace GraphForP4.Services
         #endregion
 
         #region Helper Method
-        private static (List<String>, String) Pop(List<String> list)
+        private static (List<T>, T) Pop<T>(List<T> list)
         {
             if (list == null || !list.Any())
             {
-                return (list, String.Empty);
+                return (list, default(T));
             }
 
             var currentFirst = list[0];

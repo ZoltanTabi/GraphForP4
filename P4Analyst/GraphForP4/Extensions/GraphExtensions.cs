@@ -47,9 +47,9 @@ namespace GraphForP4.Extensions
 
         #region Serialize
 
-        public static IEnumerable<AngularNode> Serialize(this Graph graph)
+        public static IEnumerable<ViewNode> Serialize(this Graph graph)
         {
-            var angularGraph = new List<AngularNode>();
+            var angularGraph = new List<ViewNode>();
 
             var level = 0;
             var currentNodes = graph.MainNodes();
@@ -62,28 +62,28 @@ namespace GraphForP4.Extensions
             return angularGraph;
         }
 
-        private static (List<Node>, int) GenerateLevel(List<AngularNode> angularGraph, List<Node> currentNodes, int level)
+        private static (List<Node>, int) GenerateLevel(List<ViewNode> angularGraph, List<Node> currentNodes, int level)
         {
             var childNodes = new List<Node>();
             currentNodes.ForEach(node =>
             {
-                var item = new AngularNode
+                var item = new ViewNode
                 {
                     Text = node.Text,
-                    Id = node.Id.ToString().Replace("-", String.Empty),
+                    Id = node.Id.ToString().Replace("-", string.Empty),
                     Number = level,
                     FillColor = $"#{node.FillColor.R:X2}{node.FillColor.G:X2}{node.FillColor.B:X2}",
                     FontColor = $"#{node.FontColor.R:X2}{node.FontColor.G:X2}{node.FontColor.B:X2}",
                     Shape = (int)node.Shape,
                     Tooltip = node.Tooltip,
-                    ParentId = node.ParentId != null ? node.ParentId.ToString().Replace("-", String.Empty) : String.Empty,
-                    SubGraph = node.SubGraph != null ? "cluster" + node.SubGraph.ToString().Replace("-", String.Empty) : String.Empty,
-                    Edges = new List<AngularEdge>()
+                    ParentId = node.ParentId != null ? node.ParentId.ToString().Replace("-", string.Empty) : string.Empty,
+                    SubGraph = node.SubGraph != null ? "cluster" + node.SubGraph.ToString().Replace("-", string.Empty) : string.Empty,
+                    Edges = new List<ViewEdge>()
                 };
 
                 foreach (var edge in node.Edges)
                 {
-                    item.Edges.Add(new AngularEdge()
+                    item.Edges.Add(new ViewEdge()
                     {
                         Parent = edge.Parent.Id.ToString().Replace("-", String.Empty),
                         Child = edge.Child.Id.ToString().Replace("-", String.Empty),
@@ -101,7 +101,7 @@ namespace GraphForP4.Extensions
             return (childNodes.Distinct().ToList(), ++level);
         }
 
-        private static void CheckExisting(List<Node> childNodes, List<AngularNode> angularGraph)
+        private static void CheckExisting(List<Node> childNodes, List<ViewNode> angularGraph)
         {
             foreach (var angularNode in angularGraph)
             {

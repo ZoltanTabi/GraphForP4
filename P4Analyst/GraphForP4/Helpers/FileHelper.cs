@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace GraphForP4.Helpers
@@ -15,6 +14,10 @@ namespace GraphForP4.Helpers
             input = Regex.Replace(input, @"(//(.*?)\r?\n)", " ");
             input = Regex.Replace(input, @"(/\*(?:(?!\*/)(?:.|[\r\n\t]+))*\*/)", " ");
             input = Regex.Replace(input, @"(<[^0-9]*>)|([\n\r\t])", " ");
+            input = Regex.Replace(input, @"}", " } ");
+            input = Regex.Replace(input, @"{", " { ");
+            input = Regex.Replace(input, @" +\. +apply", ".apply");
+            input = Regex.Replace(input, @"if\(", "if (");
             input = Regex.Unescape(input);
 
             return input;

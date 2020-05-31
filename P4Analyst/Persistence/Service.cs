@@ -78,18 +78,16 @@ namespace Persistence
 
         private string CreateHash(byte[] content)
         {
-            using (SHA256 hashAlgorithm = SHA256.Create())
+            using SHA256 hashAlgorithm = SHA256.Create();
+            byte[] data = hashAlgorithm.ComputeHash(content);
+            var stringBuilder = new StringBuilder();
+
+            for (int i = 0; i < data.Length; i++)
             {
-                byte[] data = hashAlgorithm.ComputeHash(content);
-                var stringBuilder = new StringBuilder();
-
-                for (int i = 0; i < data.Length; i++)
-                {
-                    stringBuilder.Append(data[i].ToString("x2"));
-                }
-
-                return stringBuilder.ToString();
+                stringBuilder.Append(data[i].ToString("x2"));
             }
+
+            return stringBuilder.ToString();
         }
 
         public void Dispose()

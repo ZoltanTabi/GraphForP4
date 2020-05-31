@@ -15,7 +15,7 @@ namespace GraphForP4.Helpers
         public int VariableUsefulSize { get; set; }
         public int VariablesSize { get; set; }
         public int Count { get; set; }
-    };
+    }
 
     public static class AnalyzeHelper
     {
@@ -34,7 +34,7 @@ namespace GraphForP4.Helpers
                     {
                         if (structPair.Value == null) continue;
 
-                        RecursiveStruct(structPair, headersHelper, readAndWriteChartDataHelper, ref usefulModified, ref unUsefulModified);
+                        StructProcess(structPair, headersHelper, readAndWriteChartDataHelper, ref usefulModified, ref unUsefulModified);
                     }
                 });
             });
@@ -86,13 +86,13 @@ namespace GraphForP4.Helpers
             }
         }
 
-        private static void RecursiveStruct(KeyValuePair<string, Struct> structPair, Dictionary<string, HeaderHelper> headersHelper, Dictionary<string, List<Variable>> readAndWriteChartDataHelper, ref int usefulModified, ref int unUsefulModified, string prefix = "")
+        private static void StructProcess(KeyValuePair<string, Struct> structPair, Dictionary<string, HeaderHelper> headersHelper, Dictionary<string, List<Variable>> readAndWriteChartDataHelper, ref int usefulModified, ref int unUsefulModified, string prefix = "")
         {
             foreach(var keyStructPair in structPair.Value.Structs)
             {
                 if (keyStructPair.Value != null)
                 {
-                    RecursiveStruct(keyStructPair, headersHelper, readAndWriteChartDataHelper, ref usefulModified, ref unUsefulModified, prefix != "" ? $"{prefix}.{structPair.Key}" : structPair.Key);
+                    StructProcess(keyStructPair, headersHelper, readAndWriteChartDataHelper, ref usefulModified, ref unUsefulModified, prefix != "" ? $"{prefix}.{structPair.Key}" : structPair.Key);
                 }
             }
 
@@ -142,10 +142,10 @@ namespace GraphForP4.Helpers
             else return default;
         }
 
-        public static void DistinctGraphs(this List<Analyzer> analyzers, out List<List<AngularNode>> controlFlowGraphs, out List<List<AngularNode>> dataFlowGraphs)
+        public static void DistinctGraphs(this List<Analyzer> analyzers, out List<List<ViewNode>> controlFlowGraphs, out List<List<ViewNode>> dataFlowGraphs)
         {
-            controlFlowGraphs = new List<List<AngularNode>>();
-            dataFlowGraphs = new List<List<AngularNode>>();
+            controlFlowGraphs = new List<List<ViewNode>>();
+            dataFlowGraphs = new List<List<ViewNode>>();
 
             foreach(var x in analyzers.GroupBy(x => x.Id))
             {

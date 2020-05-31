@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Linq;
 
 namespace Persistence
 {
