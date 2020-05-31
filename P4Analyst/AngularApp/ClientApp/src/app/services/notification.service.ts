@@ -1,10 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import {
-  MatSnackBar,
-  MatSnackBarConfig,
-  MatSnackBarVerticalPosition,
-  MatSnackBarHorizontalPosition
-} from '@angular/material';
+import { MatSnackBar, MatSnackBarConfig, MatSnackBarVerticalPosition, MatSnackBarHorizontalPosition } from '@angular/material';
 import { SnackBarTemplateComponent } from '../components/snack-bar-template/snack-bar-template.component';
 import { Data } from '../models/data';
 

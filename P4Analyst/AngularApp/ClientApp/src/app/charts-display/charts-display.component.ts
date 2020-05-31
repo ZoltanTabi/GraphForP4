@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
-import { Color, BaseChartDirective, Label } from 'ng2-charts';
+import { ChartDataSets, ChartOptions } from 'chart.js';
 import { CalculatedData } from '../models/calculate/calculatedData';
 
 @Component({

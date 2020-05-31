@@ -3,6 +3,8 @@ import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { LocalStorageService } from 'ngx-store';
 import { ThemeService } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
+import { MatIconRegistry } from '@angular/material';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-nav-bar',
@@ -11,13 +13,13 @@ import { ChartOptions } from 'chart.js';
 })
 export class NavBarComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
-  opened = true;
   toggleChecked = false;
 
   private _mobileQueryListener: () => void;
 
   // tslint:disable-next-line:max-line-length
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private localStorageService: LocalStorageService, private themeService: ThemeService) {
+  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private localStorageService: LocalStorageService, private themeService: ThemeService,
+    private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
     const checked = localStorageService.get('darkTheme') as boolean;
     if (checked) {
       this.changeToggle(true);
@@ -26,6 +28,10 @@ export class NavBarComponent implements OnDestroy {
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     // tslint:disable-next-line: deprecation
     this.mobileQuery.addListener(this._mobileQueryListener);
+    this.matIconRegistry.addSvgIcon(
+      'p4',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../../assets/p4.svg')
+    );
   }
 
   ngOnDestroy(): void {

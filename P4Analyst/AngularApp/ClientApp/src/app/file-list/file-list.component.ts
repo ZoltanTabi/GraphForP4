@@ -55,30 +55,34 @@ export class FileListComponent implements OnInit {
   }
 
   copy(id: number) {
-    const file = this.getFileData(id);
-    this.clipboardService.copyFromContent(file.content);
-    this.notificationService.success('Sikeres másolás!');
+    this.getFileData(id).then(file => {
+      this.clipboardService.copyFromContent(file.content);
+      this.notificationService.success('Sikeres másolás!');
+    });
   }
 
   runGraph(id: number) {
-    const file = this.getFileData(id);
-    this.homeService
+    this.getFileData(id).then(file => {
+      this.homeService
       .sendFileContent(file)
       .subscribe(() => {
         this.sessionStorageService.clear('prefix');
         this.router.navigateByUrl('/graphview');
       });
+    });
   }
 
-  getFileData(id: number): FileData {
-    const file = this.localStorageService.get(id.toString()) as FileData;
-    if (file && file.content && file.content.length > 0) {
-      return file;
-    } else {
-      this.fileService.getFile(id).subscribe((result) => {
-        this.localStorageService.set(id.toString(), result);
-        return result;
-      });
-    }
+  getFileData = (id: number) => {
+    return new Promise<FileData>((resolve) => {
+      const file = this.localStorageService.get(id.toString()) as FileData;
+      if (file && file.content && file.content.length > 0) {
+        resolve(file);
+      } else {
+        this.fileService.getFile(id).subscribe((result) => {
+          this.localStorageService.set(id.toString(), result);
+          resolve(result);
+        });
+      }
+    });
   }
 }

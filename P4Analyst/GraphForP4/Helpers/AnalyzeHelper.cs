@@ -147,7 +147,7 @@ namespace GraphForP4.Helpers
             controlFlowGraphs = new List<List<ViewNode>>();
             dataFlowGraphs = new List<List<ViewNode>>();
 
-            foreach(var x in analyzers.GroupBy(x => x.Id))
+            foreach(var x in analyzers.OrderBy(x => x.Id).GroupBy(x => x.Id))
             {
                 var analyzer = x.FirstOrDefault();
                 controlFlowGraphs.Add(analyzer.ControlFlowGraph.Serialize().ToList());

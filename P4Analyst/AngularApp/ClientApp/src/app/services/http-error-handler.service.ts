@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { MessageService } from './message.service';
-import { Router } from '@angular/router';
 import { NotificationService } from './notification.service';
 
 export type HandleError =
@@ -10,8 +9,7 @@ export type HandleError =
 
 @Injectable()
 export class HttpErrorHandler {
-  constructor(private messageService: MessageService,
-    private router: Router, private notificationService: NotificationService) { }
+  constructor(private messageService: MessageService, private notificationService: NotificationService) { }
 
   createHandleError = (serviceName = '') => <T>
     (operation = 'operation', result = {} as T) => this.handleError(serviceName, operation, result)
@@ -27,14 +25,10 @@ export class HttpErrorHandler {
 
       this.messageService.add(`${serviceName}: ${operation} failed: ${message}`);
 
-      if (error.status === 404) {
-        this.router.navigateByUrl('/help');
+      if (error.error.length > 0) {
+        this.notificationService.error(error.error);
       } else {
-        if (error.error.length > 0) {
-          this.notificationService.error(error.error);
-        } else {
-          this.notificationService.error('Váratlan hiba!');
-        }
+        this.notificationService.error('Váratlan hiba!');
       }
 
       return throwError(error);

@@ -1,5 +1,5 @@
 import { Inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorHandler, HandleError } from 'src/app/services/http-error-handler.service';
@@ -15,9 +15,6 @@ export class GraphService {
   }
 
   getGraph(type: string): Observable<Array<Node>> {
-    const options = type ?
-     { params: new HttpParams().set('type', type) } : {};
-
     return this.http.get<Array<Node>>(this.baseUrl + 'graph/' + type)
       .pipe(
         catchError(this.handleError<Array<Node>>('getGraph'))

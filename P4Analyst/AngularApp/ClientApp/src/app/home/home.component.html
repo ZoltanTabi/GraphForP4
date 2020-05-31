@@ -1,7 +1,6 @@
 <div class="max-height flex-divs">
     <mat-tab-group mat-stretch-tabs class="max-height" animationDuration="750ms">
-        <mat-tab label="Fájl feltöltés" [disabled]="isCode()"
-            [matTooltipDisabled]="!isCode()" matTooltip="Fájlból feltöltéshez törölje ki a beírt szöveget!">
+        <mat-tab label="Fájl feltöltés" [disabled]="isCode()">
             <app-file-upload (change)="onChange($event)"></app-file-upload>
         </mat-tab>
         <mat-tab label="Szövegbevitel" [disabled]="isFile()">
