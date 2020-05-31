@@ -1,0 +1,15 @@
+h1.help-title {
+    text-align: center;
+    padding: 40px;
+}
+
+.help-main-div {
+    margin: 0 100px;
+    font-size: x-large;
+}
+
+@media screen and (min-width: 650px) {
+    .help-main-div {
+        margin: 0 200px;
+    }
+}
